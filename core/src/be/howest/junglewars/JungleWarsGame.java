@@ -93,16 +93,16 @@ public class JungleWarsGame extends ApplicationAdapter {
         harambeSprite.setPosition(xPos, yPos);
 
         // Handle user input
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             harambeSprite.translate(-10, 0);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             harambeSprite.translate(10, 0);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             harambeSprite.translate(0, 10);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             harambeSprite.translate(0, -10);
         }
     }
