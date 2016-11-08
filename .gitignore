@@ -68,3 +68,5 @@ build/
 ## OS Specific
 .DS_Store
 Thumbs.db
+
+*.iws___jb_tmp___
