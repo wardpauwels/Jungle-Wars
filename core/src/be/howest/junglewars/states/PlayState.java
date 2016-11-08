@@ -51,7 +51,7 @@ public class PlayState extends State {
 
     @Override
     public void handleInput() {
-        player.handleInput(); //TODO: for loop
+        player.handleInput(); //TODO: for loop for multiple players
     }
 
     @Override
