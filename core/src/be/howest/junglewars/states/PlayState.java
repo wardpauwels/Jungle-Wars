@@ -37,6 +37,7 @@ public class PlayState extends State {
 
     @Override
     public void render() {
+        System.out.println(Gdx.graphics.getFramesPerSecond());
         batch.begin();
         //render background
         batch.disableBlending();
