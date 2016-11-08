@@ -1,10 +1,13 @@
 package be.howest.junglewars.game;
 
 import be.howest.junglewars.be.howest.junglewars.managers.*;
+import be.howest.junglewars.states.PlayState;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g3d.particles.values.RectangleSpawnShapeValue;
 import com.badlogic.gdx.math.Rectangle;
+import com.sun.xml.internal.ws.api.ha.HaInfo;
 
 public class JungleWarsGame extends ApplicationAdapter {
 
@@ -45,6 +48,12 @@ public class JungleWarsGame extends ApplicationAdapter {
         HEIGHT = height;
         WIDTH = width;
         screenBounds = new Rectangle(0, 0, WIDTH, HEIGHT);
+
+        camera = new OrthographicCamera(WIDTH, HEIGHT);
+        camera.translate(WIDTH/2, HEIGHT/2);
+        camera.update();
+
+        sm.update(Gdx.graphics.getDeltaTime());
     }
 
     @Override
