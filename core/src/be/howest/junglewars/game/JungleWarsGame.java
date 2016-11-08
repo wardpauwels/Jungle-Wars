@@ -45,6 +45,12 @@ public class JungleWarsGame extends ApplicationAdapter {
         HEIGHT = height;
         WIDTH = width;
         screenBounds = new Rectangle(0, 0, WIDTH, HEIGHT);
+
+        camera = new OrthographicCamera(WIDTH, HEIGHT);
+        camera.translate(WIDTH/2, HEIGHT/2);
+        camera.update();
+
+        sm.update(Gdx.graphics.getDeltaTime());
     }
 
     @Override

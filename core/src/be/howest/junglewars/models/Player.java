@@ -1,30 +1,27 @@
 package be.howest.junglewars.models;
 
-<<<<<<< HEAD
 import be.howest.junglewars.game.JungleWarsGame;
+import be.howest.junglewars.models.missiles.Missile;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-<<<<<<< HEAD
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 import java.util.List;
-=======
 import be.howest.junglewars.game.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
->>>>>>> refs/remotes/origin/master
-=======
->>>>>>> parent of a321674... Bullet start
 
 public class Player extends Model {
 
     private String name;
+
+    private ArrayList<Missile> missiles;
 
     private int lives;
     private int score;
@@ -32,10 +29,8 @@ public class Player extends Model {
     private float missileTime;
     private float missileTimer;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     private boolean isLookingLeft;
-=======
+
     private boolean upPressed;
     private boolean downPressed;
     private boolean leftPressed;
@@ -47,28 +42,21 @@ public class Player extends Model {
     private boolean leftBorderTouch;
 
     private float sqrtSpeed;
->>>>>>> refs/remotes/origin/master
 
-=======
->>>>>>> parent of a321674... Bullet start
     public Player(String name) {
         this.name = name;
 
         this.lives = 3;
         this.score = 0;
-<<<<<<< HEAD
 
-<<<<<<< HEAD
         missiles = new ArrayList<Missile>();
         isLookingLeft = false;
-=======
->>>>>>> parent of a321674... Bullet start
+
         speed = 10;
-=======
+
         speed = 7;
         sqrtSpeed = ((float) Math.sqrt((speed * speed) / 2));
 
->>>>>>> refs/remotes/origin/master
         texture = new Texture(Gdx.files.internal("characters/harambe_default.png"));
         sprite = new Sprite(texture);
         sprite.setSize(texture.getWidth() * 0.7f, texture.getHeight() * 0.7f);
@@ -102,52 +90,54 @@ public class Player extends Model {
             if (leftBorderTouch || rightBorderTouch) currentSpeed = speed;
             y = bottomBorderTouch ? 0 : y - currentSpeed;
         }
-<<<<<<< HEAD
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            x = (x <= 0) ? 0 : x - speed;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            x = (x >= JungleWarsGame.WIDTH - (sprite.getWidth())) ? JungleWarsGame.WIDTH - (sprite.getWidth()) : x + speed;
-=======
+
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            if (!isLookingLeft) {
+                sprite.flip(true, false);
+                isLookingLeft = true;
+            }
             if (topBorderTouch || bottomBorderTouch) currentSpeed = speed;
             x = leftBorderTouch ? 0 : x - currentSpeed;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            if (isLookingLeft) {
+                sprite.flip(true, false);
+                isLookingLeft = false;
+            }
             if (topBorderTouch || bottomBorderTouch) currentSpeed = speed;
             x = rightBorderTouch ? JungleWarsGame.WIDTH - (sprite.getWidth()) : x + currentSpeed;
->>>>>>> refs/remotes/origin/master
+        }
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
+            shoot(Gdx.input.getX(), JungleWarsGame.HEIGHT - Gdx.input.getY());
         }
     }
 
-    @Override
+    public void update(float dt){
+        for (int i = 0; i < missiles.size(); i++) {
+            if (missiles.get(i).shouldRemove()) {
+                missiles.remove(i);
+                i--;
+            }
+        }
+    }
+
     public void render(SpriteBatch batch) {
+        //render bananas
+        for (int i = 0; i < missiles.size(); i++){
+            missiles.get(i).render(batch);
+        }
+
+        //render player
         sprite.setOriginCenter();
         sprite.setPosition(x, y);
         sprite.draw(batch);
-<<<<<<< HEAD
-=======
-
-
-
     }
 
     public void shoot(float x, float y) {
-        missiles.add(new Missile(this.getX(), this.getY(), x, y));
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of 03823a8... Bullet change
-=======
->>>>>>> parent of 03823a8... Bullet change
-=======
->>>>>>> parent of 03823a8... Bullet change
-=======
->>>>>>> parent of 03823a8... Bullet change
+        missiles.add(new Missile(this.getX() + sprite.getWidth()/2, this.getY() + sprite.getHeight()/2, x, y));
     }
 
-    public void shoot() {
-        // TODO: Schieten om halve seconden
+    public List<Missile> getMissiles() {
+        return missiles;
     }
-
 }
