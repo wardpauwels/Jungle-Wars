@@ -42,6 +42,14 @@ public class Model {
         return y;
     }
 
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
     public float getWidth() {
         return width;
     }
@@ -50,8 +58,8 @@ public class Model {
         return height;
     }
 
-    public void render(SpriteBatch batch){
+    public void render(SpriteBatch batch) {
 
-    };
+    }
 
 }
