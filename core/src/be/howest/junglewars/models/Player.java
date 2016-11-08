@@ -2,14 +2,13 @@ package be.howest.junglewars.models;
 
 <<<<<<< HEAD
 import be.howest.junglewars.game.JungleWarsGame;
-import be.howest.junglewars.models.missiles.Missile;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+<<<<<<< HEAD
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
@@ -20,12 +19,12 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 >>>>>>> refs/remotes/origin/master
+=======
+>>>>>>> parent of a321674... Bullet start
 
 public class Player extends Model {
 
     private String name;
-
-    private ArrayList<Missile> missiles;
 
     private int lives;
     private int score;
@@ -33,6 +32,7 @@ public class Player extends Model {
     private float missileTime;
     private float missileTimer;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     private boolean isLookingLeft;
 =======
@@ -49,15 +49,20 @@ public class Player extends Model {
     private float sqrtSpeed;
 >>>>>>> refs/remotes/origin/master
 
+=======
+>>>>>>> parent of a321674... Bullet start
     public Player(String name) {
         this.name = name;
 
         this.lives = 3;
         this.score = 0;
+<<<<<<< HEAD
 
 <<<<<<< HEAD
         missiles = new ArrayList<Missile>();
         isLookingLeft = false;
+=======
+>>>>>>> parent of a321674... Bullet start
         speed = 10;
 =======
         speed = 7;
@@ -99,17 +104,9 @@ public class Player extends Model {
         }
 <<<<<<< HEAD
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            if (!isLookingLeft) {
-                sprite.flip(true, false);
-                isLookingLeft = true;
-            }
             x = (x <= 0) ? 0 : x - speed;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            if (isLookingLeft) {
-                sprite.flip(true, false);
-                isLookingLeft = false;
-            }
             x = (x >= JungleWarsGame.WIDTH - (sprite.getWidth())) ? JungleWarsGame.WIDTH - (sprite.getWidth()) : x + speed;
 =======
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -121,44 +118,17 @@ public class Player extends Model {
             x = rightBorderTouch ? JungleWarsGame.WIDTH - (sprite.getWidth()) : x + currentSpeed;
 >>>>>>> refs/remotes/origin/master
         }
-
-        //left mouse click
-        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
-            shoot(Gdx.input.getX(),Gdx.graphics.getHeight() - Gdx.input.getY());
-        }
-    }
-
-    public void update(float dt){
-        for (int i = 0; i < missiles.size(); i++) {
-            if (missiles.get(i).shouldRemove()) {
-                missiles.remove(i);
-                i--;
-            }
-        }
     }
 
     @Override
     public void render(SpriteBatch batch) {
-        //render bananas
-        for (int i = 0; i < missiles.size(); i++){
-            missiles.get(i).render(batch);
-        }
-
-        //render player
         sprite.setOriginCenter();
         sprite.setPosition(x, y);
         sprite.draw(batch);
-
-
-
     }
 
-    public void shoot(float x, float y) {
-        missiles.add(new Missile(this.getX(), this.getY(), x, y));
-    }
-
-    public List<Missile> getMissiles(){
-        return missiles;
+    public void shoot() {
+        // TODO: Schieten om halve seconden
     }
 
 }

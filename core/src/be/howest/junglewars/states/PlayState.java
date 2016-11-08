@@ -1,7 +1,6 @@
 package be.howest.junglewars.states;
 
 import be.howest.junglewars.be.howest.junglewars.managers.*;
-import be.howest.junglewars.game.JungleWarsGame;
 import be.howest.junglewars.models.Player;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
@@ -17,10 +16,9 @@ public class PlayState extends State {
 
     @Override
     public void init() {
-        backgroundTexture = new Texture(Gdx.files.internal("backgrounds/background-trees.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("backgrounds/jungle-bg.png"));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setPosition(0, 0);
-        backgroundSprite.setSize(JungleWarsGame.WIDTH, JungleWarsGame.HEIGHT);
 
         player = new Player("John");
     }
@@ -28,11 +26,6 @@ public class PlayState extends State {
     @Override
     public void update(float dt) {
         handleInput();
-        player.update(dt);
-
-        for (int i = 0; i < player.getMissiles().size(); i++){
-            player.getMissiles().get(i).update(dt);
-        }
     }
 
     @Override
