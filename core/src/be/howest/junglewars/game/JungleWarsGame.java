@@ -30,6 +30,8 @@ public class JungleWarsGame extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         sm.update(Gdx.graphics.getDeltaTime());
+
+        sm.render();
     }
 
     @Override

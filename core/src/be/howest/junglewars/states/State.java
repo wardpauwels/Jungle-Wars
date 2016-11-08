@@ -1,13 +1,21 @@
 package be.howest.junglewars.states;
 
 import be.howest.junglewars.be.howest.junglewars.managers.*;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.*;
 
 public abstract class State {
+
+    protected SpriteBatch batch;
+    protected Texture backgroundTexture;
+    protected Sprite backgroundSprite;
 
     protected StateManager sm;
 
     protected State(StateManager sm) {
+        batch = new SpriteBatch();
         this.sm = sm;
+        init();
     }
 
     public abstract void init();
