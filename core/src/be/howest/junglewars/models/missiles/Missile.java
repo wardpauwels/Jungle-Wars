@@ -4,6 +4,8 @@ import be.howest.junglewars.models.*;
 
 import static sun.audio.AudioPlayer.player;
 
+import static sun.audio.AudioPlayer.player;
+
 public class Missile extends Model {
 
     private int damage;
