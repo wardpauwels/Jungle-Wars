@@ -125,6 +125,16 @@ public class Player extends Model {
         sprite.setOriginCenter();
         sprite.setPosition(x, y);
         sprite.draw(batch);
+<<<<<<< HEAD
+=======
+
+
+
+    }
+
+    public void shoot(float x, float y) {
+        missiles.add(new Missile(this.getX(), this.getY(), x, y));
+>>>>>>> parent of 03823a8... Bullet change
     }
 
     public void shoot() {
