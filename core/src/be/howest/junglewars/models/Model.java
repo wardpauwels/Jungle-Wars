@@ -1,16 +1,22 @@
 package be.howest.junglewars.models;
 
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.*;
+
 public class Model {
 
-    private float speed;
+    protected float speed;
 
-    private float x;
-    private float y;
+    protected float x;
+    protected float y;
 
-    private float width;
-    private float height;
+    protected float width;
+    protected float height;
 
-    private boolean remove;
+    protected boolean remove;
+
+    protected Texture texture;
+    protected Sprite sprite;
 
     public void setPosition() {
 
@@ -43,4 +49,9 @@ public class Model {
     public float getHeight() {
         return height;
     }
+
+    public void render(SpriteBatch batch){
+
+    };
+
 }
