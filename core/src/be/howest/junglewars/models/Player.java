@@ -154,7 +154,7 @@ public class Player extends Model {
     }
 
     public void shoot(float x, float y) {
-        missiles.add(new Missile(this.getX() + sprite.getWidth()/2, this.getY() + sprite.getHeight()/2, x, y));
+        missiles.add(new Missile(this.getX(), this.getY(), x, y));
     }
 
     public List<Missile> getMissiles(){

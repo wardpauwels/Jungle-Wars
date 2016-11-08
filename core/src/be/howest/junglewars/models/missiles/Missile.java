@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
+import static sun.audio.AudioPlayer.player;
+
 public class Missile extends Model {
 
     private int damage;
@@ -18,18 +20,18 @@ public class Missile extends Model {
     private boolean remove;
 
     private float radians;
-    private float destinationX;
-    private float destinationY;
+    private float directionX;
+    private float directionY;
     private float posX;
     private float posY;
     private float dx;
     private float dy;
 
-    public Missile(float playerX, float playerY, float destinationX, float destinationY){
-        this.destinationX = destinationX;
-        this.destinationY = destinationY;
-        this.posX = playerX;
-        this.posY = playerY;
+    public Missile(float posX, float posY, float directionX, float directionY){
+        this.directionX = directionX;
+        this.directionY = directionY;
+        this.posX = posX;
+        this.posY = posY;
 
         texture = new Texture(Gdx.files.internal("missile/Banana.png"));
         sprite = new Sprite(texture);
@@ -37,13 +39,13 @@ public class Missile extends Model {
         damage = 10;
         speed = 10;
         rotationSpeed = 5;
-        lifeTime = 1.0f;
+        lifeTime = 0.5f;
         lifeTimer = 0;
 
         radians = MathUtils.PI/2;
 
-        dx = MathUtils.cos(radians/2) * (destinationX - playerX) * speed;
-        dy = MathUtils.sin(radians/2) * (destinationY - playerY) * speed;
+        dx = MathUtils.cos(radians/2) * (directionX - posX) * speed;
+        dy = MathUtils.sin(radians/2) * (directionY - posY) * speed;
     }
 
     public void update(float dt){
