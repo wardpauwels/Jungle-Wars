@@ -35,7 +35,7 @@ public class Missile extends Model {
         sprite = new Sprite(texture);
         sprite.setSize(sprite.getWidth()*0.5f, sprite.getHeight()*0.5f);
         damage = 10;
-        speed = 10;
+        speed = 5;
         rotationSpeed = 5;
         lifeTime = 0.5f;
         lifeTimer = 0;
