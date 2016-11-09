@@ -9,7 +9,7 @@ public class DesktopLauncher {
         config.title = "Jungle Wars: The Revenge of Harambe";
         config.width = 1200;
         config.height = 900;
-        config.resizable = true;
+        config.resizable = false;
         config.useGL30 = true;
         new LwjglApplication(new JungleWarsGame(), config);
     }
