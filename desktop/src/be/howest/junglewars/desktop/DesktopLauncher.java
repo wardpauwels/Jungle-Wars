@@ -1,6 +1,7 @@
 package be.howest.junglewars.desktop;
 
 import be.howest.junglewars.game.*;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl.*;
 
 public class DesktopLauncher {
@@ -10,7 +11,7 @@ public class DesktopLauncher {
         config.width = 1200;
         config.height = 900;
         config.resizable = false;
-        config.useGL30 = true;
+        config.useGL30 = false;
         new LwjglApplication(new JungleWarsGame(), config);
     }
 }

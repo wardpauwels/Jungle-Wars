@@ -27,7 +27,6 @@ public class PlayState extends State {
 
         players = new ArrayList<Player>();
         players.add(new Player("John"));
-
     }
 
     @Override
