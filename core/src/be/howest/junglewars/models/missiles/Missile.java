@@ -1,75 +1,64 @@
 package be.howest.junglewars.models.missiles;
 
 import be.howest.junglewars.models.*;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
 
 public class Missile extends Model {
 
     private int damage;
+
     private float rotationSpeed;
+
+    private float dx;
+    private float dy;
 
     private float lifeTime;
     private float lifeTimer;
 
     private boolean remove;
 
-    private float radians;
-    private float destinationX;
-    private float destinationY;
-    private float bananaX;
-    private float bananaY;
-    private float dx;
-    private float dy;
 
-    private float rico;
-
-    public Missile(float playerX, float playerY, float destinationX, float destinationY){
-        this.destinationX = destinationX;
-        this.destinationY = destinationY;
-        this.bananaX = playerX;
-        this.bananaY = playerY;
+    public Missile(float startX, float startY, float radians) {
+        x = startX;
+        y = startY;
 
         texture = new Texture(Gdx.files.internal("missile/Banana.png"));
         sprite = new Sprite(texture);
-        sprite.setSize(sprite.getWidth()*0.5f, sprite.getHeight()*0.5f);
+        sprite.setSize(sprite.getWidth() * 0.5f, sprite.getHeight() * 0.5f);
+
         damage = 10;
-        speed = 2f;
+
+        speed = 300;
         rotationSpeed = -10;
-        //lifeTime = 10f;
+
+        dx = MathUtils.cos(radians) * speed;
+        dy = MathUtils.sin(radians) * speed;
+
+        lifeTime = 3;
         lifeTimer = 0;
-
-        radians = MathUtils.PI/2;
-
-        System.out.printf("radians %f%n destinationsx %f%n destinationy %f%n playerX %f%n playerY %f%n speed %f%n cos %f%n sin %f%n",
-                radians, destinationX, destinationY, this.bananaX, this.bananaY, speed, MathUtils.cos(radians), MathUtils.sin(radians));
-
-        dx = (MathUtils.cos(radians)) + (destinationX - playerX) * speed;
-        dy = (MathUtils.sin(radians)) + (destinationY - playerY) * speed;
-        System.out.println("dx: "+dx);
-        System.out.println("dy: "+dy);
     }
 
-    public void update(float dt){
+    public void update(float dt) {
+        x += dx * dt;
+        y += dy * dt;
 
-        bananaX += dx * dt;
-        bananaY += dy * dt;
-
-        /*lifeTimer += dt;
-        if (lifeTimer > lifeTime){
+        lifeTimer += dt;
+        if (lifeTimer > lifeTime) {
             remove = true;
-        }*/
+        }
     }
 
-    public void render(SpriteBatch batch){
+    public void render(SpriteBatch batch) {
         sprite.setOriginCenter();
-        sprite.setPosition(bananaX - sprite.getWidth()/2, bananaY - sprite.getHeight()/2);
+        sprite.setPosition(x - width / 2, y - height / 2);
         sprite.rotate(rotationSpeed);
         sprite.draw(batch);
     }
 
-    public boolean shouldRemove(){ return remove;}
+    public boolean shouldRemove() {
+        return remove;
+    }
 }

@@ -1,21 +1,13 @@
 package be.howest.junglewars.models;
 
-import be.howest.junglewars.game.JungleWarsGame;
-import be.howest.junglewars.models.missiles.Missile;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.utils.Array;
-
-import java.util.ArrayList;
-import java.util.List;
 import be.howest.junglewars.game.*;
+import be.howest.junglewars.models.missiles.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
+
+import java.util.*;
 
 public class Player extends Model {
 
@@ -43,6 +35,15 @@ public class Player extends Model {
 
     private float sqrtSpeed;
 
+    private Texture defaultTexture;
+    private Sprite defaultSprite;
+    public static final int DEFAULT_SPRITE = 0;
+    private Texture shootingTexture;
+    private Sprite shootingSprite;
+    public static final int SHOOTING_SPRITE = 1;
+
+    boolean isShooting;
+
     public Player(String name) {
         this.name = name;
 
@@ -55,9 +56,19 @@ public class Player extends Model {
         speed = 7;
         sqrtSpeed = ((float) Math.sqrt((speed * speed) / 2));
 
-        texture = new Texture(Gdx.files.internal("characters/harambe_default.png"));
-        sprite = new Sprite(texture);
-        sprite.setSize(texture.getWidth() * 0.7f, texture.getHeight() * 0.7f);
+        defaultTexture = new Texture(Gdx.files.internal("characters/harambe_default.png"));
+        defaultSprite = new Sprite(defaultTexture);
+        defaultSprite.setSize(defaultTexture.getWidth() * 0.7f, defaultTexture.getHeight() * 0.7f);
+        shootingTexture = new Texture(Gdx.files.internal("characters/harambe_shooting.png"));
+        shootingSprite = new Sprite(shootingTexture);
+
+        isShooting = false;
+
+    }
+
+    private void initSprite(Texture texture, Sprite sprite, float width, float height) {
+//        sprite.setSize(sprite.getTexture().getWidth() * 0.7f, sprite.getTexture().getHeight() * 0.7f);
+
         x = JungleWarsGame.WIDTH / 2 - sprite.getWidth() / 2;
         y = JungleWarsGame.HEIGHT / 2 - sprite.getHeight() / 2;
     }
@@ -105,12 +116,15 @@ public class Player extends Model {
             if (topBorderTouch || bottomBorderTouch) currentSpeed = speed;
             x = rightBorderTouch ? JungleWarsGame.WIDTH - (sprite.getWidth()) : x + currentSpeed;
         }
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             shoot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+            isShooting = true;
+        } else {
+            isShooting = false;
         }
     }
 
-    public void update(float dt){
+    public void update(float dt) {
         for (int i = 0; i < missiles.size(); i++) {
             if (missiles.get(i).shouldRemove()) {
                 missiles.remove(i);
@@ -120,22 +134,22 @@ public class Player extends Model {
     }
 
     public void render(SpriteBatch batch) {
+
         //render player
         sprite.setOriginCenter();
         sprite.setPosition(x, y);
         sprite.draw(batch);
 
-
         //render bananas
-        for (int i = 0; i < missiles.size(); i++){
-            missiles.get(i).render(batch);
+        for (Missile missile : missiles) {
+            missile.render(batch);
         }
-
 
     }
 
-    public void shoot(float x, float y) {
-        missiles.add(new Missile(this.getX() + sprite.getWidth()/2, this.getY() + sprite.getHeight()/2, x,  y));
+    private void shoot(float clickX, float clickY) {
+        float radians = MathUtils.atan2(clickY - y, clickX - x);
+        missiles.add(new Missile(x, y, radians));
     }
 
     public List<Missile> getMissiles() {
