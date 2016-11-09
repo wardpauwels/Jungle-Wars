@@ -10,7 +10,11 @@ public class DesktopLauncher {
         config.width = 1200;
         config.height = 900;
         config.resizable = false;
+<<<<<<< 552ae2107adaa47f901d65aea84562151788e1c4
         config.useGL30 = true;
+=======
+        config.useGL30 = false;
+>>>>>>> shoot animation & shoot direction fix
         new LwjglApplication(new JungleWarsGame(), config);
     }
 }
