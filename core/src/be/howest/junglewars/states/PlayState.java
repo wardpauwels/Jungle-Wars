@@ -3,13 +3,19 @@ package be.howest.junglewars.states;
 import be.howest.junglewars.game.*;
 import be.howest.junglewars.managers.*;
 import be.howest.junglewars.models.*;
+import be.howest.junglewars.game.*;
+import be.howest.junglewars.managers.*;
+import be.howest.junglewars.models.*;
+import be.howest.junglewars.models.missiles.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 
+import java.util.*;
+
 public class PlayState extends State {
 
-    private Player player;
+    private ArrayList<Player> players;
 
     public PlayState(StateManager sm) {
         super(sm);
@@ -22,16 +28,20 @@ public class PlayState extends State {
         backgroundSprite.setPosition(0, 0);
         backgroundSprite.setSize(JungleWarsGame.WIDTH, JungleWarsGame.HEIGHT);
 
-        player = new Player("John");
+        players = new ArrayList<Player>();
+        players.add(new Player("John"));
+
     }
 
     @Override
     public void update(float dt) {
         handleInput();
 
-        player.update(dt);
-        for (int i = 0; i < player.getMissiles().size(); i++) {
-            player.getMissiles().get(i).update(dt);
+        for (Player player : players) {
+            player.update(dt);
+            for (Missile missile : player.getMissiles()) {
+                missile.update(dt);
+            }
         }
     }
 
@@ -43,14 +53,22 @@ public class PlayState extends State {
         backgroundSprite.draw(batch);
         batch.enableBlending();
 
-        //render player
-        player.render(batch);
+        //render players and missiles
+        for (Player player : players) {
+            player.render(batch);
+            for (Missile missile : player.getMissiles()) {
+                missile.render(batch);
+            }
+        }
+
         batch.end();
     }
 
     @Override
     public void handleInput() {
-        player.handleInput(); //TODO: for loop for multiple players
+        for (Player player : players) {
+            player.handleInput();
+        }
     }
 
     @Override

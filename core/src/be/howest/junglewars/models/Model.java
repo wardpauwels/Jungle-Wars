@@ -18,18 +18,6 @@ public class Model {
     protected Texture texture;
     protected Sprite sprite;
 
-    public void setPosition() {
-
-    }
-
-    public void setSize() {
-
-    }
-
-    public void setSpeed() {
-
-    }
-
     public float getSpeed() {
         return speed;
     }
