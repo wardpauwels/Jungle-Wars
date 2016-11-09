@@ -1,11 +1,9 @@
 package be.howest.junglewars.models.missiles;
 
 import be.howest.junglewars.models.*;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.*;
 
 public class Missile extends Model {
 
@@ -25,7 +23,9 @@ public class Missile extends Model {
     private float dx;
     private float dy;
 
-    public Missile(float playerX, float playerY, float destinationX, float destinationY){
+    private float rico;
+
+    public Missile(float playerX, float playerY, float destinationX, float destinationY) {
         this.destinationX = destinationX;
         this.destinationY = destinationY;
         this.posX = playerX;
@@ -33,34 +33,41 @@ public class Missile extends Model {
 
         texture = new Texture(Gdx.files.internal("missile/Banana.png"));
         sprite = new Sprite(texture);
-        sprite.setSize(sprite.getWidth()*0.5f, sprite.getHeight()*0.5f);
+        sprite.setSize(sprite.getWidth() * 0.5f, sprite.getHeight() * 0.5f);
         damage = 10;
-        speed = 5;
+        speed = 10;
         rotationSpeed = 5;
-        lifeTime = 0.5f;
+        lifeTime = 10f;
         lifeTimer = 0;
 
-        radians = MathUtils.PI/2;
+        rico = (destinationY - posY) / (destinationX - posX);
+        System.out.println(rico);
 
-        dx = MathUtils.cos(radians/2) * (destinationX - playerX) * speed;
-        dy = MathUtils.sin(radians/2) * (destinationY - playerY) * speed;
+        //radians = MathUtils.PI/2;
+
+        dx = posX;
+        dy = posY;
+        //dx = (MathUtils.cos(radians)) + (destinationX - posX);
+        //dy = (MathUtils.sin(radians)) + (destinationY - posY);
     }
 
-    public void update(float dt){
-        posX += dx * dt;
-        posY += dy * dt;
+    public void update(float dt) {
+        dx += rico * speed * dt;
+        dy -= 1 * speed * dt;
 
         lifeTimer += dt;
-        if (lifeTimer > lifeTime){
+        if (lifeTimer > lifeTime) {
             remove = true;
         }
     }
 
-    public void render(SpriteBatch batch){
+    public void render(SpriteBatch batch) {
         sprite.setOriginCenter();
-        sprite.setPosition(posX - sprite.getWidth()/2, posY - sprite.getHeight()/2);
+        sprite.setPosition(dx - sprite.getWidth() / 2, dy - sprite.getHeight() / 2);
         sprite.draw(batch);
     }
 
-    public boolean shouldRemove(){ return remove;}
+    public boolean shouldRemove() {
+        return remove;
+    }
 }

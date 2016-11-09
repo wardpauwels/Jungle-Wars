@@ -1,8 +1,8 @@
 package be.howest.junglewars.states;
 
-import be.howest.junglewars.be.howest.junglewars.managers.*;
-import be.howest.junglewars.game.JungleWarsGame;
-import be.howest.junglewars.models.Player;
+import be.howest.junglewars.game.*;
+import be.howest.junglewars.managers.*;
+import be.howest.junglewars.models.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -30,9 +30,9 @@ public class PlayState extends State {
         handleInput();
 
         player.update(dt);
-            for (int i = 0; i < player.getMissiles().size(); i++){
-                player.getMissiles().get(i).update(dt);
-            }
+        for (int i = 0; i < player.getMissiles().size(); i++) {
+            player.getMissiles().get(i).update(dt);
+        }
     }
 
     @Override

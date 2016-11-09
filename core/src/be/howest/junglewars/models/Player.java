@@ -52,8 +52,6 @@ public class Player extends Model {
         missiles = new ArrayList<Missile>();
         isLookingLeft = false;
 
-        speed = 10;
-
         speed = 7;
         sqrtSpeed = ((float) Math.sqrt((speed * speed) / 2));
 
@@ -108,7 +106,7 @@ public class Player extends Model {
             x = rightBorderTouch ? JungleWarsGame.WIDTH - (sprite.getWidth()) : x + currentSpeed;
         }
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
-            shoot(Gdx.input.getX(), JungleWarsGame.HEIGHT - Gdx.input.getY());
+            shoot(Gdx.input.getX(), Gdx.input.getY());
         }
     }
 
@@ -122,19 +120,22 @@ public class Player extends Model {
     }
 
     public void render(SpriteBatch batch) {
+        //render player
+        sprite.setOriginCenter();
+        sprite.setPosition(x, y);
+        sprite.draw(batch);
+
+
         //render bananas
         for (int i = 0; i < missiles.size(); i++){
             missiles.get(i).render(batch);
         }
 
-        //render player
-        sprite.setOriginCenter();
-        sprite.setPosition(x, y);
-        sprite.draw(batch);
+
     }
 
     public void shoot(float x, float y) {
-        missiles.add(new Missile(this.getX() + sprite.getWidth()/2, this.getY() + sprite.getHeight()/2, x, y));
+        missiles.add(new Missile(this.getX() + sprite.getWidth()/2, this.getY() + sprite.getHeight()/2, x,  y));
     }
 
     public List<Missile> getMissiles() {
