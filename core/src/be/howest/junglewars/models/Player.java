@@ -106,7 +106,7 @@ public class Player extends Model {
             x = rightBorderTouch ? JungleWarsGame.WIDTH - (sprite.getWidth()) : x + currentSpeed;
         }
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
-            shoot(Gdx.input.getX(), Gdx.input.getY());
+            shoot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
         }
     }
 
