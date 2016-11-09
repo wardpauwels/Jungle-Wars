@@ -15,8 +15,12 @@ public class JungleWarsGame extends ApplicationAdapter {
 
     private StateManager sm;
 
+    private FPSLogger fpsLogger; // TODO: development only!
+
     @Override
     public void create() {
+        fpsLogger = new FPSLogger(); // TODO: development only!
+
         WIDTH = Gdx.graphics.getWidth();
         HEIGHT = Gdx.graphics.getHeight();
 
@@ -31,6 +35,8 @@ public class JungleWarsGame extends ApplicationAdapter {
 
     @Override
     public void render() {
+        fpsLogger.log(); // TODO: development only!
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

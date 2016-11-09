@@ -1,6 +1,7 @@
 package be.howest.junglewars.desktop;
 
 import be.howest.junglewars.game.*;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl.*;
 
 public class DesktopLauncher {

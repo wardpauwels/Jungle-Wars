@@ -3,9 +3,6 @@ package be.howest.junglewars.states;
 import be.howest.junglewars.game.*;
 import be.howest.junglewars.managers.*;
 import be.howest.junglewars.models.*;
-import be.howest.junglewars.game.*;
-import be.howest.junglewars.managers.*;
-import be.howest.junglewars.models.*;
 import be.howest.junglewars.models.missiles.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
@@ -30,7 +27,6 @@ public class PlayState extends State {
 
         players = new ArrayList<Player>();
         players.add(new Player("John"));
-
     }
 
     @Override

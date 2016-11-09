@@ -10,6 +10,8 @@ public class Missile extends Model {
 
     private int damage;
 
+    private Player owner;
+
     private float rotationSpeed;
 
     private float dx;
@@ -21,7 +23,8 @@ public class Missile extends Model {
     private boolean remove;
 
 
-    public Missile(float startX, float startY, float radians) {
+    public Missile(Player owner, float startX, float startY, float radians) {
+        this.owner = owner;
         x = startX;
         y = startY;
 
@@ -31,7 +34,7 @@ public class Missile extends Model {
 
         damage = 10;
 
-        speed = 300;
+        speed = owner.getSpeed() * 100;
         rotationSpeed = -10;
 
         dx = MathUtils.cos(radians) * speed;

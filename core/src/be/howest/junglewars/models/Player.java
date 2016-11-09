@@ -18,8 +18,13 @@ public class Player extends Model {
     private int lives;
     private int score;
 
-    private float missileTime;
-    private float missileTimer;
+    private float shootTime;
+    private float shootTimer;
+    private boolean canShoot;
+
+    private float shootAnimationTime;
+    private float shootAnimationTimer;
+    private boolean shootAnimationOn;
 
     private boolean isLookingLeft;
 
@@ -37,12 +42,8 @@ public class Player extends Model {
 
     private Texture defaultTexture;
     private Sprite defaultSprite;
-    public static final int DEFAULT_SPRITE = 0;
     private Texture shootingTexture;
     private Sprite shootingSprite;
-    public static final int SHOOTING_SPRITE = 1;
-
-    boolean isShooting;
 
     public Player(String name) {
         this.name = name;
@@ -53,24 +54,31 @@ public class Player extends Model {
         missiles = new ArrayList<Missile>();
         isLookingLeft = false;
 
-        speed = 7;
+        speed = 6;
         sqrtSpeed = ((float) Math.sqrt((speed * speed) / 2));
+
+        shootTime = .3f;
+        shootTimer = 0;
+        canShoot = true;
+        shootAnimationTime = .15f;
+        shootAnimationTimer = 0;
+        shootAnimationOn = false;
+
+        width = 80;
+        height = 70;
 
         defaultTexture = new Texture(Gdx.files.internal("characters/harambe_default.png"));
         defaultSprite = new Sprite(defaultTexture);
-        defaultSprite.setSize(defaultTexture.getWidth() * 0.7f, defaultTexture.getHeight() * 0.7f);
+        defaultSprite.setSize(width, height);
         shootingTexture = new Texture(Gdx.files.internal("characters/harambe_shooting.png"));
         shootingSprite = new Sprite(shootingTexture);
+        shootingSprite.setSize(width, height);
 
-        isShooting = false;
-
-    }
-
-    private void initSprite(Texture texture, Sprite sprite, float width, float height) {
-//        sprite.setSize(sprite.getTexture().getWidth() * 0.7f, sprite.getTexture().getHeight() * 0.7f);
+        sprite = defaultSprite;
 
         x = JungleWarsGame.WIDTH / 2 - sprite.getWidth() / 2;
         y = JungleWarsGame.HEIGHT / 2 - sprite.getHeight() / 2;
+
     }
 
     public void handleInput() {
@@ -83,6 +91,14 @@ public class Player extends Model {
         bottomBorderTouch = y <= 0;
         leftBorderTouch = x <= 0;
         rightBorderTouch = x >= JungleWarsGame.WIDTH - (sprite.getWidth());
+
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && canShoot) {
+            shoot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+            sprite = shootingSprite;
+            shootAnimationOn = true;
+        } else if (!shootAnimationOn) {
+            sprite = defaultSprite;
+        }
 
         float currentSpeed = speed;
 
@@ -101,30 +117,40 @@ public class Player extends Model {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            if (!isLookingLeft) {
-                sprite.flip(true, false);
-                isLookingLeft = true;
-            }
+            isLookingLeft = true;
             if (topBorderTouch || bottomBorderTouch) currentSpeed = speed;
             x = leftBorderTouch ? 0 : x - currentSpeed;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            if (isLookingLeft) {
-                sprite.flip(true, false);
-                isLookingLeft = false;
-            }
+            isLookingLeft = false;
             if (topBorderTouch || bottomBorderTouch) currentSpeed = speed;
             x = rightBorderTouch ? JungleWarsGame.WIDTH - (sprite.getWidth()) : x + currentSpeed;
         }
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            shoot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
-            isShooting = true;
-        } else {
-            isShooting = false;
+
+        if (sprite.isFlipX() != isLookingLeft) {
+            sprite.flip(true, false);
         }
+
     }
 
     public void update(float dt) {
+        if (shootTimer > shootTime) {
+            canShoot = true;
+            shootTimer = 0;
+        } else {
+            shootTimer += dt;
+        }
+
+        if (shootAnimationOn) {
+            if (shootAnimationTimer > shootAnimationTime) {
+                sprite = defaultSprite;
+                shootAnimationTimer = 0;
+                shootAnimationOn = false;
+            } else {
+                shootAnimationTimer += dt;
+            }
+        }
+
         for (int i = 0; i < missiles.size(); i++) {
             if (missiles.get(i).shouldRemove()) {
                 missiles.remove(i);
@@ -148,8 +174,18 @@ public class Player extends Model {
     }
 
     private void shoot(float clickX, float clickY) {
-        float radians = MathUtils.atan2(clickY - y, clickX - x);
-        missiles.add(new Missile(x, y, radians));
+        canShoot = false;
+        shootTimer = 0;
+
+        clickX -= 16;
+        clickY -= 14;
+        float missileX = x;
+        if (!isLookingLeft) {
+            missileX += sprite.getWidth() / 2 + 8;
+        }
+        float missileY = y + sprite.getHeight() - 28;
+        float radians = MathUtils.atan2(clickY - missileY, clickX - missileX);
+        missiles.add(new Missile(this, missileX, missileY, radians));
     }
 
     public List<Missile> getMissiles() {
