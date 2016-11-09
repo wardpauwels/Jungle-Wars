@@ -9,7 +9,7 @@ public abstract class Power extends Model {
 
     private PowerType type;
 
-    public abstract int activatePower();
+    public abstract void activatePower();
 
     private enum PowerType {
         POWER_UP,
