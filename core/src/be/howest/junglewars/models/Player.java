@@ -1,21 +1,12 @@
 package be.howest.junglewars.models;
 
-import be.howest.junglewars.game.JungleWarsGame;
-import be.howest.junglewars.models.missiles.Missile;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.utils.Array;
-
-import java.util.ArrayList;
-import java.util.List;
 import be.howest.junglewars.game.*;
+import be.howest.junglewars.models.missiles.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
+
+import java.util.*;
 
 public class Player extends Model {
 
@@ -52,9 +43,8 @@ public class Player extends Model {
         missiles = new ArrayList<Missile>();
         isLookingLeft = false;
 
-        speed = 10;
-
         speed = 7;
+
         sqrtSpeed = ((float) Math.sqrt((speed * speed) / 2));
 
         texture = new Texture(Gdx.files.internal("characters/harambe_default.png"));
@@ -107,12 +97,12 @@ public class Player extends Model {
             if (topBorderTouch || bottomBorderTouch) currentSpeed = speed;
             x = rightBorderTouch ? JungleWarsGame.WIDTH - (sprite.getWidth()) : x + currentSpeed;
         }
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             shoot(Gdx.input.getX(), JungleWarsGame.HEIGHT - Gdx.input.getY());
         }
     }
 
-    public void update(float dt){
+    public void update(float dt) {
         for (int i = 0; i < missiles.size(); i++) {
             if (missiles.get(i).shouldRemove()) {
                 missiles.remove(i);
@@ -123,7 +113,7 @@ public class Player extends Model {
 
     public void render(SpriteBatch batch) {
         //render bananas
-        for (int i = 0; i < missiles.size(); i++){
+        for (int i = 0; i < missiles.size(); i++) {
             missiles.get(i).render(batch);
         }
 
@@ -134,7 +124,7 @@ public class Player extends Model {
     }
 
     public void shoot(float x, float y) {
-        missiles.add(new Missile(this.getX() + sprite.getWidth()/2, this.getY() + sprite.getHeight()/2, x, y));
+        missiles.add(new Missile(this.getX() + sprite.getWidth() / 2, this.getY() + sprite.getHeight() / 2, x, y, this));
     }
 
     public List<Missile> getMissiles() {

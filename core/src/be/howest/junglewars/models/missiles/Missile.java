@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.MathUtils;
 
 public class Missile extends Model {
 
+    private Player owner;
+
     private int damage;
     private float rotationSpeed;
 
@@ -25,11 +27,12 @@ public class Missile extends Model {
     private float dx;
     private float dy;
 
-    public Missile(float playerX, float playerY, float destinationX, float destinationY){
+    public Missile(float playerX, float playerY, float destinationX, float destinationY, Player owner){
         this.destinationX = destinationX;
         this.destinationY = destinationY;
         this.posX = playerX;
         this.posY = playerY;
+        this.owner = owner;
 
         texture = new Texture(Gdx.files.internal("missile/Banana.png"));
         sprite = new Sprite(texture);

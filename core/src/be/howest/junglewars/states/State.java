@@ -1,6 +1,6 @@
 package be.howest.junglewars.states;
 
-import be.howest.junglewars.be.howest.junglewars.managers.*;
+import be.howest.junglewars.managers.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 

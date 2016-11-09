@@ -1,4 +1,4 @@
-package be.howest.junglewars.be.howest.junglewars.managers;
+package be.howest.junglewars.managers;
 
 import be.howest.junglewars.states.*;
 
