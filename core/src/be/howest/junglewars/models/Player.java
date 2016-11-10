@@ -207,4 +207,8 @@ public class Player extends Model {
     public void substractLife(){
         lives -= 1;
     }
+
+    public String getName(){
+        return name;
+    }
 }
