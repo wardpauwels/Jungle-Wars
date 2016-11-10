@@ -11,9 +11,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 
 import java.util.*;
 
-import static java.lang.Thread.interrupted;
 import static javax.swing.UIManager.get;
-import static sun.audio.AudioPlayer.player;
 
 public class PlayState extends State {
 
@@ -23,6 +21,9 @@ public class PlayState extends State {
     private int level;
     private int startingEnemies;
     private float multiplierEnemies;
+    private float amountEnemies;
+    private float timeBetweenEnemySpawn;
+    private float timeLastEnemySpawn;
 
 
     public PlayState(StateManager sm) {
@@ -36,6 +37,9 @@ public class PlayState extends State {
         backgroundSprite.setPosition(0, 0);
         backgroundSprite.setSize(JungleWarsGame.WIDTH, JungleWarsGame.HEIGHT);
 
+        timeBetweenEnemySpawn = 1;
+        timeLastEnemySpawn = 0;
+
         players = new ArrayList<Player>();
         enemies = new ArrayList<Enemy>();
 
@@ -45,6 +49,7 @@ public class PlayState extends State {
 
         startingEnemies = 10;
         multiplierEnemies = 0.5f;
+        amountEnemies = startingEnemies+(startingEnemies*(multiplierEnemies*level));
     }
 
     @Override
@@ -56,10 +61,11 @@ public class PlayState extends State {
 
         //generate enemies
         if (enemies.size() == 0){
-            for (int i = 0; i < (startingEnemies+(startingEnemies*(multiplierEnemies*level))); i++){
+            for (int i = 0; i < amountEnemies; i++){
                 enemies.add(new Enemy(players));
                 enemies.get(i).update(dt);
             }
+
             level++;
         }
 
