@@ -1,12 +1,16 @@
 package be.howest.junglewars.models.missiles;
+import be.howest.junglewars.models.Model;
+import be.howest.junglewars.models.Player;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 
-import be.howest.junglewars.models.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.*;
-
-public class Missile extends Model {
+/**
+ * Created by jensthiel on 10/11/16.
+ */
+public class HelperMissile extends Model{
 
     private int damage;
 
@@ -22,19 +26,19 @@ public class Missile extends Model {
 
     private boolean remove;
 
+    public HelperMissile(Player owner, float startX, float startY, float radians) {
 
-    public Missile(Player owner, float startX, float startY, float radians) {
         this.owner = owner;
         x = startX;
         y = startY;
 
-        texture = new Texture(Gdx.files.internal("missile/Banana.png"));
+        texture = new Texture(Gdx.files.internal("missile/DroneBullet.png"));
         sprite = new Sprite(texture);
-        sprite.setSize(sprite.getWidth() * 0.5f, sprite.getHeight() * 0.5f);
+        sprite.setSize(10,10);
 
         damage = 10;
         //TODO speed aanpassen naar iets dat niet afhangt van owner;
-        speed = owner.getSpeed() * 100;
+        speed = 300;
         rotationSpeed = -10;
 
         dx = MathUtils.cos(radians) * speed;
@@ -64,4 +68,5 @@ public class Missile extends Model {
     public boolean shouldRemove() {
         return remove;
     }
+
 }
