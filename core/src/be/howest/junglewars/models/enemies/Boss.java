@@ -1,4 +1,9 @@
-package be.howest.junglewars.models.enemies;
-
-public class Boss extends Enemy {
-}
+//package be.howest.junglewars.models.enemies;
+//
+//import be.howest.junglewars.models.*;
+//
+//public class Boss extends Enemy {
+//    public Boss(Player player) {
+//        super();
+//    }
+//}

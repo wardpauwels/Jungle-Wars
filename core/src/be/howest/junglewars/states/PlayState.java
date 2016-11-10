@@ -3,6 +3,7 @@ package be.howest.junglewars.states;
 import be.howest.junglewars.game.*;
 import be.howest.junglewars.managers.*;
 import be.howest.junglewars.models.*;
+import be.howest.junglewars.models.enemies.*;
 import be.howest.junglewars.models.missiles.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
@@ -10,9 +11,19 @@ import com.badlogic.gdx.graphics.g2d.*;
 
 import java.util.*;
 
+import static java.lang.Thread.interrupted;
+import static javax.swing.UIManager.get;
+import static sun.audio.AudioPlayer.player;
+
 public class PlayState extends State {
 
     private ArrayList<Player> players;
+    private ArrayList<Enemy> enemies;
+    private Enemy enemy;
+    private int level;
+    private int startingEnemies;
+    private float multiplierEnemies;
+
 
     public PlayState(StateManager sm) {
         super(sm);
@@ -26,17 +37,52 @@ public class PlayState extends State {
         backgroundSprite.setSize(JungleWarsGame.WIDTH, JungleWarsGame.HEIGHT);
 
         players = new ArrayList<Player>();
+        enemies = new ArrayList<Enemy>();
+
         players.add(new Player("John"));
+
+        level = 10;
+
+        startingEnemies = 10;
+        multiplierEnemies = 0.5f;
     }
 
     @Override
     public void update(float dt) {
         handleInput();
 
+        //check collision
+        checkCollision();
+
+        //generate enemies
+        if (enemies.size() == 0){
+            for (int i = 0; i < (startingEnemies+(startingEnemies*(multiplierEnemies*level))); i++){
+                enemies.add(new Enemy(players));
+                enemies.get(i).update(dt);
+            }
+        }
+
         for (Player player : players) {
             player.update(dt);
             for (Missile missile : player.getMissiles()) {
                 missile.update(dt);
+            }
+        }
+
+        for (int i = 0; i < enemies.size(); i++){
+            enemies.get(i).update(dt);
+        }
+    }
+
+    private void checkCollision() {
+        for (int i = 0; i < players.size(); i++) {
+            for (int j = 0; j < players.get(i).getMissiles().size(); j++) {
+                for (int k = 0; k < enemies.size(); k++){
+                    if (players.get(i).getMissiles().get(j).getX() == enemies.get(k).getX()){
+                        System.out.println("DEAD");
+                    } else{
+                    }
+                }
             }
         }
     }
@@ -54,6 +100,9 @@ public class PlayState extends State {
             player.render(batch);
             for (Missile missile : player.getMissiles()) {
                 missile.render(batch);
+            }
+            for (int i = 0; i < enemies.size(); i++){
+                enemies.get(i).render(batch);
             }
         }
 
