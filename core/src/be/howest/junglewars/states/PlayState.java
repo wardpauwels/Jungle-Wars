@@ -41,7 +41,7 @@ public class PlayState extends State {
 
         players.add(new Player("John"));
 
-        level = 10;
+        level = 0;
 
         startingEnemies = 10;
         multiplierEnemies = 0.5f;
@@ -60,6 +60,7 @@ public class PlayState extends State {
                 enemies.add(new Enemy(players));
                 enemies.get(i).update(dt);
             }
+            level++;
         }
 
         for (Player player : players) {
@@ -76,11 +77,14 @@ public class PlayState extends State {
 
     private void checkCollision() {
         for (int i = 0; i < players.size(); i++) {
-            for (int j = 0; j < players.get(i).getMissiles().size(); j++) {
+            Player p = players.get(i);
+            for (int j = 0; j < p.getMissiles().size(); j++) {
+                Missile m = p.getMissiles().get(j);
                 for (int k = 0; k < enemies.size(); k++){
-                    if (players.get(i).getMissiles().get(j).getX() == enemies.get(k).getX()){
-                        System.out.println("DEAD");
-                    } else{
+                    Enemy e = enemies.get(k);
+                    if (((m.getX() < (e.getX()+e.getWidth())) && (m.getX() > e.getX())) && ((m.getY() < (e.getY()+e.getHeight())) && (m.getY() > e.getY()))){
+                        p.getMissiles().remove(m);
+                        enemies.remove(e);
                     }
                 }
             }

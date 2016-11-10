@@ -50,4 +50,8 @@ public class Model {
 
     }
 
+    public void contains(float x, float y){
+
+    }
+
 }

@@ -2,17 +2,11 @@ package be.howest.junglewars.models.enemies;
 
 import be.howest.junglewars.game.*;
 import be.howest.junglewars.models.*;
-import be.howest.junglewars.states.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.utils.*;
-
 import java.util.*;
-
-import static javax.swing.UIManager.get;
-import static sun.audio.AudioPlayer.player;
 
 public class Enemy extends Model {
 
@@ -50,6 +44,8 @@ public class Enemy extends Model {
 
         this.target = chooseTarget(players);
         updateRadians();
+
+        remove = true;
     }
 
     private void generateEnemyPosition() {
