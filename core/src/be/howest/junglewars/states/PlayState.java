@@ -76,6 +76,7 @@ public class PlayState extends State {
     }
 
     private void checkCollision() {
+        //bullet-enemy collision
         for (int i = 0; i < players.size(); i++) {
             Player p = players.get(i);
             for (int j = 0; j < p.getMissiles().size(); j++) {
@@ -85,10 +86,29 @@ public class PlayState extends State {
                     if (((m.getX() < (e.getX()+e.getWidth())) && (m.getX() > e.getX())) && ((m.getY() < (e.getY()+e.getHeight())) && (m.getY() > e.getY()))){
                         p.getMissiles().remove(m);
                         enemies.remove(e);
+                        p.addScore(e.getScore());
+                        System.out.println(p.getScore());
                     }
                 }
             }
         }
+
+        //harambe-enemy collision
+        for (int i = 0; i < players.size(); i++) {
+            Player p = players.get(i);
+                for (int k = 0; k < enemies.size(); k++){
+                    Enemy e = enemies.get(k);
+                    if (((p.getX() < (e.getX()+e.getWidth())) && (p.getX() > e.getX())) && ((p.getY() < (e.getY()+e.getHeight())) && (p.getY() > e.getY()))){
+                        p.substractLife();
+                        reset(p);
+                    }
+                }
+        }
+    }
+
+    public void reset(Player player){
+        player.setX(JungleWarsGame.WIDTH / 2 - player.getWidth() / 2);
+        player.setY(JungleWarsGame.HEIGHT / 2 - player.getHeight() / 2);
     }
 
     @Override

@@ -191,4 +191,20 @@ public class Player extends Model {
     public List<Missile> getMissiles() {
         return missiles;
     }
+
+    public int getScore(){
+        return score;
+    }
+
+    public void addScore(int score){
+        this.score += score;
+    }
+
+    public int getLives(){
+        return lives;
+    }
+
+    public void substractLife(){
+        lives -= 1;
+    }
 }
