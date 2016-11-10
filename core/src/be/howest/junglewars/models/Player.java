@@ -16,7 +16,7 @@ public class Player extends Model {
     private String name;
 
     private ArrayList<Missile> missiles;
-    private ShootingHelper helper;
+    private Helper helper;
 
     private int lives;
     private int score;
@@ -161,6 +161,13 @@ public class Player extends Model {
                 missiles.remove(i);
                 i--;
             }
+        //bullets van helper removen
+        }
+        for (int i = 0; i < getHelper().getMissiles().size(); i++) {
+            if (getHelper().getMissiles().get(i).shouldRemove()) {
+                getHelper().getMissiles().remove(i);
+                i--;
+            }
         }
     }
 
@@ -187,7 +194,7 @@ public class Player extends Model {
     private void shoot(float clickX, float clickY) {
         canShoot = false;
         shootTimer = 0;
-        helper.shoot(300,500);
+        helper.shoot(Gdx.input.getX(),Gdx.graphics.getHeight() - Gdx.input.getY());
         clickX -= 16;
         clickY -= 14;
         float missileX = x;

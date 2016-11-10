@@ -39,6 +39,9 @@ public class PlayState extends State {
             for (Missile missile : player.getMissiles()) {
                 missile.update(dt);
             }
+            for (HelperMissile missile : player.getHelper().getMissiles()) {
+                missile.update(dt);
+            }
         }
     }
 
