@@ -74,7 +74,15 @@ public class ShootingHelper extends Helper {
             flyAnimationTimer = 0;
             if(areWingsUp){
                 sprite = flySprite;
+
+                //todo Sprite buggt soms heel hard
+
+                if (sprite.isFlipX() != owner.getIslookingLeft()) {
+                    sprite.flip(true, false);
+
+                }
                 areWingsUp = false;
+
             } else {
                 sprite = defaultSprite;
                 areWingsUp = true;

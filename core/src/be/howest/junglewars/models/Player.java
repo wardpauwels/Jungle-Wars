@@ -2,6 +2,7 @@ package be.howest.junglewars.models;
 
 import be.howest.junglewars.game.*;
 import be.howest.junglewars.models.helper.Helper;
+import be.howest.junglewars.models.helper.Protector;
 import be.howest.junglewars.models.helper.ShootingHelper;
 import be.howest.junglewars.models.missiles.*;
 import com.badlogic.gdx.*;
@@ -134,6 +135,7 @@ public class Player extends Model {
 
         if (sprite.isFlipX() != isLookingLeft) {
             sprite.flip(true, false);
+            helper.sprite.flip(true,false);
         }
 
     }
@@ -189,6 +191,10 @@ public class Player extends Model {
         }
 
 
+    }
+
+    public boolean getIslookingLeft(){
+        return isLookingLeft;
     }
 
     private void shoot(float clickX, float clickY) {

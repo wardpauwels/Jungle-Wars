@@ -2,12 +2,24 @@ package be.howest.junglewars.models.helper;
 
 import be.howest.junglewars.models.*;
 import be.howest.junglewars.models.missiles.HelperMissile;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.ArrayList;
 
 public class Helper extends Model {
 
     private Player owner;
+
+    private Texture defaultTexture;
+    private Sprite defaultSprite;
+    private Texture flyTexture;
+    private Sprite flySprite;
+
+    private float flyAnimationTime;
+    private float flyAnimationTimer;
+    private boolean areWingsUp;
+
 
     private ArrayList<HelperMissile> missiles;
 
@@ -22,6 +34,21 @@ public class Helper extends Model {
     }
 
     public void update(float dt){
+        setCoordinates(owner.getX() - 30, owner.getY() + 70);
+
+        if(flyAnimationTimer > flyAnimationTime){
+            flyAnimationTimer = 0;
+            if(areWingsUp){
+                sprite = flySprite;
+                areWingsUp = false;
+            } else {
+                sprite = defaultSprite;
+                areWingsUp = true;
+
+            }
+        } else {
+            flyAnimationTimer += dt;
+        }
 
 
     }
