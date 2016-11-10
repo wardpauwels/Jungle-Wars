@@ -35,6 +35,7 @@ public class PlayState extends State {
 
         for (Player player : players) {
             player.update(dt);
+            player.getHelper().update(dt);
             for (Missile missile : player.getMissiles()) {
                 missile.update(dt);
             }

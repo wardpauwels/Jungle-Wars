@@ -33,7 +33,7 @@ public class Missile extends Model {
         sprite.setSize(sprite.getWidth() * 0.5f, sprite.getHeight() * 0.5f);
 
         damage = 10;
-
+        //TODO speed aanpassen naar iets dat niet afhangt van owner;
         speed = owner.getSpeed() * 100;
         rotationSpeed = -10;
 

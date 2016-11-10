@@ -1,6 +1,8 @@
 package be.howest.junglewars.models;
 
 import be.howest.junglewars.game.*;
+import be.howest.junglewars.models.helper.Helper;
+import be.howest.junglewars.models.helper.ShootingHelper;
 import be.howest.junglewars.models.missiles.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
@@ -14,6 +16,7 @@ public class Player extends Model {
     private String name;
 
     private ArrayList<Missile> missiles;
+    private ShootingHelper helper;
 
     private int lives;
     private int score;
@@ -53,6 +56,8 @@ public class Player extends Model {
 
         missiles = new ArrayList<Missile>();
         isLookingLeft = false;
+
+        helper = new ShootingHelper(this);
 
         speed = 6;
         sqrtSpeed = ((float) Math.sqrt((speed * speed) / 2));
@@ -170,13 +175,19 @@ public class Player extends Model {
         for (Missile missile : missiles) {
             missile.render(batch);
         }
+        //render Helper
+        helper.render(batch);
+        for (HelperMissile missile : helper.getMissiles()) {
+            missile.render(batch);
+        }
+
 
     }
 
     private void shoot(float clickX, float clickY) {
         canShoot = false;
         shootTimer = 0;
-
+        helper.shoot(300,500);
         clickX -= 16;
         clickY -= 14;
         float missileX = x;
@@ -188,7 +199,12 @@ public class Player extends Model {
         missiles.add(new Missile(this, missileX, missileY, radians));
     }
 
+
     public List<Missile> getMissiles() {
         return missiles;
+    }
+
+    public Helper getHelper(){
+        return helper;
     }
 }
