@@ -217,7 +217,27 @@ public class Player extends Model {
         return missiles;
     }
 
-    public Helper getHelper(){
+    public Helper getHelper() {
         return helper;
+    }
+
+    public int getScore(){
+        return score;
+    }
+
+    public void addScore(int score){
+        this.score += score;
+    }
+
+    public int getLives(){
+        return lives;
+    }
+
+    public void substractLife(){
+        lives -= 1;
+    }
+
+    public String getName(){
+        return name;
     }
 }

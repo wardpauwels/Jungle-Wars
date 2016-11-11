@@ -70,3 +70,4 @@ build/
 Thumbs.db
 
 *.iws___jb_tmp___
+classes/

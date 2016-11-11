@@ -22,6 +22,9 @@ public class Enemy extends Model {
     private ArrayList<Player> players;
     private Player target;
 
+    private int score;
+    private int experience;
+
     private boolean remove;
 
     private int whichPlayer;
@@ -34,6 +37,8 @@ public class Enemy extends Model {
         lives = 20;
         width = 80;
         height = 70;
+        experience = 10;
+        score = 10;
         fromWhichSide = MathUtils.random(0, 3);
 
         texture = new Texture(Gdx.files.internal("characters/Zookeeper_1.png"));
@@ -100,5 +105,13 @@ public class Enemy extends Model {
 
     public boolean shouldRemove() {
         return remove;
+    }
+
+    public int getScore(){
+        return score;
+    }
+
+    public int getExp(){
+        return experience;
     }
 }

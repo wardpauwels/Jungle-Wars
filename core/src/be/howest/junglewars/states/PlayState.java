@@ -8,12 +8,9 @@ import be.howest.junglewars.models.missiles.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.*;
 
 import java.util.*;
-
-import static java.lang.Thread.interrupted;
-import static javax.swing.UIManager.get;
-import static sun.audio.AudioPlayer.player;
 
 public class PlayState extends State {
 
@@ -23,7 +20,13 @@ public class PlayState extends State {
     private int level;
     private int startingEnemies;
     private float multiplierEnemies;
+    private float amountEnemies;
+    private float timeBetweenEnemySpawn;
+    private float timeLastEnemySpawn;
 
+    private BitmapFont font;
+    private BitmapFont fontH2;
+    private FreeTypeFontGenerator generator;
 
     public PlayState(StateManager sm) {
         super(sm);
@@ -36,6 +39,17 @@ public class PlayState extends State {
         backgroundSprite.setPosition(0, 0);
         backgroundSprite.setSize(JungleWarsGame.WIDTH, JungleWarsGame.HEIGHT);
 
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Roboto-Regular.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 20;
+        font = generator.generateFont(parameter);
+        parameter.size = 24;
+        fontH2 = generator.generateFont(parameter);
+        generator.dispose(); // don't forget to dispose to avoid memory leaks!
+
+        timeBetweenEnemySpawn = 1;
+        timeLastEnemySpawn = 0;
+
         players = new ArrayList<Player>();
         enemies = new ArrayList<Enemy>();
 
@@ -45,6 +59,7 @@ public class PlayState extends State {
 
         startingEnemies = 10;
         multiplierEnemies = 0.5f;
+        amountEnemies = startingEnemies+(startingEnemies*(multiplierEnemies*level));
     }
 
     @Override
@@ -55,8 +70,9 @@ public class PlayState extends State {
         checkCollision();
 
         //generate enemies
+        amountEnemies = startingEnemies+(startingEnemies*(multiplierEnemies*level));
         if (enemies.size() == 0){
-            for (int i = 0; i < (startingEnemies+(startingEnemies*(multiplierEnemies*level))); i++){
+            for (int i = 0; i < amountEnemies; i++){
                 enemies.add(new Enemy(players));
                 enemies.get(i).update(dt);
             }
@@ -80,6 +96,7 @@ public class PlayState extends State {
     }
 
     private void checkCollision() {
+        //bullet-enemy collision
         for (int i = 0; i < players.size(); i++) {
             Player p = players.get(i);
             for (int j = 0; j < p.getMissiles().size(); j++) {
@@ -89,10 +106,29 @@ public class PlayState extends State {
                     if (((m.getX() < (e.getX()+e.getWidth())) && (m.getX() > e.getX())) && ((m.getY() < (e.getY()+e.getHeight())) && (m.getY() > e.getY()))){
                         p.getMissiles().remove(m);
                         enemies.remove(e);
+                        p.addScore(e.getScore());
+                        System.out.println(p.getScore());
                     }
                 }
             }
         }
+
+        //harambe-enemy collision
+        for (int i = 0; i < players.size(); i++) {
+            Player p = players.get(i);
+                for (int k = 0; k < enemies.size(); k++){
+                    Enemy e = enemies.get(k);
+                    if (((p.getX() < (e.getX()+e.getWidth())) && (p.getX() > e.getX())) && ((p.getY() < (e.getY()+e.getHeight())) && (p.getY() > e.getY()))){
+                        p.substractLife();
+                        reset(p);
+                    }
+                }
+        }
+    }
+
+    public void reset(Player player){
+        player.setX(JungleWarsGame.WIDTH / 2 - player.getWidth() / 2);
+        player.setY(JungleWarsGame.HEIGHT / 2 - player.getHeight() / 2);
     }
 
     @Override
@@ -114,6 +150,14 @@ public class PlayState extends State {
             }
         }
 
+        for (int i = 0; i < players.size(); i++) {
+            fontH2.setColor(0, 0, 0, 1);
+            fontH2.draw(batch, "Player 1", 20, JungleWarsGame.HEIGHT-20);
+            font.draw(batch, "Score: " + players.get(i).getName(), 20, JungleWarsGame.HEIGHT-40);
+            font.draw(batch, "Score: " + players.get(i).getScore(), 20, JungleWarsGame.HEIGHT-60);
+            font.draw(batch, "Lives: " + players.get(i).getLives(), 20, JungleWarsGame.HEIGHT-80);
+        }
+        fontH2.draw(batch, "LEVEL " + level, JungleWarsGame.WIDTH/2, JungleWarsGame.HEIGHT-20);
         batch.end();
     }
 
