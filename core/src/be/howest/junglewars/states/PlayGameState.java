@@ -2,9 +2,9 @@ package be.howest.junglewars.states;
 
 import be.howest.junglewars.game.*;
 import be.howest.junglewars.managers.*;
-import be.howest.junglewars.models.*;
-import be.howest.junglewars.models.enemies.*;
-import be.howest.junglewars.models.missiles.*;
+import be.howest.junglewars.gameobjects.*;
+import be.howest.junglewars.gameobjects.enemies.*;
+import be.howest.junglewars.gameobjects.missiles.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.*;
 
 import java.util.*;
 
-public class PlayState extends State {
+public class PlayGameState extends State {
 
     private ArrayList<Player> players;
     private ArrayList<Enemy> enemies;
@@ -28,7 +28,7 @@ public class PlayState extends State {
     private BitmapFont fontH2;
     private FreeTypeFontGenerator generator;
 
-    public PlayState(StateManager sm) {
+    public PlayGameState(StateManager sm) {
         super(sm);
     }
 

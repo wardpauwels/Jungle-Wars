@@ -1,13 +1,13 @@
-package be.howest.junglewars.models.helper;
+package be.howest.junglewars.gameobjects.helper;
 
-import be.howest.junglewars.models.*;
-import be.howest.junglewars.models.missiles.HelperMissile;
+import be.howest.junglewars.gameobjects.*;
+import be.howest.junglewars.gameobjects.missiles.HelperMissile;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.ArrayList;
 
-public class Helper extends Model {
+public class Helper extends GameObject {
 
     private Player owner;
 
@@ -39,10 +39,10 @@ public class Helper extends Model {
         if(flyAnimationTimer > flyAnimationTime){
             flyAnimationTimer = 0;
             if(areWingsUp){
-                sprite = flySprite;
+                activeSprite = flySprite;
                 areWingsUp = false;
             } else {
-                sprite = defaultSprite;
+                activeSprite = defaultSprite;
                 areWingsUp = true;
 
             }

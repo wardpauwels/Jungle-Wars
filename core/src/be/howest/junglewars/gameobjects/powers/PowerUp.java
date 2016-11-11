@@ -1,4 +1,4 @@
-package be.howest.junglewars.models.powers;
+package be.howest.junglewars.gameobjects.powers;
 
 public class PowerUp extends Power {
 

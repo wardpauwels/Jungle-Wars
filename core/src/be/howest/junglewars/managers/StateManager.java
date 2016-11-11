@@ -19,7 +19,7 @@ public class StateManager {
         }
         switch (state) {
             case PLAY:
-                this.state = new PlayState(this);
+                this.state = new PlayGameState(this);
         }
     }
 

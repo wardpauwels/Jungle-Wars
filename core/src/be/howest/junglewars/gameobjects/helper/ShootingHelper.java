@@ -1,7 +1,7 @@
-package be.howest.junglewars.models.helper;
+package be.howest.junglewars.gameobjects.helper;
 
-import be.howest.junglewars.models.Player;
-import be.howest.junglewars.models.missiles.HelperMissile;
+import be.howest.junglewars.gameobjects.Player;
+import be.howest.junglewars.gameobjects.missiles.HelperMissile;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -47,7 +47,7 @@ public class ShootingHelper extends Helper {
         laser = Gdx.audio.newSound(Gdx.files.internal("sound/plop2.wav"));
 
 
-        sprite = defaultSprite;
+        activeSprite = defaultSprite;
         areWingsUp = true;
 
         flyAnimationTime = .05f;
@@ -60,9 +60,9 @@ public class ShootingHelper extends Helper {
     public void render(SpriteBatch batch) {
 
         //render Helper
-        sprite.setOriginCenter();
-        sprite.setPosition(x, y);
-        sprite.draw(batch);
+        activeSprite.setOriginCenter();
+        activeSprite.setPosition(x, y);
+        activeSprite.draw(batch);
 
 
     }
@@ -73,18 +73,18 @@ public class ShootingHelper extends Helper {
         if(flyAnimationTimer > flyAnimationTime){
             flyAnimationTimer = 0;
             if(areWingsUp){
-                sprite = flySprite;
+                activeSprite = flySprite;
 
                 //todo Sprite buggt soms heel hard
 
-                if (sprite.isFlipX() != owner.getIslookingLeft()) {
-                    sprite.flip(true, false);
+                if (activeSprite.isFlipX() != owner.getIslookingLeft()) {
+                    activeSprite.flip(true, false);
 
                 }
                 areWingsUp = false;
 
             } else {
-                sprite = defaultSprite;
+                activeSprite = defaultSprite;
                 areWingsUp = true;
 
             }

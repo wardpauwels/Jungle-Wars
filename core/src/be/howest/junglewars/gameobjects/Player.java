@@ -1,18 +1,21 @@
-package be.howest.junglewars.models;
+package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.game.*;
-import be.howest.junglewars.models.helper.Helper;
-import be.howest.junglewars.models.helper.Protector;
-import be.howest.junglewars.models.helper.ShootingHelper;
-import be.howest.junglewars.models.missiles.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.*;
+import be.howest.junglewars.game.JungleWarsGame;
+import be.howest.junglewars.gameobjects.helper.Helper;
+import be.howest.junglewars.gameobjects.helper.ShootingHelper;
+import be.howest.junglewars.gameobjects.missiles.HelperMissile;
+import be.howest.junglewars.gameobjects.missiles.Missile;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Player extends Model {
+public class Player extends GameObject {
 
     private String name;
 
@@ -80,10 +83,10 @@ public class Player extends Model {
         shootingSprite = new Sprite(shootingTexture);
         shootingSprite.setSize(width, height);
 
-        sprite = defaultSprite;
+        activeSprite = defaultSprite;
 
-        x = JungleWarsGame.WIDTH / 2 - sprite.getWidth() / 2;
-        y = JungleWarsGame.HEIGHT / 2 - sprite.getHeight() / 2;
+        x = JungleWarsGame.WIDTH / 2 - activeSprite.getWidth() / 2;
+        y = JungleWarsGame.HEIGHT / 2 - activeSprite.getHeight() / 2;
 
     }
 
@@ -93,17 +96,17 @@ public class Player extends Model {
         leftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
         rightPressed = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
 
-        topBorderTouch = y >= JungleWarsGame.HEIGHT - (sprite.getHeight());
+        topBorderTouch = y >= JungleWarsGame.HEIGHT - (activeSprite.getHeight());
         bottomBorderTouch = y <= 0;
         leftBorderTouch = x <= 0;
-        rightBorderTouch = x >= JungleWarsGame.WIDTH - (sprite.getWidth());
+        rightBorderTouch = x >= JungleWarsGame.WIDTH - (activeSprite.getWidth());
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && canShoot) {
             shoot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
-            sprite = shootingSprite;
+            activeSprite = shootingSprite;
             shootAnimationOn = true;
         } else if (!shootAnimationOn) {
-            sprite = defaultSprite;
+            activeSprite = defaultSprite;
         }
 
         float currentSpeed = speed;
@@ -115,7 +118,7 @@ public class Player extends Model {
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             if (leftBorderTouch || rightBorderTouch) currentSpeed = speed;
-            y = topBorderTouch ? JungleWarsGame.HEIGHT - (sprite.getHeight()) : y + currentSpeed;
+            y = topBorderTouch ? JungleWarsGame.HEIGHT - (activeSprite.getHeight()) : y + currentSpeed;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             if (leftBorderTouch || rightBorderTouch) currentSpeed = speed;
@@ -130,12 +133,12 @@ public class Player extends Model {
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             isLookingLeft = false;
             if (topBorderTouch || bottomBorderTouch) currentSpeed = speed;
-            x = rightBorderTouch ? JungleWarsGame.WIDTH - (sprite.getWidth()) : x + currentSpeed;
+            x = rightBorderTouch ? JungleWarsGame.WIDTH - (activeSprite.getWidth()) : x + currentSpeed;
         }
 
-        if (sprite.isFlipX() != isLookingLeft) {
-            sprite.flip(true, false);
-            helper.sprite.flip(true,false);
+        if (activeSprite.isFlipX() != isLookingLeft) {
+            activeSprite.flip(true, false);
+            helper.activeSprite.flip(true, false);
         }
 
     }
@@ -150,7 +153,7 @@ public class Player extends Model {
 
         if (shootAnimationOn) {
             if (shootAnimationTimer > shootAnimationTime) {
-                sprite = defaultSprite;
+                activeSprite = defaultSprite;
                 shootAnimationTimer = 0;
                 shootAnimationOn = false;
             } else {
@@ -163,7 +166,7 @@ public class Player extends Model {
                 missiles.remove(i);
                 i--;
             }
-        //bullets van helper removen
+            //bullets van helper removen
         }
         for (int i = 0; i < getHelper().getMissiles().size(); i++) {
             if (getHelper().getMissiles().get(i).shouldRemove()) {
@@ -176,9 +179,9 @@ public class Player extends Model {
     public void render(SpriteBatch batch) {
 
         //render player
-        sprite.setOriginCenter();
-        sprite.setPosition(x, y);
-        sprite.draw(batch);
+        activeSprite.setOriginCenter();
+        activeSprite.setPosition(x, y);
+        activeSprite.draw(batch);
 
         //render bananas
         for (Missile missile : missiles) {
@@ -193,21 +196,21 @@ public class Player extends Model {
 
     }
 
-    public boolean getIslookingLeft(){
+    public boolean getIslookingLeft() {
         return isLookingLeft;
     }
 
     private void shoot(float clickX, float clickY) {
         canShoot = false;
         shootTimer = 0;
-        helper.shoot(Gdx.input.getX(),Gdx.graphics.getHeight() - Gdx.input.getY());
+        helper.shoot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
         clickX -= 16;
         clickY -= 14;
         float missileX = x;
         if (!isLookingLeft) {
-            missileX += sprite.getWidth() / 2 + 8;
+            missileX += activeSprite.getWidth() / 2 + 8;
         }
-        float missileY = y + sprite.getHeight() - 28;
+        float missileY = y + activeSprite.getHeight() - 28;
         float radians = MathUtils.atan2(clickY - missileY, clickX - missileX);
         missiles.add(new Missile(this, missileX, missileY, radians));
     }
@@ -221,23 +224,23 @@ public class Player extends Model {
         return helper;
     }
 
-    public int getScore(){
+    public int getScore() {
         return score;
     }
 
-    public void addScore(int score){
+    public void addScore(int score) {
         this.score += score;
     }
 
-    public int getLives(){
+    public int getLives() {
         return lives;
     }
 
-    public void substractLife(){
+    public void substractLife() {
         lives -= 1;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 }

@@ -1,6 +1,6 @@
-package be.howest.junglewars.models.missiles;
-import be.howest.junglewars.models.Model;
-import be.howest.junglewars.models.Player;
+package be.howest.junglewars.gameobjects.missiles;
+import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.gameobjects.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
 /**
  * Created by jensthiel on 10/11/16.
  */
-public class HelperMissile extends Model{
+public class HelperMissile extends GameObject {
 
     private int damage;
 
@@ -33,8 +33,8 @@ public class HelperMissile extends Model{
         y = startY;
 
         texture = new Texture(Gdx.files.internal("missile/DroneBullet.png"));
-        sprite = new Sprite(texture);
-        sprite.setSize(10,10);
+        activeSprite = new Sprite(texture);
+        activeSprite.setSize(10,10);
 
         damage = 10;
         //TODO speed aanpassen naar iets dat niet afhangt van owner;
@@ -59,10 +59,10 @@ public class HelperMissile extends Model{
     }
 
     public void render(SpriteBatch batch) {
-        sprite.setOriginCenter();
-        sprite.setPosition(x - width / 2, y - height / 2);
-        sprite.rotate(rotationSpeed);
-        sprite.draw(batch);
+        activeSprite.setOriginCenter();
+        activeSprite.setPosition(x - width / 2, y - height / 2);
+        activeSprite.rotate(rotationSpeed);
+        activeSprite.draw(batch);
     }
 
     public boolean shouldRemove() {

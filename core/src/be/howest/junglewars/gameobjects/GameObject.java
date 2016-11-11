@@ -1,9 +1,10 @@
-package be.howest.junglewars.models;
+package be.howest.junglewars.gameobjects;
 
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Model {
+public abstract class GameObject {
 
     protected float speed;
 
@@ -15,8 +16,7 @@ public class Model {
 
     protected boolean remove;
 
-    protected Texture texture;
-    protected Sprite sprite;
+    protected Sprite activeSprite;
 
     public float getSpeed() {
         return speed;
@@ -50,7 +50,7 @@ public class Model {
 
     }
 
-    public void contains(float x, float y){
+    public void contains(float x, float y) {
 
     }
 

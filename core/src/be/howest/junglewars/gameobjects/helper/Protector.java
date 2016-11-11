@@ -1,7 +1,7 @@
-package be.howest.junglewars.models.helper;
+package be.howest.junglewars.gameobjects.helper;
 
-import be.howest.junglewars.models.Player;
-import be.howest.junglewars.models.missiles.HelperMissile;
+import be.howest.junglewars.gameobjects.Player;
+import be.howest.junglewars.gameobjects.missiles.HelperMissile;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;

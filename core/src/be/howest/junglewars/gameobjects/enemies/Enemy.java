@@ -1,14 +1,14 @@
-package be.howest.junglewars.models.enemies;
+package be.howest.junglewars.gameobjects.enemies;
 
 import be.howest.junglewars.game.*;
-import be.howest.junglewars.models.*;
+import be.howest.junglewars.gameobjects.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 import java.util.*;
 
-public class Enemy extends Model {
+public class Enemy extends GameObject {
 
     private String type;
 
@@ -42,8 +42,8 @@ public class Enemy extends Model {
         fromWhichSide = MathUtils.random(0, 3);
 
         texture = new Texture(Gdx.files.internal("characters/Zookeeper_1.png"));
-        sprite = new Sprite(texture);
-        sprite.setSize(width, height);
+        activeSprite = new Sprite(texture);
+        activeSprite.setSize(width, height);
 
         generateEnemyPosition();
 
@@ -59,13 +59,13 @@ public class Enemy extends Model {
 
         switch (fromWhichSide){
             case 0:
-                y = 0 - sprite.getWidth();
+                y = 0 - activeSprite.getWidth();
                 break;
             case 1:
                 y = JungleWarsGame.HEIGHT;
                 break;
             case 2:
-                x = 0 - sprite.getHeight();
+                x = 0 - activeSprite.getHeight();
                 break;
             case 3:
                 x = JungleWarsGame.WIDTH;
@@ -87,9 +87,9 @@ public class Enemy extends Model {
     }
 
     public void render(SpriteBatch batch) {
-        sprite.setOriginCenter();
-        sprite.setPosition(x, y);
-        sprite.draw(batch);
+        activeSprite.setOriginCenter();
+        activeSprite.setPosition(x, y);
+        activeSprite.draw(batch);
     }
 
     public Player chooseTarget(ArrayList<Player> players){

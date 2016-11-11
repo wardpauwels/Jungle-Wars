@@ -1,8 +1,8 @@
-package be.howest.junglewars.models.powers;
+package be.howest.junglewars.gameobjects.powers;
 
-import be.howest.junglewars.models.*;
+import be.howest.junglewars.gameobjects.*;
 
-public abstract class Power extends Model {
+public abstract class Power extends GameObject {
 
     private float lifeTime;
     private float lifeTimer;

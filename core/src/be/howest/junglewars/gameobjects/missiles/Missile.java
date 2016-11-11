@@ -1,12 +1,12 @@
-package be.howest.junglewars.models.missiles;
+package be.howest.junglewars.gameobjects.missiles;
 
-import be.howest.junglewars.models.*;
+import be.howest.junglewars.gameobjects.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 
-public class Missile extends Model {
+public class Missile extends GameObject {
 
     private int damage;
 
@@ -29,8 +29,8 @@ public class Missile extends Model {
         y = startY;
 
         texture = new Texture(Gdx.files.internal("missile/Banana.png"));
-        sprite = new Sprite(texture);
-        sprite.setSize(sprite.getWidth() * 0.5f, sprite.getHeight() * 0.5f);
+        activeSprite = new Sprite(texture);
+        activeSprite.setSize(activeSprite.getWidth() * 0.5f, activeSprite.getHeight() * 0.5f);
 
         damage = 10;
         //TODO speed aanpassen naar iets dat niet afhangt van owner;
@@ -55,10 +55,10 @@ public class Missile extends Model {
     }
 
     public void render(SpriteBatch batch) {
-        sprite.setOriginCenter();
-        sprite.setPosition(x - width / 2, y - height / 2);
-        sprite.rotate(rotationSpeed);
-        sprite.draw(batch);
+        activeSprite.setOriginCenter();
+        activeSprite.setPosition(x - width / 2, y - height / 2);
+        activeSprite.rotate(rotationSpeed);
+        activeSprite.draw(batch);
     }
 
     public boolean shouldRemove() {
