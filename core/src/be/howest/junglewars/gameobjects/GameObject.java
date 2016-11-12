@@ -1,57 +1,23 @@
 package be.howest.junglewars.gameobjects;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameObject {
-
     protected float speed;
+    protected Vector2 position; // position.x and position.y
+    protected Rectangle bounds; // bounds.getWidth() and bounds.getHeight()
 
-    protected float x;
-    protected float y;
-
-    protected float width;
-    protected float height;
-
-    protected boolean remove;
-
-    protected Sprite activeSprite;
-
-    public float getSpeed() {
-        return speed;
+    protected GameObject(float width, float height) {
+        position = generateSpawnPosition(width, height);
+        this.bounds = new Rectangle(position.x - width / 2, position.y - height / 2, width, height);
     }
 
-    public float getX() {
-        return x;
-    }
+    protected abstract Vector2 generateSpawnPosition(float width, float height);
 
-    public float getY() {
-        return y;
-    }
+    protected abstract void update(float dt);
 
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public void render(SpriteBatch batch) {
-
-    }
-
-    public void contains(float x, float y) {
-
-    }
+    protected abstract void draw(SpriteBatch batch);
 
 }

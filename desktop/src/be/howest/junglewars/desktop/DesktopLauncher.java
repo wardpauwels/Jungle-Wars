@@ -1,10 +1,7 @@
 package be.howest.junglewars.desktop;
 
-import be.howest.junglewars.game.*;
-import com.badlogic.gdx.*;
+import be.howest.junglewars.main.*;
 import com.badlogic.gdx.backends.lwjgl.*;
-
-import java.awt.*;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {

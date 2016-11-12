@@ -1,6 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.game.JungleWarsGame;
+import be.howest.junglewars.main.JungleWarsGame;
 import be.howest.junglewars.gameobjects.helper.Helper;
 import be.howest.junglewars.gameobjects.helper.ShootingHelper;
 import be.howest.junglewars.gameobjects.missiles.HelperMissile;
