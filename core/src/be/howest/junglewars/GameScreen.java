@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayGameScreen extends ScreenAdapter {
+public class GameScreen extends ScreenAdapter {
     //region fields
     private JungleWarsGame game;
     private GameState gameState;
@@ -42,7 +42,7 @@ public class PlayGameScreen extends ScreenAdapter {
         BETWEEN_WAVE;
     }
 
-    public PlayGameScreen(JungleWarsGame game, int startLevel, int difficulty) {
+    public GameScreen(JungleWarsGame game, int startLevel, int difficulty) {
         this.game = game;
         this.level = startLevel;
         this.difficulty = difficulty;

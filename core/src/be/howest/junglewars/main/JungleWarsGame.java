@@ -1,6 +1,6 @@
 package be.howest.junglewars.main;
 
-import be.howest.junglewars.PlayGameScreen;
+import be.howest.junglewars.GameScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,7 +17,7 @@ public class JungleWarsGame extends Game {
 
         // TODO: load settings here
 
-        setScreen(new PlayGameScreen(this, 1)); // TODO: get level from settings
+        setScreen(new GameScreen(this, 1)); // TODO: get level from settings
     }
 
     @Override
