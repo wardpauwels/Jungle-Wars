@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
+
 public class Enemy extends GameObject {
     private String name;
     private Sprite sprite;
@@ -40,15 +42,8 @@ public class Enemy extends GameObject {
         sprite.setOriginCenter();
     }
 
-    private void generateStats(int level, int diff, int damage, int hitpoints, int speed) {
-        // TODO: use algorithm
-        this.damage = damage;
-        this.hitpoints = hitpoints;
-        this.speed = speed;
-    }
-
     @Override
-    public void update(float dt){
+    public void update(float dt) {
         float radians = MathUtils.atan2(dPosition.y - position.y, dPosition.x - position.x);
         dPosition.set(
                 MathUtils.cos(radians) * speed,
@@ -90,4 +85,30 @@ public class Enemy extends GameObject {
         return new Vector2(x, y);
     }
 
+    private void generateStats(int level, int diff, int damage, int hitpoints, int speed) {
+        // TODO: use algorithm
+        this.damage = damage;
+        this.hitpoints = hitpoints;
+        this.speed = speed;
+    }
+
+    public Player chooseTarget(ArrayList<Player> players) {
+//        Player playerToAttack = players.get(0);
+        double rangeBetweenPlayerenemy = Math.sqrt(Math.pow(this.x - players.get(0).getX(), 2) + Math.pow(this.y - players.get(0).getY(), 2));
+        for (int i = 1; i < players.size(); i++) {
+            if (Math.sqrt(Math.pow(this.x - players.get(i).getX(), 2) + Math.pow(this.y - players.get(i).getY(), 2)) >
+                    Math.sqrt(Math.pow(this.x - players.get(i - 1).getX(), 2) + Math.pow(this.y - players.get(i - 1).getY(), 2))) {
+                playerToAttack = players.get(i);
+            }
+        }
+
+
+        Player playerToAttack = players.get(0);
+        for (Player player : players){
+            if(Math.sqrt(Math.pow(position.x - player.)))
+        }
+
+
+            return playerToAttack;
+    }
 }

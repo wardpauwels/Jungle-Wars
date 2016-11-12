@@ -9,6 +9,8 @@ public abstract class GameObject {
     protected Vector2 position; // position.x and position.y
     protected Rectangle bounds; // bounds.getWidth() and bounds.getHeight()
 
+    protected boolean shouldRemove;
+
     protected GameObject(float width, float height) {
         position = generateSpawnPosition(width, height);
         this.bounds = new Rectangle(position.x - width / 2, position.y - height / 2, width, height);
@@ -19,5 +21,15 @@ public abstract class GameObject {
     protected abstract void update(float dt);
 
     protected abstract void draw(SpriteBatch batch);
+
+    public boolean ShouldRemove(){
+        return shouldRemove;
+    }
+
+    //region getters/setters
+    public int getX(){
+        return (int) position.x;
+    }
+    //endregion
 
 }
