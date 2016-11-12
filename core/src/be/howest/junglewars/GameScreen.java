@@ -1,4 +1,4 @@
-package be.howest.junglewars.screens;
+package be.howest.junglewars;
 
 import be.howest.junglewars.gameobjects.Currency;
 import be.howest.junglewars.gameobjects.Player;
@@ -20,10 +20,12 @@ public class PlayGameScreen extends ScreenAdapter {
     private GameState gameState;
 
     private ArrayList<Player> players;
+    private ArrayList<Enemy> enemies;
     private ArrayList<Power> powers;
     private ArrayList<Currency> currencies;
 
     int level;
+    int difficulty;
 
     private Sprite backgroundSprite;
 
@@ -33,14 +35,17 @@ public class PlayGameScreen extends ScreenAdapter {
     //endregion
 
     private enum GameState {
-        READY, RUNNING, PAUSED, GAME_OVER, BETWEEN_WAVE;
+        READY,
+        RUNNING,
+        PAUSED,
+        GAME_OVER,
+        BETWEEN_WAVE;
     }
 
-    public PlayGameScreen(JungleWarsGame game, int startLevel) {
+    public PlayGameScreen(JungleWarsGame game, int startLevel, int difficulty) {
         this.game = game;
-
-        // Level
         this.level = startLevel;
+        this.difficulty = difficulty;
 
         // Background
         Texture bgTexture = new Texture(Gdx.files.internal("backgrounds/background-trees.png"));
@@ -55,14 +60,17 @@ public class PlayGameScreen extends ScreenAdapter {
         font = fontGenerator.generateFont(fontParameter);
         fontParameter.size = 24;
         fontH2 = fontGenerator.generateFont(fontParameter);
-        fontGenerator.dispose(); // don't forget to dispose to avoid memory leaks!
+        fontGenerator.dispose(); // To prevent memory leaks
 
         // Players
         players = new ArrayList<Player>();
         players.add(new Player("John"));
 
         // Enemies
+        enemies = new ArrayList<Enemy>();
+        enemies.add(new Enemy("Zookeeper", 70, 80, 10, 10, "images/characters/enemies/zookeeper.png", 1, ));
 
+        // Set game to the READY state
         gameState = GameState.READY;
     }
 
@@ -77,6 +85,7 @@ public class PlayGameScreen extends ScreenAdapter {
     }
 
     private void updateReady() {
+        // TODO: show some message like "press any key to start"
         if (Gdx.input.justTouched()) {
             gameState = GameState.RUNNING;
         }
@@ -101,7 +110,7 @@ public class PlayGameScreen extends ScreenAdapter {
         return gameState;
     }
 
-    public List<Player> getPlayers(){
+    public List<Player> getPlayers() {
         return players;
     }
     //endregion

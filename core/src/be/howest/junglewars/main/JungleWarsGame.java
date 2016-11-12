@@ -1,6 +1,6 @@
 package be.howest.junglewars.main;
 
-import be.howest.junglewars.screens.PlayGameScreen;
+import be.howest.junglewars.PlayGameScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

@@ -1,7 +1,5 @@
 package be.howest.junglewars.managers;
 
-import be.howest.junglewars.gameobjects.enemies.EnemyOld;
-
 public class LevelManager {
     private int level;
 

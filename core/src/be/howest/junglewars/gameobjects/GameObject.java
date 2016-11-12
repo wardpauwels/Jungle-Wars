@@ -22,13 +22,13 @@ public abstract class GameObject {
 
     protected abstract void draw(SpriteBatch batch);
 
-    public boolean ShouldRemove(){
+    public boolean shouldRemove() {
         return shouldRemove;
     }
 
     //region getters/setters
-    public int getX(){
-        return (int) position.x;
+    public Vector2 getPosition(){
+        return position;
     }
     //endregion
 

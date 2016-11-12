@@ -1,7 +1,6 @@
 package be.howest.junglewars.states;
 
 import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.gameobjects.enemies.EnemyOld;
 import be.howest.junglewars.gameobjects.missiles.HelperMissile;
 import be.howest.junglewars.gameobjects.missiles.Missile;
 import be.howest.junglewars.main.JungleWarsGame;

@@ -1,4 +1,4 @@
-package be.howest.junglewars.gameobjects.enemies;
+package be.howest.junglewars;
 
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.Player;
@@ -93,22 +93,23 @@ public class Enemy extends GameObject {
     }
 
     public Player chooseTarget(ArrayList<Player> players) {
-//        Player playerToAttack = players.get(0);
-        double rangeBetweenPlayerenemy = Math.sqrt(Math.pow(this.x - players.get(0).getX(), 2) + Math.pow(this.y - players.get(0).getY(), 2));
+        Player playerToAttack = players.get(0);
         for (int i = 1; i < players.size(); i++) {
-            if (Math.sqrt(Math.pow(this.x - players.get(i).getX(), 2) + Math.pow(this.y - players.get(i).getY(), 2)) >
-                    Math.sqrt(Math.pow(this.x - players.get(i - 1).getX(), 2) + Math.pow(this.y - players.get(i - 1).getY(), 2))) {
+            if (Math.sqrt(Math.pow(position.x - players.get(i).getPosition().x, 2) + Math.pow(position.y - players.get(i).getPosition().y, 2))
+                    > Math.sqrt(Math.pow(position.x - players.get(i - 1).getPosition().x, 2) + Math.pow(position.y - players.get(i - 1).getPosition().y, 2))) {
                 playerToAttack = players.get(i);
             }
         }
-
-
-        Player playerToAttack = players.get(0);
-        for (Player player : players){
-            if(Math.sqrt(Math.pow(position.x - player.)))
-        }
-
-
-            return playerToAttack;
+        return playerToAttack;
     }
+
+    //region getters/setters
+    public int getScoreWhenKilled() {
+        return scoreWhenKilled;
+    }
+
+    public int getExperienceWhenKilled() {
+        return experienceWhenKilled;
+    }
+    //endregion
 }
