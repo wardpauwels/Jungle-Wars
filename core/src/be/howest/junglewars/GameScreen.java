@@ -38,14 +38,16 @@ public class GameScreen extends ScreenAdapter {
         READY,
         RUNNING,
         PAUSED,
-        GAME_OVER,
-        BETWEEN_WAVE;
+        GAME_OVER, // TODO: if all players are dead
+        BETWEEN_WAVE; // TODO: if all enemies are dead
     }
 
     public GameScreen(JungleWarsGame game, int startLevel, int difficulty) {
         this.game = game;
         this.level = startLevel;
         this.difficulty = difficulty;
+
+        gameState = GameState.READY;
 
         // Background
         Texture bgTexture = new Texture(Gdx.files.internal("backgrounds/background-trees.png"));
@@ -68,10 +70,7 @@ public class GameScreen extends ScreenAdapter {
 
         // Enemies
         enemies = new ArrayList<Enemy>();
-        enemies.add(new Enemy("Zookeeper", 70, 80, 10, 10, "images/characters/enemies/zookeeper.png", 1, ));
 
-        // Set game to the READY state
-        gameState = GameState.READY;
     }
 
     public void update(float dt) {

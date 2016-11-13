@@ -1,0 +1,84 @@
+[
+  {
+    "name": "Zookeeper",
+    "spriteUrl": "zookeeper.png",
+    "scoreWhenKilled": 10,
+    "xpWhenKilled": 15,
+    "baseDamage": 5,
+    "baseSpeed": 50,
+    "baseHp": 2,
+    "rarity": 1,
+    "movementTypes": [
+      "straight"
+    ],
+    "attackTypes": [
+      "melee"
+    ]
+  },
+  {
+    "name": "Crying Zookeeper",
+    "spriteUrl": "crying-zookeeper.png",
+    "scoreWhenKilled": 15,
+    "xpWhenKilled": 20,
+    "baseDamage": 1,
+    "baseSpeed": 40,
+    "baseHp": 2,
+    "rarity": 2,
+    "movementTypes": [
+      "circle_around"
+    ],
+    "attackTypes": [
+      "slow_down",
+      "ranged"
+    ]
+  },
+  {
+    "name": "Shooting Zookeeper",
+    "spriteUrl": "shooting-zookeeper.png",
+    "scoreWhenKilled": 20,
+    "xpWhenKilled": 25,
+    "baseDamage": 1,
+    "baseSpeed": 50,
+    "baseHp": 2,
+    "rarity": 2,
+    "movementTypes": [
+      "zig_zag"
+    ],
+    "attackTypes": [
+      "ranged"
+    ]
+  },
+  {
+    "name": "Trump",
+    "spriteUrl": "trump.png",
+    "scoreWhenKilled": 50,
+    "xpWhenKilled": 70,
+    "baseDamage": 0,
+    "baseSpeed": 70,
+    "baseHp": 30,
+    "rarity": 4,
+    "movementTypes": [
+      "random"
+    ],
+    "attackTypes": [
+      "wall_builder"
+    ]
+  },
+  {
+    "name": "Anonymous Trump",
+    "spriteUrl": "anonymous-trump.png",
+    "scoreWhenKilled": 70,
+    "xpWhenKilled": 100,
+    "baseDamage": 0,
+    "baseSpeed": 95,
+    "baseHp": 40,
+    "rarity": 6,
+    "movementTypes": [
+      "random"
+    ],
+    "attackTypes": [
+      "flame_wall_builder",
+      "key_scrambler"
+    ]
+  }
+]

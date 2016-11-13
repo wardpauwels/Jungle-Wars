@@ -22,10 +22,29 @@ public class Enemy extends GameObject {
     private int hitpoints;
     private int speed;
 
+    private int rarity;
+
     private int scoreWhenKilled;
     private int experienceWhenKilled;
 
-    private static int rarity;
+
+    public enum AttackType {
+        ENEMY_MELEE_ATTACK {
+
+        };
+
+        interface EnemyAttackBehaviour {
+            void attack();
+        }
+    }
+
+    public enum MovementType {
+
+    }
+
+    public Enemy(AttackType attackType) {
+        super(0, 0);
+    }
 
     public Enemy(String name, int width, int height, int scoreWhenKilled, int experienceWhenKilled,
                  String imgUrl, int baseDamage, int baseSpeed, int baseHitpoints,
@@ -103,6 +122,14 @@ public class Enemy extends GameObject {
         return playerToAttack;
     }
 
+    public void move() {
+
+    }
+
+    public void attack() {
+        Player p = new Player("test");
+    }
+
     //region getters/setters
     public int getScoreWhenKilled() {
         return scoreWhenKilled;
@@ -110,6 +137,10 @@ public class Enemy extends GameObject {
 
     public int getExperienceWhenKilled() {
         return experienceWhenKilled;
+    }
+
+    public int getRarity() {
+        return rarity;
     }
     //endregion
 }
