@@ -1,7 +1,8 @@
 package be.howest.junglewars.desktop;
 
-import be.howest.junglewars.main.*;
-import com.badlogic.gdx.backends.lwjgl.*;
+import be.howest.junglewars.main.JungleWarsGame;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {

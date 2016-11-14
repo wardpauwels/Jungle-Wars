@@ -1,4 +1,5 @@
 package be.howest.junglewars.gameobjects.missiles;
+
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.Player;
 import com.badlogic.gdx.Gdx;
@@ -34,7 +35,7 @@ public class HelperMissile extends GameObject {
 
         texture = new Texture(Gdx.files.internal("missile/DroneBullet.png"));
         activeSprite = new Sprite(texture);
-        activeSprite.setSize(10,10);
+        activeSprite.setSize(10, 10);
 
         damage = 10;
         //TODO speed aanpassen naar iets dat niet afhangt van owner;

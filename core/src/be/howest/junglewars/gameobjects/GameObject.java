@@ -38,7 +38,7 @@ public abstract class GameObject {
     }
 
     //region getters/setters
-    public Vector2 getPosition(){
+    public Vector2 getPosition() {
         return position;
     }
     //endregion

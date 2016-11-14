@@ -67,12 +67,12 @@ public class ShootingHelper extends Helper {
 
     }
 
-    public void update(float dt){
+    public void update(float dt) {
         setCoordinates(owner.getX() - 30, owner.getY() + 70);
 
-        if(flyAnimationTimer > flyAnimationTime){
+        if (flyAnimationTimer > flyAnimationTime) {
             flyAnimationTimer = 0;
-            if(areWingsUp){
+            if (areWingsUp) {
                 activeSprite = flySprite;
 
                 //todo Sprite buggt soms heel hard
@@ -105,11 +105,9 @@ public class ShootingHelper extends Helper {
         laser.play();
     }
 
-    public ArrayList<HelperMissile> getMissiles(){
+    public ArrayList<HelperMissile> getMissiles() {
         return missiles;
     }
-
-
 
 
 }

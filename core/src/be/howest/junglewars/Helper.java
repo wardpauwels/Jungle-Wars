@@ -5,22 +5,81 @@ import be.howest.junglewars.gameobjects.Player;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+enum HelperMovementType {
+    CIRCLE_AROUND_PLAYER {
+        @Override
+        public void move() {
+
+        }
+
+    },
+    RANDOM {
+        @Override
+        public void move() {
+
+        }
+    },
+    POSITION_TO_POSITION {
+        @Override
+        public void move() {
+
+        }
+    },
+    STATIC {
+        @Override
+        public void move() {
+            
+        }
+    };
+
+    public abstract void move();
+}
+
+enum HelperSpecialActionType {
+    SHOOTER {
+        @Override
+        public void doSpecialAction(Helper helper) {
+            // TODO: Shoots at the nearest enemy
+        }
+    },
+    SHIELD {
+        @Override
+        public void doSpecialAction(Helper helper) {
+            // TODO: Blocks every bullet that he gets
+        }
+    },
+    CURRENCY_COLLECTOR {
+        @Override
+        public void doSpecialAction(Helper helper) {
+            // TODO: Collects currency on collision
+        }
+    },
+    POWER_COLLECTOR {
+        @Override
+        public void doSpecialAction(Helper helper) {
+            // TODO: Collects power on collision
+        }
+    };
+
+    public abstract void doSpecialAction(Helper helper);
+}
+
 public class Helper extends GameObject {
 
+    private final int adaptXcoord = -30; // TODO: review this
+    private final int adaptYcoord = 70; // TODO: review this
     private Player owner;
     private String name;
-
-    private HelperType helperType;
-
-    private final int adaptXcoord = -30;
-    private final int adaptYcoord = 70;
+    private HelperMovementType movementType;
+    private HelperSpecialActionType specialActionType;
 
 
-    public Helper(String name, float width, float height, HelperType helperType, Player owner, String textureUrl) {
+    public Helper(String name, float width, float height, HelperMovementType movementType, HelperSpecialActionType specialActionType, Player owner, String textureUrl) {
         super(width, height, textureUrl);
         this.owner = owner;
         this.name = name;
-        this.helperType = helperType;
+        this.movementType = movementType;
+        this.specialActionType = specialActionType;
     }
 
     @Override
@@ -35,9 +94,9 @@ public class Helper extends GameObject {
 
     @Override
     protected void update(float dt) {
-        helperType.doSpecialAbility();
+        specialActionType.doSpecialAction(this);
 //        position.set(owner.getPosition().x + adaptXcoord, owner.getPosition().y + adaptYcoord);
-        helperType.move();
+        movementType.move();
 
     }
 
@@ -46,56 +105,4 @@ public class Helper extends GameObject {
         activeSprite.setPosition(position.x, position.y);
     }
 
-
-}
-
-enum HelperType {
-    SHOOTER {
-        @Override
-        public void move() {
-
-        }
-
-        @Override
-        public void doSpecialAbility() {
-
-        }
-    },
-    SHIELD {
-        @Override
-        public void move() {
-
-        }
-
-        @Override
-        public void doSpecialAbility() {
-
-        }
-    },
-    CURRENCY_COLLECTOR {
-        @Override
-        public void move() {
-
-        }
-
-        @Override
-        public void doSpecialAbility() {
-
-        }
-    },
-    POWER_COLLECTOR {
-        @Override
-        public void move() {
-
-        }
-
-        @Override
-        public void doSpecialAbility() {
-
-        }
-    };
-
-    public abstract void move();
-
-    public abstract void doSpecialAbility();
 }

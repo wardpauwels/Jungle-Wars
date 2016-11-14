@@ -15,32 +15,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
+    int level;
+    int difficulty;
     //region fields
     private JungleWarsGame game;
     private GameState gameState;
-
     private ArrayList<Player> players;
     private ArrayList<Enemy> enemies;
     private ArrayList<Power> powers;
     private ArrayList<Currency> currencies;
-
-    int level;
-    int difficulty;
-
     private Sprite backgroundSprite;
 
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont font;
     private BitmapFont fontH2;
     //endregion
-
-    private enum GameState {
-        READY,
-        RUNNING,
-        PAUSED,
-        GAME_OVER, // TODO: if all players are dead
-        BETWEEN_WAVE; // TODO: if all enemies are dead
-    }
 
     public GameScreen(JungleWarsGame game, int startLevel, int difficulty) {
         this.game = game;
@@ -111,6 +100,14 @@ public class GameScreen extends ScreenAdapter {
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    private enum GameState {
+        READY,
+        RUNNING,
+        PAUSED,
+        GAME_OVER, // TODO: if all players are dead
+        BETWEEN_WAVE; // TODO: if all enemies are dead
     }
     //endregion
 

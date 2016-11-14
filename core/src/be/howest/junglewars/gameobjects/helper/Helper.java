@@ -1,6 +1,7 @@
 package be.howest.junglewars.gameobjects.helper;
 
-import be.howest.junglewars.gameobjects.*;
+import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.gameobjects.Player;
 import be.howest.junglewars.gameobjects.missiles.HelperMissile;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -33,12 +34,12 @@ public class Helper extends GameObject {
 
     }
 
-    public void update(float dt){
+    public void update(float dt) {
         setCoordinates(owner.getX() - 30, owner.getY() + 70);
 
-        if(flyAnimationTimer > flyAnimationTime){
+        if (flyAnimationTimer > flyAnimationTime) {
             flyAnimationTimer = 0;
-            if(areWingsUp){
+            if (areWingsUp) {
                 activeSprite = flySprite;
                 areWingsUp = false;
             } else {
@@ -53,12 +54,15 @@ public class Helper extends GameObject {
 
     }
 
-    protected void setCoordinates(float x, float y){
+    protected void setCoordinates(float x, float y) {
         this.x = x;
         this.y = y;
     }
 
-    public void shoot(int x, int y){}
+    public void shoot(int x, int y) {
+    }
 
-    public ArrayList<HelperMissile> getMissiles(){return missiles;}
+    public ArrayList<HelperMissile> getMissiles() {
+        return missiles;
+    }
 }

@@ -3,13 +3,76 @@ package be.howest.junglewars;
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.Player;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+
+enum AttackType {
+    MELEE {
+        @Override
+        public void attack() {
+            System.out.println("I'm a melee attacker");
+        }
+    },
+    RANGED {
+        @Override
+        public void attack() {
+            System.out.println("I'm a ranged attacker");
+        }
+    },
+    SLOW_DOWN {
+        @Override
+        public void attack() {
+            System.out.println("My attacks slow you down");
+        }
+    },
+    WALL_BUILDER {
+        @Override
+        public void attack() {
+            System.out.println("I build a wall");
+        }
+    },
+    KEY_SCRAMBLER {
+        @Override
+        public void attack() {
+            System.out.println("I scramble your keybinds");
+        }
+    };
+
+    public abstract void attack();
+}
+
+enum MovementType {
+    STRAIGHT {
+        @Override
+        public void move() {
+            System.out.println("I run straight at you");
+        }
+    },
+    ZIG_ZAG {
+        @Override
+        public void move() {
+            System.out.println("I'm hard to hit because I zigzag to you");
+        }
+    },
+    CIRCLE_AROUND {
+        @Override
+        public void move() {
+            System.out.println("I'm just circling around");
+        }
+    },
+    RANDOM {
+        @Override
+        public void move() {
+            System.out.println("I'm crazy and run all over the map");
+        }
+    };
+
+    public abstract void move();
+}
 
 public class Enemy extends GameObject {
     private String name;
@@ -27,19 +90,19 @@ public class Enemy extends GameObject {
     private int scoreWhenKilled;
     private int experienceWhenKilled;
 
-    private AttackType attackType;
-    private MovementType movementType;
+    private AttackType[] attackTypes;
+    private MovementType[] movementTypes;
 
     public Enemy(String name, int width, int height, int scoreWhenKilled, int experienceWhenKilled,
                  String textureUrl, int baseDamage, int baseSpeed, int baseHitpoints,
-                 int rarity, int gameLevel, int gameDifficulty, AttackType attackType, MovementType movementType) {
+                 int rarity, int gameLevel, int gameDifficulty, AttackType[] attackTypes, MovementType[] movementTypes) {
         super(width, height, textureUrl);
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
         this.rarity = rarity;
-        this.attackType = attackType;
-        this.movementType = movementType;
+        this.attackTypes = attackTypes;
+        this.movementTypes = movementTypes;
 
         calculateStats(gameLevel, gameDifficulty, baseDamage, baseHitpoints, baseSpeed);
 
@@ -112,11 +175,15 @@ public class Enemy extends GameObject {
     }
 
     public void move() {
-        movementType.move();
+        for (MovementType movementType : movementTypes) {
+            movementType.move();
+        }
     }
 
     public void attack() {
-        attackType.attack();
+        for (AttackType attackType : attackTypes) {
+            attackType.attack();
+        }
     }
 
     //region getters/setters
@@ -132,68 +199,4 @@ public class Enemy extends GameObject {
         return rarity;
     }
     //endregion
-}
-
-enum AttackType {
-    MELEE {
-        @Override
-        public void attack() {
-            System.out.println("I'm a melee attacker");
-        }
-    },
-    RANGED {
-        @Override
-        public void attack() {
-            System.out.println("I'm a ranged attacker");
-        }
-    },
-    SLOW_DOWN {
-        @Override
-        public void attack() {
-            System.out.println("My attacks slow you down");
-        }
-    },
-    WALL_BUILDER {
-        @Override
-        public void attack() {
-            System.out.println("I build a wall");
-        }
-    },
-    KEY_SCRAMBLER {
-        @Override
-        public void attack() {
-            System.out.println("I scramble your keybinds");
-        }
-    };
-
-    public abstract void attack();
-}
-
-enum MovementType {
-    STRAIGHT {
-        @Override
-        public void move() {
-            System.out.println("I run straight at you");
-        }
-    },
-    ZIG_ZAG {
-        @Override
-        public void move() {
-            System.out.println("I'm hard to hit because I zigzag to you");
-        }
-    },
-    CIRCLE_AROUND {
-        @Override
-        public void move() {
-            System.out.println("I'm just circling around");
-        }
-    },
-    RANDOM {
-        @Override
-        public void move() {
-            System.out.println("I'm crazy and run all over the map");
-        }
-    };
-
-    public abstract void move();
 }

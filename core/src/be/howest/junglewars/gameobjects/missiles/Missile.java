@@ -1,10 +1,12 @@
 package be.howest.junglewars.gameobjects.missiles;
 
-import be.howest.junglewars.gameobjects.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.*;
+import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.gameobjects.Player;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 
 public class Missile extends GameObject {
 

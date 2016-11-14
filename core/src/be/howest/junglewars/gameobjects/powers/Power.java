@@ -1,6 +1,6 @@
 package be.howest.junglewars.gameobjects.powers;
 
-import be.howest.junglewars.gameobjects.*;
+import be.howest.junglewars.gameobjects.GameObject;
 
 public abstract class Power extends GameObject {
 

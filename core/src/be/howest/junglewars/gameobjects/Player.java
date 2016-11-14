@@ -1,10 +1,10 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.main.JungleWarsGame;
 import be.howest.junglewars.gameobjects.helper.Helper;
 import be.howest.junglewars.gameobjects.helper.ShootingHelper;
 import be.howest.junglewars.gameobjects.missiles.HelperMissile;
 import be.howest.junglewars.gameobjects.missiles.Missile;
+import be.howest.junglewars.main.JungleWarsGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;

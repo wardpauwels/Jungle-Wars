@@ -21,11 +21,9 @@ public class Protector extends Helper {
     private Sprite flySprite;
 
 
-
     private Player owner;
 
     private ArrayList<HelperMissile> missiles;
-
 
 
     public Protector(Player owner) {
@@ -42,8 +40,9 @@ public class Protector extends Helper {
 
     }
 
-    public ArrayList<HelperMissile> getMissiles(){return missiles;}
-
+    public ArrayList<HelperMissile> getMissiles() {
+        return missiles;
+    }
 
 
 }

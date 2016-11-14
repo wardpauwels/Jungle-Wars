@@ -1,8 +1,9 @@
 package be.howest.junglewars.states;
 
-import be.howest.junglewars.managers.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
+import be.howest.junglewars.managers.StateManager;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public abstract class State {
 

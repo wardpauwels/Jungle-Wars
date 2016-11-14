@@ -3,9 +3,9 @@ package be.howest.junglewars.gameobjects;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class Currency extends GameObject{
+public class Currency extends GameObject {
 
-    public Currency(float width, float height){
+    public Currency(float width, float height) {
         super(width, height);
     }
 

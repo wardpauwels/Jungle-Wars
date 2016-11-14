@@ -8,10 +8,6 @@ public class LevelManager {
     private int startingSpawnAmount;
     private float levelSpawnAmountMultiplier;
 
-    public enum Difficulty {
-        EASY, MEDIUM, HARD;
-    }
-
     public LevelManager(int startLevel, Difficulty difficulty) {
         this.level = startLevel;
         this.difficulty = difficulty;
@@ -27,18 +23,21 @@ public class LevelManager {
         return 4;
     }
 
-
     //region getters/setters
-    public int getLevel(){
+    public int getLevel() {
         return level;
     }
 
-    public void setLevel(int level){
+    public void setLevel(int level) {
         this.level = level;
     }
 
     public Difficulty getDifficulty() {
         return difficulty;
+    }
+
+    public enum Difficulty {
+        EASY, MEDIUM, HARD;
     }
     //endregion
 

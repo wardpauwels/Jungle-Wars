@@ -1,6 +1,7 @@
 package be.howest.junglewars.managers;
 
-import be.howest.junglewars.states.*;
+import be.howest.junglewars.states.PlayGameState;
+import be.howest.junglewars.states.State;
 
 public class StateManager {
 
