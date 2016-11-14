@@ -1,5 +1,6 @@
 package be.howest.junglewars.states;
 
+import be.howest.junglewars.Enemy;
 import be.howest.junglewars.gameobjects.Player;
 import be.howest.junglewars.gameobjects.missiles.HelperMissile;
 import be.howest.junglewars.gameobjects.missiles.Missile;
@@ -16,8 +17,8 @@ import java.util.ArrayList;
 public class PlayGameState extends State {
 
     private ArrayList<Player> players;
-    private ArrayList<EnemyOld> enemies;
-    private EnemyOld enemyOld;
+    private ArrayList<Enemy> enemies;
+    private Enemy enemyOld;
     private int level;
     private int startingEnemies;
     private float multiplierEnemies;
@@ -52,7 +53,7 @@ public class PlayGameState extends State {
         timeLastEnemySpawn = 0;
 
         players = new ArrayList<Player>();
-        enemies = new ArrayList<EnemyOld>();
+        enemies = new ArrayList<Enemy>();
 
         players.add(new Player("John"));
 

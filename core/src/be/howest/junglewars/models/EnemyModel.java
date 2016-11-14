@@ -1,4 +1,4 @@
-package be.howest.junglewars.data.models;
+package be.howest.junglewars.models;
 
 import java.util.Arrays;
 

@@ -1,6 +1,6 @@
 package be.howest.junglewars.data;
 
-import be.howest.junglewars.data.models.EnemyModel;
+import be.howest.junglewars.models.EnemyModel;
 
 import java.util.List;
 

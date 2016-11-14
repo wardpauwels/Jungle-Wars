@@ -77,7 +77,7 @@
       "random"
     ],
     "attackTypes": [
-      "flame_wall_builder",
+      "wall_builder",
       "key_scrambler"
     ]
   }
