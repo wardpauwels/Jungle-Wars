@@ -8,56 +8,68 @@ import com.badlogic.gdx.math.Vector2;
 enum HelperMovementType {
     CIRCLE_AROUND_PLAYER {
         @Override
-        public void move() {
-
+        public void move(Helper helper) {
+            // TODO: circle around owner
         }
 
     },
     RANDOM {
         @Override
-        public void move() {
-
+        public void move(Helper helper) {
+            // TODO: randomly run around the map
         }
     },
     POSITION_TO_POSITION {
         @Override
-        public void move() {
-
+        public void move(Helper helper) {
+            // TODO: go from position to position
         }
     },
     STATIC {
         @Override
-        public void move() {
-            
+        public void move(Helper helper) {
+            // TODO: stays at one place
+        }
+    },
+    FOLLOW_PLAYER {
+        @Override
+        public void move(Helper helper) {
+            // TODO: stays near player
         }
     };
 
-    public abstract void move();
+    public abstract void move(Helper helper);
 }
 
 enum HelperSpecialActionType {
     SHOOTER {
         @Override
         public void doSpecialAction(Helper helper) {
-            // TODO: Shoots at the nearest enemy
+            // TODO: shoots at the nearest enemy
+        }
+    },
+    MELEE {
+        @Override
+        public void doSpecialAction(Helper helper) {
+            // TODO: kill enemy on collision
         }
     },
     SHIELD {
         @Override
         public void doSpecialAction(Helper helper) {
-            // TODO: Blocks every bullet that he gets
+            // TODO: blocks every bullet that he gets
         }
     },
     CURRENCY_COLLECTOR {
         @Override
         public void doSpecialAction(Helper helper) {
-            // TODO: Collects currency on collision
+            // TODO: collects currency on collision
         }
     },
     POWER_COLLECTOR {
         @Override
         public void doSpecialAction(Helper helper) {
-            // TODO: Collects power on collision
+            // TODO: collects power on collision
         }
     };
 
@@ -65,16 +77,16 @@ enum HelperSpecialActionType {
 }
 
 public class Helper extends GameObject {
-
-    private final int adaptXcoord = -30; // TODO: review this
-    private final int adaptYcoord = 70; // TODO: review this
     private Player owner;
     private String name;
     private HelperMovementType movementType;
     private HelperSpecialActionType specialActionType;
 
+    private final int ANIMATION_WINGS_UP = 0;
+    private final int ANIMATION_WINGS_DOWN = 1;
 
-    public Helper(String name, float width, float height, HelperMovementType movementType, HelperSpecialActionType specialActionType, Player owner, String textureUrl) {
+    public Helper(String name, float width, float height, HelperMovementType movementType,
+                  HelperSpecialActionType specialActionType, Player owner, String textureUrl) {
         super(width, height, textureUrl);
         this.owner = owner;
         this.name = name;
@@ -89,14 +101,13 @@ public class Helper extends GameObject {
 
     @Override
     protected Vector2 generateSpawnPosition() {
-        return new Vector2(owner.getPosition().x + adaptXcoord, owner.getPosition().y + adaptYcoord);
+        return new Vector2(owner.getPosition().x - bounds.x, owner.getPosition().y + bounds.y);
     }
 
     @Override
     protected void update(float dt) {
         specialActionType.doSpecialAction(this);
-//        position.set(owner.getPosition().x + adaptXcoord, owner.getPosition().y + adaptYcoord);
-        movementType.move();
+        movementType.move(this);
 
     }
 

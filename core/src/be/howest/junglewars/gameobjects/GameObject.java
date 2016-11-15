@@ -20,6 +20,7 @@ public abstract class GameObject {
     protected boolean shouldRemove;
 
     protected GameObject(float width, float height, String textureUrl) {
+        setAnimationFrames();
         position = generateSpawnPosition();
         this.bounds = new Rectangle(position.x - width / 2, position.y - height / 2, width, height);
         this.texture = new Texture(Gdx.files.internal(textureUrl));

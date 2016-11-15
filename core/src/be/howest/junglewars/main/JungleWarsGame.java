@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class JungleWarsGame extends Game {
+    // TODO: http://gamedev.stackexchange.com/questions/112582/libgdx-switching-between-screens-without-losing-information
     private FPSLogger fpsLogger;
 
     private SpriteBatch batch;

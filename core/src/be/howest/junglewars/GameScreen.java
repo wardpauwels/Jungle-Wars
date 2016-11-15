@@ -14,12 +14,20 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
+enum GameState {
+    READY,
+    RUNNING,
+    PAUSED,
+    GAME_OVER, // TODO: if all players are dead
+    BETWEEN_WAVE; // TODO: if all enemies are dead
+}
+
 public class GameScreen extends ScreenAdapter {
-    int level;
-    int difficulty;
-    //region fields
     private JungleWarsGame game;
     private GameState gameState;
+
+    private int level;
+    private int difficulty;
     private ArrayList<Player> players;
     private ArrayList<Enemy> enemies;
     private ArrayList<Power> powers;
@@ -29,7 +37,6 @@ public class GameScreen extends ScreenAdapter {
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont font;
     private BitmapFont fontH2;
-    //endregion
 
     public GameScreen(JungleWarsGame game, int startLevel, int difficulty) {
         this.game = game;
@@ -69,6 +76,7 @@ public class GameScreen extends ScreenAdapter {
                 break;
             case RUNNING:
                 updateRunning(dt);
+                break;
         }
     }
 
@@ -93,7 +101,6 @@ public class GameScreen extends ScreenAdapter {
         if (gameState == GameState.RUNNING) gameState = GameState.PAUSED;
     }
 
-    //region getters/setters
     public GameState getGameState() {
         return gameState;
     }
@@ -102,13 +109,8 @@ public class GameScreen extends ScreenAdapter {
         return players;
     }
 
-    private enum GameState {
-        READY,
-        RUNNING,
-        PAUSED,
-        GAME_OVER, // TODO: if all players are dead
-        BETWEEN_WAVE; // TODO: if all enemies are dead
+    public List<Enemy> getEnemies() {
+        return enemies;
     }
-    //endregion
 
 }

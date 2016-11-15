@@ -13,65 +13,65 @@ import java.util.ArrayList;
 enum AttackType {
     MELEE {
         @Override
-        public void attack() {
+        public void attack(Enemy enemy) {
             System.out.println("I'm a melee attacker");
         }
     },
     RANGED {
         @Override
-        public void attack() {
+        public void attack(Enemy enemy) {
             System.out.println("I'm a ranged attacker");
         }
     },
     SLOW_DOWN {
         @Override
-        public void attack() {
+        public void attack(Enemy enemy) {
             System.out.println("My attacks slow you down");
         }
     },
     WALL_BUILDER {
         @Override
-        public void attack() {
+        public void attack(Enemy enemy) {
             System.out.println("I build a wall");
         }
     },
     KEY_SCRAMBLER {
         @Override
-        public void attack() {
+        public void attack(Enemy enemy) {
             System.out.println("I scramble your keybinds");
         }
     };
 
-    public abstract void attack();
+    public abstract void attack(Enemy enemy);
 }
 
 enum MovementType {
     STRAIGHT {
         @Override
-        public void move() {
+        public void move(Enemy enemy) {
             System.out.println("I run straight at you");
         }
     },
     ZIG_ZAG {
         @Override
-        public void move() {
+        public void move(Enemy enemy) {
             System.out.println("I'm hard to hit because I zigzag to you");
         }
     },
     CIRCLE_AROUND {
         @Override
-        public void move() {
+        public void move(Enemy enemy) {
             System.out.println("I'm just circling around");
         }
     },
     RANDOM {
         @Override
-        public void move() {
+        public void move(Enemy enemy) {
             System.out.println("I'm crazy and run all over the map");
         }
     };
 
-    public abstract void move();
+    public abstract void move(Enemy enemy);
 }
 
 public class Enemy extends GameObject {
@@ -176,17 +176,16 @@ public class Enemy extends GameObject {
 
     public void move() {
         for (MovementType movementType : movementTypes) {
-            movementType.move();
+            movementType.move(this);
         }
     }
 
     public void attack() {
         for (AttackType attackType : attackTypes) {
-            attackType.attack();
+            attackType.attack(this);
         }
     }
 
-    //region getters/setters
     public int getScoreWhenKilled() {
         return scoreWhenKilled;
     }
@@ -198,5 +197,4 @@ public class Enemy extends GameObject {
     public int getRarity() {
         return rarity;
     }
-    //endregion
 }
