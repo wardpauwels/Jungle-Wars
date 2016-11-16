@@ -1,8 +1,11 @@
 package be.howest.junglewars.entities;
 
+import be.howest.junglewars.AttackType;
+import be.howest.junglewars.Enemy;
+
 import java.util.Arrays;
 
-public class Enemy {
+public class EnemyEntity {
 
     private String name;
     private String spriteUrl;
@@ -12,8 +15,11 @@ public class Enemy {
     private int baseSpeed;
     private int baseHp;
     private int rarity;
-    private String[] movementTypes;
-    private String[] attackTypes;
+    private String movementTypes;
+    private String attackTypes;
+    private AttackType[] attackTypesSerialized;
+    private float width;
+    private float height;
 
     public String getName() {
         return name;
@@ -79,20 +85,46 @@ public class Enemy {
         this.rarity = rarity;
     }
 
-    public String[] getMovementTypes() {
+    public String getMovementTypes() {
         return movementTypes;
     }
 
-    public void setMovementTypes(String[] movementTypes) {
+    public void setMovementTypes(String movementTypes) {
         this.movementTypes = movementTypes;
     }
 
-    public String[] getAttackTypes() {
+    public String getAttackTypes() {
         return attackTypes;
     }
 
-    public void setAttackTypes(String[] attackTypes) {
+    public void setAttackTypes(String attackTypes) {
         this.attackTypes = attackTypes;
+    }
+
+    public AttackType[] getAttackTypesSerialized(){
+        return (AttackType[]) Arrays.stream(attackTypes.split(",")).map(AttackType::valueOf).toArray();
+    }
+
+    public void setAttackTypesSerialized(AttackType[] attackTypes){
+        for(AttackType attackType : attackTypes){
+            attackType.
+        }
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
     }
 
     @Override

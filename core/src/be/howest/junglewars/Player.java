@@ -97,7 +97,7 @@ public class Player extends GameObject {
 
         float missileY = position.y + bounds.getHeight() - 28;
         float radians = MathUtils.atan2(y - missileY, x - missileX);
-        missiles.add(new Missile(this, missileX, missileY, radians, "banana.png"));
+        missiles.add(new Missile(this, missileX, missileY, radians, "banana.png", 10, 10, -10, 3));
     }
 
     @Override

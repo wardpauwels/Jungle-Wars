@@ -138,7 +138,7 @@ public class GameScreen extends ScreenAdapter {
 //            for (Missile missile : player.getMissiles()) {
 //                missile.render(batch);
 //            }
-//            for (Enemy enemy : enemies) {
+//            for (EnemyEntity enemy : enemies) {
 //                enemy.render(batch);
 //            }
 

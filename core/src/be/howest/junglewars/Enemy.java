@@ -1,5 +1,6 @@
 package be.howest.junglewars;
 
+import be.howest.junglewars.entities.EnemyEntity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,41 +30,6 @@ enum TargetSelection {
     };
 
     public abstract Player selectTarget(Enemy enemy);
-}
-
-enum AttackType {
-    MELEE {
-        @Override
-        public void attack(Enemy enemy) {
-            System.out.println("I'm a melee attacker");
-        }
-    },
-    RANGED {
-        @Override
-        public void attack(Enemy enemy) {
-            System.out.println("I'm a ranged attacker");
-        }
-    },
-    SLOW_DOWN {
-        @Override
-        public void attack(Enemy enemy) {
-            System.out.println("My attacks slow you down");
-        }
-    },
-    WALL_BUILDER {
-        @Override
-        public void attack(Enemy enemy) {
-            System.out.println("I build a wall");
-        }
-    },
-    KEY_SCRAMBLER {
-        @Override
-        public void attack(Enemy enemy) {
-            System.out.println("I scramble your keybinds");
-        }
-    };
-
-    public abstract void attack(Enemy enemy);
 }
 
 enum MovementType {
@@ -129,6 +95,11 @@ public class Enemy extends GameObject {
 
         calculateStats(gameLevel, gameDifficulty, baseDamage, baseHitpoints, baseSpeed);
 
+    }
+
+    public Enemy(EnemyEntity enemy, int gameLevel, int gameDifficulty){
+        this(enemy.getName(), enemy.getWidth(), enemy.getHeight(), enemy.getScoreWhenKilled(), enemy.getXpWhenKilled(), enemy.getSpriteUrl(), enemy.getBaseDamage(),
+                enemy.getBaseHp(), enemy.getRarity(), gameLevel, gameDifficulty, enemy.get, )
     }
 
     @Override
