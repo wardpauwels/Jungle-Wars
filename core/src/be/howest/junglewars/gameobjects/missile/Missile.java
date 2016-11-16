@@ -1,5 +1,7 @@
-package be.howest.junglewars;
+package be.howest.junglewars.gameobjects.missile;
 
+import be.howest.junglewars.gameobjects.player.Player;
+import be.howest.junglewars.gameobjects.GameObject;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;

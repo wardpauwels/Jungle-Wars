@@ -1,7 +1,7 @@
 package be.howest.junglewars.entities;
 
-import be.howest.junglewars.AttackType;
-import be.howest.junglewars.Enemy;
+import be.howest.junglewars.gameobjects.enemy.AttackType;
+import be.howest.junglewars.gameobjects.enemy.TargetSelection;
 
 import java.util.Arrays;
 
@@ -15,9 +15,9 @@ public class EnemyEntity {
     private int baseSpeed;
     private int baseHp;
     private int rarity;
-    private String movementTypes;
-    private String attackTypes;
-    private AttackType[] attackTypesSerialized;
+    private String movementType;
+    private String attackTypes; // String of enums, seperated by commas
+    private String targetSelection;
     private float width;
     private float height;
 
@@ -85,12 +85,12 @@ public class EnemyEntity {
         this.rarity = rarity;
     }
 
-    public String getMovementTypes() {
-        return movementTypes;
+    public String getMovementType() {
+        return movementType; // TODO: serialized getter
     }
 
-    public void setMovementTypes(String movementTypes) {
-        this.movementTypes = movementTypes;
+    public void setMovementType(String movementType) {
+        this.movementType = movementType;
     }
 
     public String getAttackTypes() {
@@ -101,14 +101,26 @@ public class EnemyEntity {
         this.attackTypes = attackTypes;
     }
 
-    public AttackType[] getAttackTypesSerialized(){
-        return (AttackType[]) Arrays.stream(attackTypes.split(",")).map(AttackType::valueOf).toArray();
+    public void setAttackTypes(AttackType[] attackTypes){ // TODO: check if this works
+        String[] names = new String[attackTypes.length];
+
+        for(int i= 0; i<attackTypes.length;i++){
+            names[i] = attackTypes[i].name();
+        }
+
+        this.attackTypes = String.join(",", (CharSequence[]) names);
     }
 
-    public void setAttackTypesSerialized(AttackType[] attackTypes){
-        for(AttackType attackType : attackTypes){
-            attackType.
-        }
+    public AttackType[] getAttackTypesSerialized(){ // Converts database string of enums to real enum
+        return (AttackType[]) Arrays.stream(attackTypes.split(",")).map(AttackType::valueOf).toArray(); // TODO: check if this works
+    }
+
+    public TargetSelection getTargetSelection(){
+        return null; // TODO
+    }
+
+    public void setTargetSelection(){
+        // TODO
     }
 
     public float getWidth() {
@@ -127,19 +139,4 @@ public class EnemyEntity {
         this.height = height;
     }
 
-    @Override
-    public String toString() {
-        return "EnemyModel{" +
-                "name='" + name + '\'' +
-                ", spriteUrl='" + spriteUrl + '\'' +
-                ", scoreWhenKilled=" + scoreWhenKilled +
-                ", xpWhenKilled=" + xpWhenKilled +
-                ", baseDamage=" + baseDamage +
-                ", baseSpeed=" + baseSpeed +
-                ", baseHp=" + baseHp +
-                ", rarity=" + rarity +
-                ", movementTypes=" + Arrays.toString(movementTypes) +
-                ", attackTypes=" + Arrays.toString(attackTypes) +
-                '}';
-    }
 }

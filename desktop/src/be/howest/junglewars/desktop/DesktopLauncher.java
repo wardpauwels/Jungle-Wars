@@ -1,6 +1,6 @@
 package be.howest.junglewars.desktop;
 
-import be.howest.junglewars.main.JungleWarsGame;
+import be.howest.junglewars.JungleWarsGame;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 

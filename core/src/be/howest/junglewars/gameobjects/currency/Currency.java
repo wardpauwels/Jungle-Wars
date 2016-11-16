@@ -1,5 +1,6 @@
-package be.howest.junglewars;
+package be.howest.junglewars.gameobjects.currency;
 
+import be.howest.junglewars.gameobjects.GameObject;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 

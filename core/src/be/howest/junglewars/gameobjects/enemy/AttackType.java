@@ -1,4 +1,4 @@
-package be.howest.junglewars;
+package be.howest.junglewars.gameobjects.enemy;
 
 public enum AttackType {
     MELEE {

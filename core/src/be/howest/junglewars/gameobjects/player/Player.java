@@ -1,5 +1,9 @@
-package be.howest.junglewars;
+package be.howest.junglewars.gameobjects.player;
 
+import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.gameobjects.helper.Helper;
+import be.howest.junglewars.gameobjects.missile.Missile;
+import be.howest.junglewars.gameobjects.power.Power;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -39,7 +43,7 @@ public class Player extends GameObject {
         super(width, height, textureUrl);
     }
 
-    private void handleInput() {
+    public void handleInput() {
         keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
@@ -130,7 +134,7 @@ public class Player extends GameObject {
     }
 
     @Override
-    protected void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch) {
         activeSprite.setPosition(position.x, position.y);
         activeSprite.draw(batch);
 

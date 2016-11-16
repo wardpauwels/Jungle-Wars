@@ -1,5 +1,7 @@
-package be.howest.junglewars;
+package be.howest.junglewars.gameobjects.power;
 
+import be.howest.junglewars.gameobjects.player.Player;
+import be.howest.junglewars.gameobjects.GameObject;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -39,13 +41,3 @@ public class Power extends GameObject {
     }
 }
 
-enum PowerAction {
-    DOUBLE_DAMAGE {
-        @Override
-        public void activatePower(Power power) {
-
-        }
-    };
-
-    public abstract void activatePower(Power power);
-}

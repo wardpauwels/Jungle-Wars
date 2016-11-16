@@ -1,4 +1,4 @@
-package be.howest.junglewars;
+package be.howest.junglewars.gameobjects.enemy;
 
 import java.util.Map;
 

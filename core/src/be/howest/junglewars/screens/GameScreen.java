@@ -1,7 +1,10 @@
-package be.howest.junglewars;
+package be.howest.junglewars.screens;
 
-import be.howest.junglewars.gameobjects.powers.Power;
-import be.howest.junglewars.main.JungleWarsGame;
+import be.howest.junglewars.JungleWarsGame;
+import be.howest.junglewars.gameobjects.player.Player;
+import be.howest.junglewars.gameobjects.currency.Currency;
+import be.howest.junglewars.gameobjects.enemy.Enemy;
+import be.howest.junglewars.gameobjects.power.Power;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,14 +15,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-
-enum GameState {
-    READY,
-    RUNNING,
-    PAUSED,
-    GAME_OVER, // TODO: if all players are dead
-    BETWEEN_WAVE; // TODO: if all enemies are dead
-}
 
 public class GameScreen extends ScreenAdapter {
     private JungleWarsGame game;
@@ -36,6 +31,14 @@ public class GameScreen extends ScreenAdapter {
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont font;
     private BitmapFont fontH2;
+
+    private enum GameState {
+        READY,
+        RUNNING,
+        PAUSED,
+        GAME_OVER, // TODO: if all players are dead
+        BETWEEN_WAVE; // TODO: if all enemies are dead
+    }
 
     public GameScreen(JungleWarsGame game, int startLevel, int difficulty) {
         this.game = game;
@@ -61,7 +64,7 @@ public class GameScreen extends ScreenAdapter {
 
         // Players
         players = new ArrayList<Player>();
-        players.add(new Player("John"));
+        players.add(new Player("John", 70, 80, "harambe.png"));
 
         // Enemies
         enemies = new ArrayList<Enemy>();
@@ -87,7 +90,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void updateRunning(float dt) {
-        for(Player player: players){
+        for (Player player : players) {
             player.handleInput();
         }
 
@@ -119,8 +122,8 @@ public class GameScreen extends ScreenAdapter {
 //        }
     }
 
-    private void checkCollision(){
-        // TODO : global collision or collision function inside be.howest.junglewars.GameObject?
+    private void checkCollision() {
+        // TODO : global collision or collision function inside be.howest.junglewars.gameobjects.GameObject?
     }
 
     @Override
@@ -132,8 +135,8 @@ public class GameScreen extends ScreenAdapter {
         batch.disableBlending();
         backgroundSprite.draw(batch);
 
-        for (Player player: players){
-            player.render(batch);
+        for (Player player : players) {
+            player.draw(batch);
             // TODO: render missiles
 //            for (Missile missile : player.getMissiles()) {
 //                missile.render(batch);

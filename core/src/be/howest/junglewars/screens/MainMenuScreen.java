@@ -1,4 +1,4 @@
-package be.howest.junglewars;
+package be.howest.junglewars.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
 

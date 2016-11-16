@@ -1,65 +1,13 @@
-package be.howest.junglewars;
+package be.howest.junglewars.gameobjects.enemy;
 
+import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.entities.EnemyEntity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-
-enum TargetSelection {
-    RANDOM {
-        @Override
-        public Player selectTarget(Enemy enemy) {
-            return null;
-        }
-    },
-    CLOSEST {
-        @Override
-        public Player selectTarget(Enemy enemy) {
-//            Player playerToAttack = players.get(0);
-//            for (int i = 1; i < players.size(); i++) {
-//                if (Math.sqrt(Math.pow(position.x - players.get(i).getPosition().x, 2) + Math.pow(position.y - players.get(i).getPosition().y, 2))
-//                        > Math.sqrt(Math.pow(position.x - players.get(i - 1).getPosition().x, 2) + Math.pow(position.y - players.get(i - 1).getPosition().y, 2))) {
-//                    playerToAttack = players.get(i);
-//                }
-//            }
-//            return playerToAttack;
-            return null;
-        }
-    };
-
-    public abstract Player selectTarget(Enemy enemy);
-}
-
-enum MovementType {
-    STRAIGHT {
-        @Override
-        public void move(Enemy enemy) {
-            System.out.println("I run straight at you");
-        }
-    },
-    ZIG_ZAG {
-        @Override
-        public void move(Enemy enemy) {
-            System.out.println("I'm hard to hit because I zigzag to you");
-        }
-    },
-    CIRCLE_AROUND {
-        @Override
-        public void move(Enemy enemy) {
-            System.out.println("I'm just circling around");
-        }
-    },
-    RANDOM {
-        @Override
-        public void move(Enemy enemy) {
-            System.out.println("I'm crazy and run all over the map");
-        }
-    };
-
-    public abstract void move(Enemy enemy);
-}
 
 public class Enemy extends GameObject {
     private String name;
@@ -81,7 +29,7 @@ public class Enemy extends GameObject {
     private TargetSelection targetSelection;
     private Player target;
 
-    public Enemy(String name, int width, int height, int scoreWhenKilled, int experienceWhenKilled,
+    public Enemy(String name, float width, float height, int scoreWhenKilled, int experienceWhenKilled,
                  String textureUrl, int baseDamage, int baseSpeed, int baseHitpoints,
                  int rarity, int gameLevel, int gameDifficulty, AttackType[] attackTypes, MovementType movementType, TargetSelection targetSelection) {
         super(width, height, textureUrl);
@@ -99,7 +47,7 @@ public class Enemy extends GameObject {
 
     public Enemy(EnemyEntity enemy, int gameLevel, int gameDifficulty){
         this(enemy.getName(), enemy.getWidth(), enemy.getHeight(), enemy.getScoreWhenKilled(), enemy.getXpWhenKilled(), enemy.getSpriteUrl(), enemy.getBaseDamage(),
-                enemy.getBaseHp(), enemy.getRarity(), gameLevel, gameDifficulty, enemy.get, )
+                enemy.getBaseSpeed(), enemy.getBaseHp(), enemy.getRarity(), gameLevel, gameDifficulty, enemy.getAttackTypesSerialized(), enemy.getMovementType(), enemy.getTargetSelection());
     }
 
     @Override
