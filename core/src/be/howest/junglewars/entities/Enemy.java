@@ -1,8 +1,8 @@
-package be.howest.junglewars.models;
+package be.howest.junglewars.entities;
 
 import java.util.Arrays;
 
-public class EnemyModel {
+public class Enemy {
 
     private String name;
     private String spriteUrl;

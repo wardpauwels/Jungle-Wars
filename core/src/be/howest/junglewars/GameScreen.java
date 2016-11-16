@@ -1,9 +1,5 @@
 package be.howest.junglewars;
 
-import be.howest.junglewars.gameobjects.Currency;
-import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.gameobjects.missiles.HelperMissile;
-import be.howest.junglewars.gameobjects.missiles.Missile;
 import be.howest.junglewars.gameobjects.powers.Power;
 import be.howest.junglewars.main.JungleWarsGame;
 import com.badlogic.gdx.Gdx;
@@ -124,7 +120,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void checkCollision(){
-        // TODO : global collision or collision function inside GameObject?
+        // TODO : global collision or collision function inside be.howest.junglewars.GameObject?
     }
 
     @Override

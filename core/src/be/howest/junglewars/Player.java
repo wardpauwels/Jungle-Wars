@@ -1,10 +1,12 @@
 package be.howest.junglewars;
 
-import be.howest.junglewars.gameobjects.GameObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.ArrayList;
 
 public class Player extends GameObject {
 
@@ -19,6 +21,8 @@ public class Player extends GameObject {
     private boolean rightBorderTouch;
 
     private Helper helper;
+    private ArrayList<Power> powers;
+    private ArrayList<Missile> missiles;
 
     private int lives;
     private int score;
@@ -31,12 +35,8 @@ public class Player extends GameObject {
 
     private int level;
 
-    private float sqrtSpeed;
-
     public Player(String name, float width, float height, String textureUrl) {
         super(width, height, textureUrl);
-
-        sqrtSpeed = ((float) Math.sqrt((speed * speed) / 2));
     }
 
     private void handleInput() {
@@ -55,6 +55,7 @@ public class Player extends GameObject {
         }
 
         float currentSpeed = speed;
+        float sqrtSpeed = ((float) Math.sqrt((speed * speed) / 2));
 
         if ((keyUpPressed && (keyLeftPressed || keyRightPressed)) ||
                 (keyDownPressed && (keyLeftPressed || keyRightPressed))) {
@@ -86,7 +87,17 @@ public class Player extends GameObject {
     }
 
     private void shoot(float x, float y) {
+        canShoot = false;
+        shootTimer = 0;
+        x -= 16;
+        y -= 14;
 
+        float missileX = position.x;
+        if (!isLookingLeft) missileX += bounds.getWidth() / 2 + 8;
+
+        float missileY = position.y + bounds.getHeight() - 28;
+        float radians = MathUtils.atan2(y - missileY, x - missileX);
+        missiles.add(new Missile(this, missileX, missileY, radians, "banana.png"));
     }
 
     @Override
@@ -122,5 +133,16 @@ public class Player extends GameObject {
     protected void draw(SpriteBatch batch) {
         activeSprite.setPosition(position.x, position.y);
         activeSprite.draw(batch);
+
+        // TODO render missiles and helper?
+        /*
+        for (Missile missile : missiles) {
+            missile.draw(batch);
+        }
+        helper.render(batch);
+        for (HelperMissile missile : helper.getMissiles()) {
+            missile.draw(batch);
+        }
+         */
     }
 }

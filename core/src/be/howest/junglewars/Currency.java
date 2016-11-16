@@ -1,10 +1,9 @@
 package be.howest.junglewars;
 
-import be.howest.junglewars.gameobjects.GameObject;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class Currency extends GameObject{
+public class Currency extends GameObject {
 
     public Currency(float width, float height, int coinValue, float secondsOnField, String textureUrl) {
         super(width, height, textureUrl);

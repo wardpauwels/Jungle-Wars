@@ -1,4 +1,4 @@
-package be.howest.junglewars.gameobjects;
+package be.howest.junglewars;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

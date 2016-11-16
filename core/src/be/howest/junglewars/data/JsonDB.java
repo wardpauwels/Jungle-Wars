@@ -1,6 +1,6 @@
 package be.howest.junglewars.data;
 
-import be.howest.junglewars.models.EnemyModel;
+import be.howest.junglewars.entities.Enemy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -15,8 +15,8 @@ import java.util.List;
 public class JsonDB extends DB {
 
     @Override
-    public List<EnemyModel> getAllEnemies() {
-        List<EnemyModel> enemies = null;
+    public List<Enemy> getAllEnemies() {
+        List<Enemy> enemies = null;
 
         try {
 
@@ -24,7 +24,7 @@ public class JsonDB extends DB {
             Path path = Paths.get(url.toURI());
             byte[] jsonData = Files.readAllBytes(path);
             ObjectMapper mapper = new ObjectMapper();
-            enemies = Arrays.asList(mapper.readValue(jsonData, EnemyModel[].class));
+            enemies = Arrays.asList(mapper.readValue(jsonData, Enemy[].class));
 
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
