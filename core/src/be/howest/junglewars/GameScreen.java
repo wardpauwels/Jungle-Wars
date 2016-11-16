@@ -2,6 +2,8 @@ package be.howest.junglewars;
 
 import be.howest.junglewars.gameobjects.Currency;
 import be.howest.junglewars.gameobjects.Player;
+import be.howest.junglewars.gameobjects.missiles.HelperMissile;
+import be.howest.junglewars.gameobjects.missiles.Missile;
 import be.howest.junglewars.gameobjects.powers.Power;
 import be.howest.junglewars.main.JungleWarsGame;
 import com.badlogic.gdx.Gdx;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import java.util.ArrayList;
@@ -88,12 +91,71 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void updateRunning(float dt) {
+        for(Player player: players){
+            player.handleInput();
+        }
 
+        checkCollision();
+
+        // TODO: generate enemies in different class?
+//        amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * level));
+//        if (enemies.size() == 0) {
+//            for (int i = 0; i < amountEnemies; i++) {
+//                enemies.add(new EnemyOld(players));
+//                enemies.get(i).update(dt);
+//            }
+//            level++;
+//        }
+//
+//        for (Player player : players) {
+//            player.update(dt);
+//            player.getHelper().update(dt);
+//            for (Missile missile : player.getMissiles()) {
+//                missile.update(dt);
+//            }
+//            for (HelperMissile missile : player.getHelper().getMissiles()) {
+//                missile.update(dt);
+//            }
+//        }
+//
+//        for (int i = 0; i < enemies.size(); i++) {
+//            enemies.get(i).update(dt);
+//        }
+    }
+
+    private void checkCollision(){
+        // TODO : global collision or collision function inside GameObject?
     }
 
     @Override
     public void render(float delta) {
         update(delta);
+
+        SpriteBatch batch = game.getBatch();
+        batch.begin();
+        batch.disableBlending();
+        backgroundSprite.draw(batch);
+
+        for (Player player: players){
+            player.render(batch);
+            // TODO: render missiles
+//            for (Missile missile : player.getMissiles()) {
+//                missile.render(batch);
+//            }
+//            for (Enemy enemy : enemies) {
+//                enemy.render(batch);
+//            }
+
+            // TODO: score and stats
+//            fontH2.setColor(0, 0, 0, 1);
+//            fontH2.draw(batch, "Player 1", 20, JungleWarsGame.HEIGHT - 20);
+//            font.draw(batch, "Score: " + player.getName(), 20, JungleWarsGame.HEIGHT - 40);
+//            font.draw(batch, "Score: " + player.getScore(), 20, JungleWarsGame.HEIGHT - 60);
+//            font.draw(batch, "Lives: " + player.getLives(), 20, JungleWarsGame.HEIGHT - 80);
+        }
+
+//        fontH2.draw(batch, "LEVEL " + level, JungleWarsGame.WIDTH / 2, JungleWarsGame.HEIGHT - 20);
+//        batch.end();
     }
 
     @Override

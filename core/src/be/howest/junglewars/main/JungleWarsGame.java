@@ -18,7 +18,7 @@ public class JungleWarsGame extends Game {
         fpsLogger = new FPSLogger();
         batch = new SpriteBatch();
 
-        // TODO: load settings here
+// TODO: load settings here
 
         setScreen(new GameScreen(this, 1, 1)); // TODO: get level & difficulty from settings (enum?)
     }

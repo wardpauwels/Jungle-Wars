@@ -144,17 +144,17 @@ public class PlayGameState extends State {
             for (Missile missile : player.getMissiles()) {
                 missile.render(batch);
             }
-            for (int i = 0; i < enemies.size(); i++) {
-                enemies.get(i).render(batch);
+            for (Enemy enemy : enemies) {
+                enemy.render(batch);
             }
         }
 
-        for (int i = 0; i < players.size(); i++) {
+        for (Player player : players) {
             fontH2.setColor(0, 0, 0, 1);
             fontH2.draw(batch, "Player 1", 20, JungleWarsGame.HEIGHT - 20);
-            font.draw(batch, "Score: " + players.get(i).getName(), 20, JungleWarsGame.HEIGHT - 40);
-            font.draw(batch, "Score: " + players.get(i).getScore(), 20, JungleWarsGame.HEIGHT - 60);
-            font.draw(batch, "Lives: " + players.get(i).getLives(), 20, JungleWarsGame.HEIGHT - 80);
+            font.draw(batch, "Score: " + player.getName(), 20, JungleWarsGame.HEIGHT - 40);
+            font.draw(batch, "Score: " + player.getScore(), 20, JungleWarsGame.HEIGHT - 60);
+            font.draw(batch, "Lives: " + player.getLives(), 20, JungleWarsGame.HEIGHT - 80);
         }
         fontH2.draw(batch, "LEVEL " + level, JungleWarsGame.WIDTH / 2, JungleWarsGame.HEIGHT - 20);
         batch.end();

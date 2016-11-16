@@ -166,7 +166,6 @@ public class Player extends GameObject {
                 missiles.remove(i);
                 i--;
             }
-            //bullets van helper removen
         }
         for (int i = 0; i < getHelper().getMissiles().size(); i++) {
             if (getHelper().getMissiles().get(i).shouldRemove()) {
