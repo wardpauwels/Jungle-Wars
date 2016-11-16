@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public abstract class GameObject {
+public abstract class GameObject { // TODO: make Game-access possible
     protected float speed;
     protected Vector2 position; // position.x and position.y
     protected Rectangle bounds; // bounds.getWidth() and bounds.getHeight()

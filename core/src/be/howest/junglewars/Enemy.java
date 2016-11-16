@@ -8,7 +8,30 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.ArrayList;
+enum TargetSelection {
+    RANDOM {
+        @Override
+        public Player selectTarget(Enemy enemy) {
+            return null;
+        }
+    },
+    CLOSEST {
+        @Override
+        public Player selectTarget(Enemy enemy) {
+//            Player playerToAttack = players.get(0);
+//            for (int i = 1; i < players.size(); i++) {
+//                if (Math.sqrt(Math.pow(position.x - players.get(i).getPosition().x, 2) + Math.pow(position.y - players.get(i).getPosition().y, 2))
+//                        > Math.sqrt(Math.pow(position.x - players.get(i - 1).getPosition().x, 2) + Math.pow(position.y - players.get(i - 1).getPosition().y, 2))) {
+//                    playerToAttack = players.get(i);
+//                }
+//            }
+//            return playerToAttack;
+            return null;
+        }
+    };
+
+    public abstract Player selectTarget(Enemy enemy);
+}
 
 enum AttackType {
     MELEE {
@@ -78,7 +101,6 @@ public class Enemy extends GameObject {
     private String name;
     private Sprite sprite;
 
-    private Player target;
     private Vector2 dPosition;
 
     private int damage;
@@ -91,18 +113,21 @@ public class Enemy extends GameObject {
     private int experienceWhenKilled;
 
     private AttackType[] attackTypes;
-    private MovementType[] movementTypes;
+    private MovementType movementType;
+    private TargetSelection targetSelection;
+    private Player target;
 
     public Enemy(String name, int width, int height, int scoreWhenKilled, int experienceWhenKilled,
                  String textureUrl, int baseDamage, int baseSpeed, int baseHitpoints,
-                 int rarity, int gameLevel, int gameDifficulty, AttackType[] attackTypes, MovementType[] movementTypes) {
+                 int rarity, int gameLevel, int gameDifficulty, AttackType[] attackTypes, MovementType movementType, TargetSelection targetSelection) {
         super(width, height, textureUrl);
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
         this.rarity = rarity;
         this.attackTypes = attackTypes;
-        this.movementTypes = movementTypes;
+        this.movementType = movementType;
+        this.targetSelection = targetSelection;
 
         calculateStats(gameLevel, gameDifficulty, baseDamage, baseHitpoints, baseSpeed);
 
@@ -163,21 +188,12 @@ public class Enemy extends GameObject {
         this.speed = level * difficulty * baseSpeed;
     }
 
-    public Player chooseTarget(ArrayList<Player> players) {
-        Player playerToAttack = players.get(0);
-        for (int i = 1; i < players.size(); i++) {
-            if (Math.sqrt(Math.pow(position.x - players.get(i).getPosition().x, 2) + Math.pow(position.y - players.get(i).getPosition().y, 2))
-                    > Math.sqrt(Math.pow(position.x - players.get(i - 1).getPosition().x, 2) + Math.pow(position.y - players.get(i - 1).getPosition().y, 2))) {
-                playerToAttack = players.get(i);
-            }
-        }
-        return playerToAttack;
+    public Player chooseTarget() {
+        return targetSelection.selectTarget(this);
     }
 
     public void move() {
-        for (MovementType movementType : movementTypes) {
-            movementType.move(this);
-        }
+        movementType.move(this);
     }
 
     public void attack() {
