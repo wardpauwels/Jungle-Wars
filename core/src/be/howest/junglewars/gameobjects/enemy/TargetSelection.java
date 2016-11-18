@@ -22,6 +22,18 @@ public enum TargetSelection {
 //            return playerToAttack;
             return null;
         }
+    },
+    ALL_ONE_BY_ONE {
+        @Override
+        public Player selectTarget(Enemy enemy) {
+            return null;
+        }
+    },
+    ALL_AT_ONCE {
+        @Override
+        public Player selectTarget(Enemy enemy) {
+            return null;
+        }
     };
 
     public abstract Player selectTarget(Enemy enemy);

@@ -1,8 +1,8 @@
 package be.howest.junglewars.gameobjects.enemy;
 
+import be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.player.Player;
-import be.howest.junglewars.entities.EnemyEntity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,6 +10,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Enemy extends GameObject {
+    private static final float ENEMY_WIDTH = 70;
+    private static final float ENEMY_HEIGHT = 80;
+
     private String name;
     private Sprite sprite;
 
@@ -18,6 +21,7 @@ public class Enemy extends GameObject {
     private int damage;
     private int hitpoints;
     private int speed;
+    private float attackSpeed; // shoot per x seconds (e.g. "0.25" shoots 4 times a second)
 
     private int rarity;
 
@@ -29,10 +33,12 @@ public class Enemy extends GameObject {
     private TargetSelection targetSelection;
     private Player target;
 
-    public Enemy(String name, float width, float height, int scoreWhenKilled, int experienceWhenKilled,
-                 String textureUrl, int baseDamage, int baseSpeed, int baseHitpoints,
-                 int rarity, int gameLevel, int gameDifficulty, AttackType[] attackTypes, MovementType movementType, TargetSelection targetSelection) {
-        super(width, height, textureUrl);
+    public Enemy(String name, String textureUrl,
+                 int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
+                 int experienceWhenKilled, int scoreWhenKilled, int rarity,
+                 MovementType movementType, TargetSelection targetSelection, AttackType[] attackTypes,
+                 int gameLevel, int gameDifficulty) {
+        super(ENEMY_WIDTH, ENEMY_HEIGHT, textureUrl);
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
@@ -41,13 +47,26 @@ public class Enemy extends GameObject {
         this.movementType = movementType;
         this.targetSelection = targetSelection;
 
-        calculateStats(gameLevel, gameDifficulty, baseDamage, baseHitpoints, baseSpeed);
+        calculateStats(gameLevel, gameDifficulty, baseDamage, baseHitpoints, baseSpeed, baseAttackSpeed);
 
     }
 
-    public Enemy(EnemyEntity enemy, int gameLevel, int gameDifficulty){
-        this(enemy.getName(), enemy.getWidth(), enemy.getHeight(), enemy.getScoreWhenKilled(), enemy.getXpWhenKilled(), enemy.getSpriteUrl(), enemy.getBaseDamage(),
-                enemy.getBaseSpeed(), enemy.getBaseHp(), enemy.getRarity(), gameLevel, gameDifficulty, enemy.getAttackTypesSerialized(), enemy.getMovementType(), enemy.getTargetSelection());
+    public Enemy(EnemyEntity entity, int gameLevel, int gameDifficulty) {
+        this(
+                entity.getName(),
+                entity.getTextureFileName(),
+                entity.getBaseDamage(),
+                entity.getBaseSpeed(),
+                entity.getBaseHitpoints(),
+                entity.getBaseAttackSpeed(),
+                entity.getExperienceWhenKilled(),
+                entity.getScoreWhenKilled(),
+                entity.getRarity(),
+                entity.getMovementType(),
+                entity.getTargetSelection(),
+                entity.getAttackTypes(),
+                gameLevel,
+                gameDifficulty);
     }
 
     @Override
@@ -98,11 +117,12 @@ public class Enemy extends GameObject {
         return new Vector2(x, y);
     }
 
-    private void calculateStats(int level, int difficulty, int baseDamage, int baseHitpoints, int baseSpeed) {
+    private void calculateStats(int level, int difficulty, int baseDamage, int baseHitpoints, int baseSpeed, float baseAttackSpeed) {
         // TODO: algorithm
         this.damage = level * difficulty * baseDamage;
         this.hitpoints = level * difficulty * baseHitpoints;
         this.speed = level * difficulty * baseSpeed;
+        this.attackSpeed = level * difficulty * baseAttackSpeed;
     }
 
     public Player chooseTarget() {

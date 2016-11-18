@@ -13,12 +13,15 @@ public class JungleWarsGame extends Game {
 
     private SpriteBatch batch;
 
+    private int gameLevel;
+    private int gameDifficulty;
+
     @Override
     public void create() {
         fpsLogger = new FPSLogger();
         batch = new SpriteBatch();
 
-    // TODO: load settings here
+        // TODO: load settings here
 
         setScreen(new GameScreen(this, 1, 1)); // TODO: get level & difficulty from settings (enum?)
     }
@@ -34,6 +37,22 @@ public class JungleWarsGame extends Game {
 
     public SpriteBatch getBatch() {
         return batch;
+    }
+
+    public int getGameLevel() {
+        return gameLevel;
+    }
+
+    public void setGameLevel(int gameLevel) {
+        this.gameLevel = gameLevel;
+    }
+
+    public int getGameDifficulty() {
+        return gameDifficulty;
+    }
+
+    public void setGameDifficulty(int gameDifficulty) {
+        this.gameDifficulty = gameDifficulty;
     }
 
 }

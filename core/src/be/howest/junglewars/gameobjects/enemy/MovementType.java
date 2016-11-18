@@ -7,7 +7,7 @@ public enum MovementType {
             System.out.println("I run straight at you");
         }
     },
-    ZIG_ZAG {
+    ZIGZAG {
         @Override
         public void move(Enemy enemy) {
             System.out.println("I'm hard to hit because I zigzag to you");
