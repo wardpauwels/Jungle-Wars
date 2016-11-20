@@ -1,6 +1,5 @@
 package be.howest.junglewars.gameobjects.enemy;
 
-import be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.player.Player;
 import com.badlogic.gdx.Gdx;
@@ -30,13 +29,13 @@ public class Enemy extends GameObject {
 
     private AttackType[] attackTypes;
     private MovementType movementType;
-    private TargetSelection targetSelection;
+    private TargetSelectionType targetSelection;
     private Player target;
 
     public Enemy(String name, String textureUrl,
                  int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
                  int experienceWhenKilled, int scoreWhenKilled, int rarity,
-                 MovementType movementType, TargetSelection targetSelection, AttackType[] attackTypes,
+                 MovementType movementType, TargetSelectionType targetSelection, AttackType[] attackTypes,
                  int gameLevel, int gameDifficulty) {
         super(ENEMY_WIDTH, ENEMY_HEIGHT, textureUrl);
         this.name = name;
@@ -51,23 +50,23 @@ public class Enemy extends GameObject {
 
     }
 
-    public Enemy(EnemyEntity entity, int gameLevel, int gameDifficulty) {
-        this(
-                entity.getName(),
-                entity.getTextureFileName(),
-                entity.getBaseDamage(),
-                entity.getBaseSpeed(),
-                entity.getBaseHitpoints(),
-                entity.getBaseAttackSpeed(),
-                entity.getExperienceWhenKilled(),
-                entity.getScoreWhenKilled(),
-                entity.getRarity(),
-                entity.getMovementType(),
-                entity.getTargetSelection(),
-                entity.getAttackTypes(),
-                gameLevel,
-                gameDifficulty);
-    }
+//    public Enemy(EnemyEntity entity, int gameLevel, int gameDifficulty) {
+//        this(
+//                entity.getName(),
+//                entity.getTextureFileName(),
+//                entity.getBaseDamage(),
+//                entity.getBaseSpeed(),
+//                entity.getBaseHitpoints(),
+//                entity.getBaseAttackSpeed(),
+//                entity.getExperienceWhenKilled(),
+//                entity.getScoreWhenKilled(),
+//                entity.getRarity(),
+//                entity.getMovementType(),
+//                entity.getTargetSelection(),
+//                entity.getAttackTypes(),
+//                gameLevel,
+//                gameDifficulty);
+//    }
 
     @Override
     public void update(float dt) {

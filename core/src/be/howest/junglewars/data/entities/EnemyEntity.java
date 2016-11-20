@@ -1,20 +1,60 @@
 package be.howest.junglewars.data.entities;
 
+import be.howest.junglewars.gameobjects.enemy.AttackType;
+import be.howest.junglewars.gameobjects.enemy.MovementType;
+import be.howest.junglewars.gameobjects.enemy.TargetSelectionType;
+import be.howest.junglewars.util.EnumStringConverter;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "enemies", schema = "junglewars")
 public class EnemyEntity {
+
+    //region Fields
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "texture_file_name")
     private String textureFileName;
+
+    @Column(name = "base_damage")
     private int baseDamage;
+
+    @Column(name = "base_speed")
     private int baseSpeed;
+
+    @Column(name = "base_hitpoints")
     private int baseHitpoints;
+
+    @Column(name = "base_attack_speed")
     private float baseAttackSpeed;
+
+    @Column(name = "experience_when_killed")
     private int experienceWhenKilled;
+
+    @Column(name = "score_when_killed")
     private int scoreWhenKilled;
+
+    @Column(name = "rarity")
     private int rarity;
-    private String targetSelection;
-    private String attackTypes;
+
+    @Column(name = "movement_type")
     private String movementType;
 
+    @Column(name = "target_selection_type")
+    private String targetSelectionType;
+
+    @Column(name = "attack_type")
+    private String attackType;
+    //endregion
+
+    //region Getters/Setters
     public int getId() {
         return id;
     }
@@ -95,74 +135,41 @@ public class EnemyEntity {
         this.rarity = rarity;
     }
 
-    public String getTargetSelection() {
-        return targetSelection;
-    }
-
-    public void setTargetSelection(String targetSelection) {
-        this.targetSelection = targetSelection;
-    }
-
-    public String getAttackTypes() {
-        return attackTypes;
-    }
-
-    public void setAttackTypes(String attackTypes) {
-        this.attackTypes = attackTypes;
-    }
-
     public String getMovementType() {
         return movementType;
+    }
+
+    public MovementType[] getMovementTypeEnums(){
+        return EnumStringConverter.stringToEnumArray(MovementType.class, movementType);
     }
 
     public void setMovementType(String movementType) {
         this.movementType = movementType;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        EnemyEntity that = (EnemyEntity) o;
-
-        if (id != that.id) return false;
-        if (baseDamage != that.baseDamage) return false;
-        if (baseSpeed != that.baseSpeed) return false;
-        if (baseHitpoints != that.baseHitpoints) return false;
-        if (Double.compare(that.baseAttackSpeed, baseAttackSpeed) != 0) return false;
-        if (experienceWhenKilled != that.experienceWhenKilled) return false;
-        if (scoreWhenKilled != that.scoreWhenKilled) return false;
-        if (rarity != that.rarity) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (textureFileName != null ? !textureFileName.equals(that.textureFileName) : that.textureFileName != null)
-            return false;
-        if (targetSelection != null ? !targetSelection.equals(that.targetSelection) : that.targetSelection != null)
-            return false;
-        if (attackTypes != null ? !attackTypes.equals(that.attackTypes) : that.attackTypes != null) return false;
-        if (movementType != null ? !movementType.equals(that.movementType) : that.movementType != null) return false;
-
-        return true;
+    public String getTargetSelectionType() {
+        return targetSelectionType;
     }
 
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (textureFileName != null ? textureFileName.hashCode() : 0);
-        result = 31 * result + baseDamage;
-        result = 31 * result + baseSpeed;
-        result = 31 * result + baseHitpoints;
-        temp = Double.doubleToLongBits(baseAttackSpeed);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + experienceWhenKilled;
-        result = 31 * result + scoreWhenKilled;
-        result = 31 * result + rarity;
-        result = 31 * result + (targetSelection != null ? targetSelection.hashCode() : 0);
-        result = 31 * result + (attackTypes != null ? attackTypes.hashCode() : 0);
-        result = 31 * result + (movementType != null ? movementType.hashCode() : 0);
-        return result;
+    public TargetSelectionType[] getTargetSelectionTypeEnums(){
+        return EnumStringConverter.stringToEnumArray(TargetSelectionType.class, targetSelectionType);
     }
+
+    public void setTargetSelectionType(String targetSelectionType) {
+        this.targetSelectionType = targetSelectionType;
+    }
+
+    public String getAttackType() {
+        return attackType;
+    }
+
+    public AttackType[] getAttackTypeEnums(){
+        return EnumStringConverter.stringToEnumArray(AttackType.class, attackType);
+    }
+
+    public void setAttackType(String attackType) {
+        this.attackType = attackType;
+    }
+    //endregion
+
 }

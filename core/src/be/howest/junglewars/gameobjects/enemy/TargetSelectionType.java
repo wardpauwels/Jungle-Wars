@@ -2,7 +2,7 @@ package be.howest.junglewars.gameobjects.enemy;
 
 import be.howest.junglewars.gameobjects.player.Player;
 
-public enum TargetSelection {
+public enum TargetSelectionType {
     RANDOM {
         @Override
         public Player selectTarget(Enemy enemy) {
