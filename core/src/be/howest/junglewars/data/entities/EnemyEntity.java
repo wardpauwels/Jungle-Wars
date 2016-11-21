@@ -1,9 +1,9 @@
 package be.howest.junglewars.data.entities;
 
+import be.howest.junglewars.data.util.EnumStringConverter;
 import be.howest.junglewars.gameobjects.enemy.AttackType;
 import be.howest.junglewars.gameobjects.enemy.MovementType;
 import be.howest.junglewars.gameobjects.enemy.TargetSelectionType;
-import be.howest.junglewars.util.EnumStringConverter;
 
 import javax.persistence.*;
 
@@ -139,7 +139,7 @@ public class EnemyEntity {
         return movementType;
     }
 
-    public MovementType[] getMovementTypeEnums(){
+    public MovementType[] getMovementTypeEnums() {
         return EnumStringConverter.stringToEnumArray(MovementType.class, movementType);
     }
 
@@ -151,7 +151,7 @@ public class EnemyEntity {
         return targetSelectionType;
     }
 
-    public TargetSelectionType[] getTargetSelectionTypeEnums(){
+    public TargetSelectionType[] getTargetSelectionTypeEnums() {
         return EnumStringConverter.stringToEnumArray(TargetSelectionType.class, targetSelectionType);
     }
 
@@ -163,7 +163,7 @@ public class EnemyEntity {
         return attackType;
     }
 
-    public AttackType[] getAttackTypeEnums(){
+    public AttackType[] getAttackTypeEnums() {
         return EnumStringConverter.stringToEnumArray(AttackType.class, attackType);
     }
 

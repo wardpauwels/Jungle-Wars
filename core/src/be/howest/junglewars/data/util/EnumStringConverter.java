@@ -1,4 +1,4 @@
-package be.howest.junglewars.util;
+package be.howest.junglewars.data.util;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;

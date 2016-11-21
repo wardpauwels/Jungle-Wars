@@ -23,7 +23,7 @@ public class JungleWarsGame extends Game {
 
         // TODO: load settings here
 
-        setScreen(new GameScreen(this, 1, 1)); // TODO: get level & difficulty from settings (enum?)
+        setScreen(new GameScreen(this, 1, 1)); // TODO: get level & difficulty from settings
     }
 
     @Override
