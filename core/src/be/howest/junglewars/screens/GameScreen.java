@@ -1,9 +1,9 @@
 package be.howest.junglewars.screens;
 
 import be.howest.junglewars.JungleWarsGame;
-import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.gameobjects.currency.Currency;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
+import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.gameobjects.power.Power;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -17,11 +17,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
+    private static final String FONT = "fonts/roboto-regular.ttf";
+    private static final String BG = "bg-ingame.png";
+    private static final String HARAMBE_NORMAL = "character-harambe-normal.png";
+    private static final String HARAMBE_SHOOT = "character-harambe-shoot.png";
+    private static final String ZOOKEEPER = "enemy-zookeeper.png";
+    private static final String HELPER_RED_WINGSUP = "helper-red-wingsup.png";
+    private static final String HELPER_RED_WINGSDOWN = "helper-red-wingsdown.png";
+    private static final String MISSILE_BANANA = "missile-banana."; // TODO different atlas for each directory
+
     private JungleWarsGame game;
     private GameState gameState;
-
     private int level;
     private int difficulty;
+
     private ArrayList<Player> players;
     private ArrayList<Enemy> enemies;
     private ArrayList<Power> powers;
@@ -29,38 +38,30 @@ public class GameScreen extends ScreenAdapter {
     private Sprite backgroundSprite;
 
     private FreeTypeFontGenerator fontGenerator;
-    private BitmapFont font;
-    private BitmapFont fontH2;
+    private BitmapFont smallFont;
+    private BitmapFont bigFont;
 
-    private enum GameState {
-        READY,
-        RUNNING,
-        PAUSED,
-        GAME_OVER, // TODO: if all players are dead
-        BETWEEN_WAVE; // TODO: if all enemies are dead
-    }
-
-    public GameScreen(JungleWarsGame game, int startLevel, int difficulty) {
+    public GameScreen(JungleWarsGame game) {
         this.game = game;
-        this.level = startLevel;
-        this.difficulty = difficulty;
+        this.level = game.getGameLevel();
+        this.difficulty = game.getGameDifficulty();
 
         gameState = GameState.READY;
 
         // Background
-        Texture bgTexture = new Texture(Gdx.files.internal("backgrounds/background-trees.png"));
+        Texture bgTexture = new Texture(Gdx.files.internal("images/backgrounds/background-trees.png"));
         backgroundSprite = new Sprite(bgTexture);
         backgroundSprite.setPosition(0, 0);
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // Fonts
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Roboto-Regular.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontParameter.size = 20;
-        font = fontGenerator.generateFont(fontParameter);
-        fontParameter.size = 24;
-        fontH2 = fontGenerator.generateFont(fontParameter);
-        fontGenerator.dispose(); // To prevent memory leaks
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 20;
+        smallFont = generator.generateFont(parameter);
+        parameter.size = 24;
+        bigFont = generator.generateFont(parameter);
+        generator.dispose();
 
         // Players
         players = new ArrayList<Player>();
@@ -146,15 +147,15 @@ public class GameScreen extends ScreenAdapter {
 //            }
 
             // TODO: score and stats
-//            fontH2.setColor(0, 0, 0, 1);
-//            fontH2.draw(batch, "Player 1", 20, JungleWarsGame.HEIGHT - 20);
-//            font.draw(batch, "Score: " + player.getName(), 20, JungleWarsGame.HEIGHT - 40);
-//            font.draw(batch, "Score: " + player.getScore(), 20, JungleWarsGame.HEIGHT - 60);
-//            font.draw(batch, "Lives: " + player.getLives(), 20, JungleWarsGame.HEIGHT - 80);
+//            bigFont.setColor(0, 0, 0, 1);
+//            bigFont.draw(batch, "Player 1", 20, JungleWarsGame.HEIGHT - 20);
+//            smallFont.draw(batch, "Score: " + player.getName(), 20, JungleWarsGame.HEIGHT - 40);
+//            smallFont.draw(batch, "Score: " + player.getScore(), 20, JungleWarsGame.HEIGHT - 60);
+//            smallFont.draw(batch, "Lives: " + player.getLives(), 20, JungleWarsGame.HEIGHT - 80);
         }
 
-//        fontH2.draw(batch, "LEVEL " + level, JungleWarsGame.WIDTH / 2, JungleWarsGame.HEIGHT - 20);
-//        batch.end();
+//        bigFont.draw(batch, "LEVEL " + level, JungleWarsGame.WIDTH / 2, JungleWarsGame.HEIGHT - 20);
+        batch.end();
     }
 
     @Override
@@ -188,5 +189,13 @@ public class GameScreen extends ScreenAdapter {
 
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
+    }
+
+    private enum GameState {
+        READY,
+        RUNNING,
+        PAUSED,
+        GAME_OVER, // TODO: if (all) player(s) is/are dead
+        BETWEEN_WAVE; // TODO: if all enemies are dead
     }
 }

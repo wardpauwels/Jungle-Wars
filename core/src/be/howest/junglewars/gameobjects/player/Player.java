@@ -8,7 +8,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ public class Player extends GameObject {
     private ArrayList<Power> powers;
     private ArrayList<Missile> missiles;
 
+    private String name;
     private int lives;
     private int score;
 
@@ -41,7 +41,8 @@ public class Player extends GameObject {
     private int level;
 
     public Player(String name, float width, float height, String textureUrl) {
-        super(width, height, textureUrl);
+        super(width, height, "images/characters/player/" + textureUrl);
+        this.name = name;
     }
 
     public void handleInput() {

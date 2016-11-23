@@ -1,0 +1,62 @@
+
+all-images.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bg-ingame
+  rotate: false
+  xy: 2, 274
+  size: 800, 600
+  orig: 800, 600
+  offset: 0, 0
+  index: -1
+character-harambe-normal
+  rotate: false
+  xy: 132, 192
+  size: 100, 80
+  orig: 100, 80
+  offset: 0, 0
+  index: -1
+character-harambe-shoot
+  rotate: false
+  xy: 804, 664
+  size: 100, 80
+  orig: 100, 80
+  offset: 0, 0
+  index: -1
+enemy-zookeeper
+  rotate: false
+  xy: 2, 144
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+helper-red-wingsdown
+  rotate: false
+  xy: 804, 746
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+helper-red-wingsup
+  rotate: false
+  xy: 2, 14
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+missile-banana
+  rotate: false
+  xy: 934, 836
+  size: 64, 38
+  orig: 64, 38
+  offset: 0, 0
+  index: -1
+missile-helper-bullet
+  rotate: false
+  xy: 2, 2
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1

@@ -1,7 +1,9 @@
 package be.howest.junglewars.gameobjects.enemy;
 
+import be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.player.Player;
+import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -35,38 +37,39 @@ public class Enemy extends GameObject {
     public Enemy(String name, String textureUrl,
                  int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
                  int experienceWhenKilled, int scoreWhenKilled, int rarity,
-                 MovementType movementType, TargetSelectionType targetSelection, AttackType[] attackTypes,
-                 int gameLevel, int gameDifficulty) {
+                 MovementType[] movementType, TargetSelectionType[] targetSelection, AttackType[] attackTypes,
+                 GameScreen gameScreen) {
         super(ENEMY_WIDTH, ENEMY_HEIGHT, textureUrl);
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
         this.rarity = rarity;
         this.attackTypes = attackTypes;
-        this.movementType = movementType;
-        this.targetSelection = targetSelection;
+        this.movementType = movementType[0];
+        this.targetSelection = targetSelection[0];
 
-        calculateStats(gameLevel, gameDifficulty, baseDamage, baseHitpoints, baseSpeed, baseAttackSpeed);
+        calculateStats(gameScreen.getLevel(), gameScreen.getDifficulty(), baseDamage, baseHitpoints, baseSpeed, baseAttackSpeed);
+        target = chooseTarget();
 
     }
 
-//    public Enemy(EnemyEntity entity, int gameLevel, int gameDifficulty) {
-//        this(
-//                entity.getName(),
-//                entity.getTextureFileName(),
-//                entity.getBaseDamage(),
-//                entity.getBaseSpeed(),
-//                entity.getBaseHitpoints(),
-//                entity.getBaseAttackSpeed(),
-//                entity.getExperienceWhenKilled(),
-//                entity.getScoreWhenKilled(),
-//                entity.getRarity(),
-//                entity.getMovementType(),
-//                entity.getTargetSelection(),
-//                entity.getAttackTypes(),
-//                gameLevel,
-//                gameDifficulty);
-//    }
+    public Enemy(EnemyEntity entity, GameScreen gameScreen) {
+        this(
+                entity.getName(),
+                entity.getTextureFileName(),
+                entity.getBaseDamage(),
+                entity.getBaseSpeed(),
+                entity.getBaseHitpoints(),
+                entity.getBaseAttackSpeed(),
+                entity.getExperienceWhenKilled(),
+                entity.getScoreWhenKilled(),
+                entity.getRarity(),
+                entity.getMovementTypeEnums(),
+                entity.getTargetSelectionTypeEnums(),
+                entity.getAttackTypeEnums(),
+                gameScreen
+        );
+    }
 
     @Override
     public void update(float dt) {
@@ -124,7 +127,7 @@ public class Enemy extends GameObject {
         this.attackSpeed = level * difficulty * baseAttackSpeed;
     }
 
-    public Player chooseTarget() {
+    private Player chooseTarget() {
         return targetSelection.selectTarget(this);
     }
 
