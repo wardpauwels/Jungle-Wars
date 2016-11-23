@@ -5,7 +5,11 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 public class AtlasPacker {
 
     public static void main(String[] args) {
-        TexturePacker.process("images", "atlas", "all-images");
+        TexturePacker.process("images/backgrounds", "atlas", "backgrounds");
+        TexturePacker.process("images/enemies", "atlas", "enemies");
+        TexturePacker.process("images/helpers", "atlas", "helpers");
+        TexturePacker.process("images/missiles", "atlas", "missiles");
+        TexturePacker.process("images/players", "atlas", "players");
     }
 
 }

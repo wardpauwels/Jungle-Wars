@@ -5,26 +5,21 @@ import be.howest.junglewars.gameobjects.currency.Currency;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.gameobjects.power.Power;
+import be.howest.junglewars.util.Assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureArray;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
-    private static final String FONT = "fonts/roboto-regular.ttf";
-    private static final String BG = "bg-ingame.png";
-    private static final String HARAMBE_NORMAL = "character-harambe-normal.png";
-    private static final String HARAMBE_SHOOT = "character-harambe-shoot.png";
-    private static final String ZOOKEEPER = "enemy-zookeeper.png";
-    private static final String HELPER_RED_WINGSUP = "helper-red-wingsup.png";
-    private static final String HELPER_RED_WINGSDOWN = "helper-red-wingsdown.png";
-    private static final String MISSILE_BANANA = "missile-banana."; // TODO different atlas for each directory
 
     private JungleWarsGame game;
     private GameState gameState;
@@ -48,20 +43,22 @@ public class GameScreen extends ScreenAdapter {
 
         gameState = GameState.READY;
 
+
+
         // Background
-        Texture bgTexture = new Texture(Gdx.files.internal("images/backgrounds/background-trees.png"));
-        backgroundSprite = new Sprite(bgTexture);
-        backgroundSprite.setPosition(0, 0);
-        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//        Texture bgTexture = new Texture(Gdx.files.internal("images/backgrounds/background-trees.png"));
+//        backgroundSprite = new Sprite(bgTexture);
+//        backgroundSprite.setPosition(0, 0);
+//        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // Fonts
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 20;
-        smallFont = generator.generateFont(parameter);
-        parameter.size = 24;
-        bigFont = generator.generateFont(parameter);
-        generator.dispose();
+//        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT));
+//        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+//        parameter.size = 20;
+//        smallFont = generator.generateFont(parameter);
+//        parameter.size = 24;
+//        bigFont = generator.generateFont(parameter);
+//        generator.dispose();
 
         // Players
         players = new ArrayList<Player>();

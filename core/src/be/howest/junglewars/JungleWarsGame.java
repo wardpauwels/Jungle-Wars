@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class JungleWarsGame extends Game {
-    public Assets assets = new Assets();
     // TODO: http://gamedev.stackexchange.com/questions/112582/libgdx-switching-between-screens-without-losing-information
     private FPSLogger fpsLogger;
     private SpriteBatch batch;
@@ -20,12 +19,18 @@ public class JungleWarsGame extends Game {
 
     @Override
     public void create() {
+        Assets.load();
+        while (!Assets.manager.update()) {
+            //TODO: still loading/updating all files
+            System.out.printf("Loading assets: %f%n", Assets.manager.getProgress() * 100); // percentage for progress bar
+        }
+        Assets.manager.finishLoading();
+
         fpsLogger = new FPSLogger();
         batch = new SpriteBatch();
         font = new BitmapFont();
 
         // TODO: loading screen while assets are loading
-        assets.load();
 
         // TODO: load settings here
 
@@ -34,17 +39,18 @@ public class JungleWarsGame extends Game {
 
     @Override
     public void render() {
-        if (!assets.manager.update()) {
-            // TODO
-            float progress = assets.manager.getProgress();
-        }
-
         fpsLogger.log();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         super.render();
 
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        Assets.dispose();
     }
 
     public SpriteBatch getBatch() {

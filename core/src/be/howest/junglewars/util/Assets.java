@@ -1,23 +1,28 @@
 package be.howest.junglewars.util;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 
 public class Assets {
 
-    public AssetManager manager = new AssetManager();
+    public static final AssetManager manager = new AssetManager();
 
-    public void load() {
-        manager.load("atlas/all-images.atlas", TextureAtlas.class);
+    public static final String
+            BACKGROUNDS = "atlas/backgrounds.atlas",
+            ENEMIES = "atlas/enemies.atlas",
+            HELPERS = "atlas/helpers.atlas",
+            MISSILES = "atlas/missiles.atlas",
+            PLAYERS = "atlas/players.atlas";
+
+    public static void load() {
+        manager.load(BACKGROUNDS, TextureAtlas.class);
+        manager.load(ENEMIES, TextureAtlas.class);
+        manager.load(HELPERS, TextureAtlas.class);
+        manager.load(MISSILES, TextureAtlas.class);
+        manager.load(PLAYERS, TextureAtlas.class);
     }
 
-    public void dispose() {
+    public static void dispose() {
         manager.dispose();
     }
 
