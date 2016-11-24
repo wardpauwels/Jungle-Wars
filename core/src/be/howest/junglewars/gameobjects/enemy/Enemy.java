@@ -1,6 +1,7 @@
 package be.howest.junglewars.gameobjects.enemy;
 
-import be.howest.junglewars.data.entities.EnemyEntity;
+import be.howest.junglewars.Difficulty;
+import      be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.screens.GameScreen;
@@ -39,8 +40,7 @@ public class Enemy extends GameObject {
     public Enemy(String name, String textureUrl,
                  int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
                  int experienceWhenKilled, int scoreWhenKilled, int rarity,
-                 MovementType[] movementType, TargetSelectionType[] targetSelection, AttackType[] attackTypes,
-                 GameScreen gameScreen) {
+                 MovementType[] movementType, TargetSelectionType[] targetSelection, AttackType[] attackTypes) {
         super(textureUrl);
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
@@ -50,12 +50,14 @@ public class Enemy extends GameObject {
         this.movementType = movementType[0];
         this.targetSelection = targetSelection[0];
 
-        calculateStats(gameScreen.getLevel(), gameScreen.getDifficulty(), baseDamage, baseHitpoints, baseSpeed, baseAttackSpeed);
+//        calculateStats(gameScreen.getLevel(), gameScreen.getDifficulty(), baseDamage, baseHitpoints, baseSpeed, baseAttackSpeed);
         target = chooseTarget();
+
+
 
     }
 
-    public Enemy(EnemyEntity entity, GameScreen gameScreen) {
+    public Enemy(EnemyEntity entity) {
         this(
                 entity.getName(),
                 entity.getTextureFileName(),
@@ -68,8 +70,7 @@ public class Enemy extends GameObject {
                 entity.getRarity(),
                 entity.getMovementTypeEnums(),
                 entity.getTargetSelectionTypeEnums(),
-                entity.getAttackTypeEnums(),
-                gameScreen
+                entity.getAttackTypeEnums()
         );
     }
 
@@ -97,12 +98,12 @@ public class Enemy extends GameObject {
         return null;
     }
 
-    private void calculateStats(int level, int difficulty, int baseDamage, int baseHitpoints, int baseSpeed, float baseAttackSpeed) {
-        // TODO: algorithm
-        this.damage = level * difficulty * baseDamage;
-        this.hitpoints = level * difficulty * baseHitpoints;
-        this.speed = level * difficulty * baseSpeed;
-        this.attackSpeed = level * difficulty * baseAttackSpeed;
+    private void calculateStats(int level, Difficulty difficulty, int baseDamage, int baseHitpoints, int baseSpeed, float baseAttackSpeed) {
+        // TODO: algorithm (see: EnemySpawner)
+//        this.damage = level * difficulty * baseDamage;
+//        this.hitpoints = level * difficulty * baseHitpoints;
+//        this.speed = level * difficulty * baseSpeed;
+//        this.attackSpeed = level * difficulty * baseAttackSpeed;
     }
 
     private Player chooseTarget() {

@@ -1,8 +1,10 @@
 package be.howest.junglewars.screens;
 
+import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.JungleWarsGame;
 import be.howest.junglewars.gameobjects.currency.Currency;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
+import be.howest.junglewars.gameobjects.enemy.EnemySpawner;
 import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.gameobjects.power.Power;
 import com.badlogic.gdx.Gdx;
@@ -15,18 +17,23 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GameScreen extends ScreenAdapter {
 
     private JungleWarsGame game;
     private GameState gameState;
     private int level;
-    private int difficulty;
+    private Difficulty difficulty;
 
     private ArrayList<Player> players;
+    private Map<Enemy, Integer> availableEnemies;
     private ArrayList<Enemy> enemies;
     private ArrayList<Power> powers;
     private ArrayList<Currency> currencies;
+
+    private EnemySpawner enemySpawner;
+
     private Sprite backgroundSprite;
 
     private FreeTypeFontGenerator fontGenerator;
@@ -38,17 +45,12 @@ public class GameScreen extends ScreenAdapter {
         this.level = game.getGameLevel();
         this.difficulty = game.getGameDifficulty();
 
+        enemySpawner = new EnemySpawner(level, difficulty);
+
         backgroundSprite = game.getBgAtlas().createSprite("game");
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         gameState = GameState.READY;
-
-
-        // Background
-//        Texture bgTexture = new Texture(Gdx.files.internal("images/backgrounds/background-trees.png"));
-//        backgroundSprite = new Sprite(bgTexture);
-//        backgroundSprite.setPosition(0, 0);
-//        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // Fonts
 //        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT));
@@ -91,15 +93,7 @@ public class GameScreen extends ScreenAdapter {
 
         checkCollision();
 
-        // TODO:
-//        amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * level));
-//        if (enemies.size() == 0) {
-//            for (int i = 0; i < amountEnemies; i++) {
-//                enemies.add(new EnemyOld(players));
-//                enemies.get(i).update(dt);
-//            }
-//            level++;
-//        }
+        availableEnemies = enemySpawner.generateEnemies();
 //
 //        for (Player player : players) {
 //            player.update(dt);
@@ -154,6 +148,11 @@ public class GameScreen extends ScreenAdapter {
 //        if (gameState == GameState.RUNNING) gameState = GameState.PAUSED;
     }
 
+    @Override
+    public void resume() {
+//        if (gameState == GameState.PAUSED) gameState = GameState.RUNNING;
+    }
+
     public GameState getGameState() {
         return gameState;
     }
@@ -174,11 +173,11 @@ public class GameScreen extends ScreenAdapter {
         this.level = level;
     }
 
-    public int getDifficulty() {
+    public Difficulty getDifficulty() {
         return difficulty;
     }
 
-    public void setDifficulty(int difficulty) {
+    public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
     }
 

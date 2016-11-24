@@ -13,7 +13,7 @@ public class JungleWarsGame extends Game {
     private FPSLogger fpsLogger;
     private SpriteBatch batch;
     private int gameLevel;
-    private int gameDifficulty;
+    private Difficulty gameDifficulty;
 
     private TextureAtlas bgAtlas;
 
@@ -65,11 +65,11 @@ public class JungleWarsGame extends Game {
         this.gameLevel = gameLevel;
     }
 
-    public int getGameDifficulty() {
+    public Difficulty getGameDifficulty() {
         return gameDifficulty;
     }
 
-    public void setGameDifficulty(int gameDifficulty) {
+    public void setGameDifficulty(Difficulty gameDifficulty) {
         this.gameDifficulty = gameDifficulty;
     }
 
