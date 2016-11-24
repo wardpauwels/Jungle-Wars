@@ -23,6 +23,12 @@ public class EnemyEntity {
     @Column(name = "texture_file_name")
     private String textureFileName;
 
+    @Column(name = "width")
+    private float width;
+
+    @Column(name = "height")
+    private float height;
+
     @Column(name = "base_damage")
     private int baseDamage;
 
@@ -77,6 +83,22 @@ public class EnemyEntity {
 
     public void setTextureFileName(String textureFileName) {
         this.textureFileName = textureFileName;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
     }
 
     public int getBaseDamage() {

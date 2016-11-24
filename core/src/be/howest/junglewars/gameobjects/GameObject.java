@@ -20,17 +20,17 @@ public abstract class GameObject {
     protected Sprite activeSprite;
     protected boolean shouldRemove;
 
-    protected GameObject(float width, float height, String textureName) {
+    protected GameObject(String textureName) {
         atlas = setAtlas();
-        position = generateSpawnPosition();
         activeSprite = new Sprite();
         defaultSprite = atlas.createSprite(textureName);
-        this.bounds = new Rectangle(position.x - width / 2, position.y - height / 2, width, height);
     }
 
-    protected abstract TextureAtlas setAtlas();
+    protected void initBounds(float width, float height){
+        bounds = new Rectangle(position.x - width / 2, position.y - height /2, width, height);
+    };
 
-    protected abstract Vector2 generateSpawnPosition();
+    protected abstract TextureAtlas setAtlas();
 
     protected abstract void update(float dt);
 

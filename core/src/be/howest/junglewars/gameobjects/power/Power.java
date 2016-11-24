@@ -17,18 +17,13 @@ public class Power extends GameObject {
     private Player owner;
 
     public Power(float width, float height, String textureUrl, PowerAction powerAction, boolean isPowerUp) {
-        super(width, height, textureUrl);
+        super(textureUrl);
         this.powerAction = powerAction;
         this.isPowerUp = isPowerUp;
     }
 
     @Override
     protected TextureAtlas setAtlas() {
-        return null;
-    }
-
-    @Override
-    protected Vector2 generateSpawnPosition() {
         return null;
     }
 

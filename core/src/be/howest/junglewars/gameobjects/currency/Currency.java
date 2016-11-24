@@ -9,17 +9,11 @@ import com.badlogic.gdx.math.Vector2;
 public class Currency extends GameObject {
 
     public Currency(float width, float height, int coinValue, float secondsOnField, String textureUrl) {
-        super(width, height, textureUrl);
+        super(textureUrl);
     }
 
     @Override
     protected TextureAtlas setAtlas() {
-        return null;
-    }
-
-    @Override
-    protected Vector2 generateSpawnPosition() {
-        // TODO: random on the map
         return null;
     }
 

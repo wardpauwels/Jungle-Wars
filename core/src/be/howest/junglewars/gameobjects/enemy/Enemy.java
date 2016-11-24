@@ -41,7 +41,7 @@ public class Enemy extends GameObject {
                  int experienceWhenKilled, int scoreWhenKilled, int rarity,
                  MovementType[] movementType, TargetSelectionType[] targetSelection, AttackType[] attackTypes,
                  GameScreen gameScreen) {
-        super(ENEMY_WIDTH, ENEMY_HEIGHT, textureUrl);
+        super(textureUrl);
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
@@ -95,30 +95,6 @@ public class Enemy extends GameObject {
     @Override
     protected TextureAtlas setAtlas() {
         return null;
-    }
-
-    @Override
-    protected Vector2 generateSpawnPosition() {
-        float x = MathUtils.random(0, Gdx.graphics.getWidth());
-        float y = MathUtils.random(0, Gdx.graphics.getHeight());
-        int side = MathUtils.random(0, 3);
-
-        switch (side) {
-            case 0:
-                y = 0 - bounds.getWidth();
-                break;
-            case 1:
-                y = Gdx.graphics.getHeight();
-                break;
-            case 2:
-                x = 0 - bounds.getHeight();
-                break;
-            case 3:
-                x = Gdx.graphics.getWidth();
-                break;
-        }
-
-        return new Vector2(x, y);
     }
 
     private void calculateStats(int level, int difficulty, int baseDamage, int baseHitpoints, int baseSpeed, float baseAttackSpeed) {

@@ -20,7 +20,7 @@ public class Helper extends GameObject {
 
     public Helper(String name, float width, float height, HelperMovementType movementType,
                   HelperSpecialActionType specialActionType, Player owner, String textureUrl) {
-        super(width, height, textureUrl);
+        super(textureUrl);
         this.owner = owner;
         this.name = name;
         this.movementType = movementType;
@@ -32,11 +32,6 @@ public class Helper extends GameObject {
     @Override
     protected TextureAtlas setAtlas() {
         return null;
-    }
-
-    @Override
-    protected Vector2 generateSpawnPosition() {
-        return new Vector2(owner.getPosition().x - bounds.x, owner.getPosition().y + bounds.y);
     }
 
     @Override

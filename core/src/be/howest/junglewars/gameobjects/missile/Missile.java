@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Missile extends GameObject {
@@ -21,20 +22,24 @@ public class Missile extends GameObject {
     private float lifeTime;
     private float lifeTimer;
 
-    public Missile(Player owner, float x, float y, float radians, String textureName, int damage, int speed,
+    public Missile(Player owner, float width, float height, float x, float y, float destinationX, float destinationY, String textureName, int damage, int speed,
                    int rotationSpeed, int lifeTime) {
-        super(x, y, textureName);
-//        this.owner = owner;
+        super(textureName);
+        this.owner = owner;
 
-//        this.damage = damage;
-//        this.speed = speed;
-//        this.rotationSpeed = rotationSpeed;
-//
-//        dx = MathUtils.cos(radians) * speed;
-//        dy = MathUtils.sin(radians) * speed;
-//
-//        this.lifeTime = lifeTime;
-//        this.lifeTimer = 0;
+        position = new Vector2(x, y);
+        initBounds(width, height);
+
+        this.damage = damage;
+        this.speed = speed;
+        this.rotationSpeed = rotationSpeed;
+
+        float radians = MathUtils.atan2(destinationY - position.y, destinationX - position.x);
+        dx = MathUtils.cos(radians) * speed;
+        dy = MathUtils.sin(radians) * speed;
+
+        this.lifeTime = lifeTime;
+        this.lifeTimer = 0;
     }
 
     @Override
@@ -43,12 +48,7 @@ public class Missile extends GameObject {
     }
 
     @Override
-    protected Vector2 generateSpawnPosition() {
-        return new Vector2();
-    }
-
-    @Override
-    protected void update(float dt) {
+    public void update(float dt) {
         position.x += dx * dt;
         position.y += dy * dt;
 
@@ -59,8 +59,12 @@ public class Missile extends GameObject {
     }
 
     @Override
-    protected void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch) {
+        activeSprite = defaultSprite;
+
         activeSprite.setPosition(position.x - bounds.getWidth() / 2, position.y - bounds.getHeight() / 2);
+        activeSprite.setSize(bounds.getWidth(), bounds.getHeight());
+        activeSprite.setOriginCenter();
         activeSprite.rotate(rotationSpeed);
         activeSprite.draw(batch);
     }

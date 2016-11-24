@@ -38,6 +38,9 @@ public class GameScreen extends ScreenAdapter {
         this.level = game.getGameLevel();
         this.difficulty = game.getGameDifficulty();
 
+        backgroundSprite = game.getBgAtlas().createSprite("game");
+        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
         gameState = GameState.READY;
 
 
@@ -57,11 +60,11 @@ public class GameScreen extends ScreenAdapter {
 //        generator.dispose();
 
         // Players
-        players = new ArrayList<Player>();
-        players.add(new Player("John", 70, 80, "harambe", 20));
+        players = new ArrayList<>();
+        players.add(new Player("John", 70, 80, "harambe", 6));
 
         // Enemies
-        enemies = new ArrayList<Enemy>();
+        enemies = new ArrayList<>();
 
     }
 
@@ -88,7 +91,7 @@ public class GameScreen extends ScreenAdapter {
 
         checkCollision();
 
-        // TODO: generate enemies in different class?
+        // TODO:
 //        amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * level));
 //        if (enemies.size() == 0) {
 //            for (int i = 0; i < amountEnemies; i++) {
@@ -120,25 +123,19 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor( 1, 0, 0, 1 );
-        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT );
+        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         update(delta);
 
         SpriteBatch batch = game.getBatch();
         batch.begin();
         batch.disableBlending();
-//        backgroundSprite.draw(batch);
+        backgroundSprite.draw(batch);
+        batch.enableBlending();
 
         for (Player player : players) {
             player.draw(batch);
-            // TODO: render missiles
-//            for (Missile missile : player.getMissiles()) {
-//                missile.render(batch);
-//            }
-//            for (EnemyEntity enemy : enemies) {
-//                enemy.render(batch);
-//            }
 
             // TODO: score and stats
 //            bigFont.setColor(0, 0, 0, 1);
@@ -154,7 +151,7 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void pause() {
-        if (gameState == GameState.RUNNING) gameState = GameState.PAUSED;
+//        if (gameState == GameState.RUNNING) gameState = GameState.PAUSED;
     }
 
     public GameState getGameState() {

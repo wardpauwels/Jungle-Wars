@@ -6,14 +6,16 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class JungleWarsGame extends Game {
     private FPSLogger fpsLogger;
     private SpriteBatch batch;
     private int gameLevel;
     private int gameDifficulty;
+
+    private TextureAtlas bgAtlas;
 
     @Override
     public void create() {
@@ -25,6 +27,8 @@ public class JungleWarsGame extends Game {
 
         fpsLogger = new FPSLogger();
         batch = new SpriteBatch();
+
+        bgAtlas = new TextureAtlas("atlas/backgrounds.atlas");
 
         // TODO: loading screen while assets are loading
 
@@ -69,4 +73,7 @@ public class JungleWarsGame extends Game {
         this.gameDifficulty = gameDifficulty;
     }
 
+    public TextureAtlas getBgAtlas() {
+        return bgAtlas;
+    }
 }
