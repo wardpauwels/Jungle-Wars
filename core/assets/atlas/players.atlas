@@ -7,14 +7,14 @@ repeat: none
 harambe
   rotate: false
   xy: 2, 2
-  size: 100, 80
-  orig: 100, 80
+  size: 94, 78
+  orig: 94, 78
   offset: 0, 0
   index: -1
 harambe-shoot
   rotate: false
-  xy: 104, 2
-  size: 100, 80
-  orig: 100, 80
+  xy: 98, 2
+  size: 94, 78
+  orig: 94, 78
   offset: 0, 0
   index: -1

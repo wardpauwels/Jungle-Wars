@@ -1,13 +1,20 @@
 
 enemies.png
-size: 256,256
+size: 128,512
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 zookeeper
   rotate: false
+  xy: 2, 132
+  size: 92, 128
+  orig: 92, 128
+  offset: 0, 0
+  index: -1
+zookeeper-attack
+  rotate: false
   xy: 2, 2
-  size: 128, 128
-  orig: 128, 128
+  size: 92, 128
+  orig: 92, 128
   offset: 0, 0
   index: -1
