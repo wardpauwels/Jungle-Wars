@@ -5,15 +5,12 @@ import be.howest.junglewars.gameobjects.currency.Currency;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.gameobjects.power.Power;
-import be.howest.junglewars.util.Assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureArray;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import java.util.ArrayList;
@@ -44,7 +41,6 @@ public class GameScreen extends ScreenAdapter {
         gameState = GameState.READY;
 
 
-
         // Background
 //        Texture bgTexture = new Texture(Gdx.files.internal("images/backgrounds/background-trees.png"));
 //        backgroundSprite = new Sprite(bgTexture);
@@ -62,7 +58,7 @@ public class GameScreen extends ScreenAdapter {
 
         // Players
         players = new ArrayList<Player>();
-        players.add(new Player("John", 70, 80, "harambe.png"));
+        players.add(new Player("John", 70, 80, "harambe"));
 
         // Enemies
         enemies = new ArrayList<Enemy>();
@@ -72,7 +68,7 @@ public class GameScreen extends ScreenAdapter {
     public void update(float dt) {
         switch (gameState) {
             case READY:
-                updateReady();
+                updateReady(dt);
                 break;
             case RUNNING:
                 updateRunning(dt);
@@ -80,7 +76,7 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    private void updateReady() {
+    private void updateReady(float dt) {
         // TODO: show some message like "press any key to start"
         if (Gdx.input.justTouched()) {
             gameState = GameState.RUNNING;
@@ -89,7 +85,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void updateRunning(float dt) {
         for (Player player : players) {
-            player.handleInput();
+            player.update(dt);
         }
 
         checkCollision();
@@ -126,12 +122,15 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor( 1, 0, 0, 1 );
+        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT );
+
         update(delta);
 
         SpriteBatch batch = game.getBatch();
         batch.begin();
         batch.disableBlending();
-        backgroundSprite.draw(batch);
+//        backgroundSprite.draw(batch);
 
         for (Player player : players) {
             player.draw(batch);

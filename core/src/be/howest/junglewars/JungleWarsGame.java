@@ -10,10 +10,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class JungleWarsGame extends Game {
-    // TODO: http://gamedev.stackexchange.com/questions/112582/libgdx-switching-between-screens-without-losing-information
     private FPSLogger fpsLogger;
-    private SpriteBatch batch;
-    private BitmapFont font;
+    public SpriteBatch batch;
     private int gameLevel;
     private int gameDifficulty;
 
@@ -28,7 +26,6 @@ public class JungleWarsGame extends Game {
 
         fpsLogger = new FPSLogger();
         batch = new SpriteBatch();
-        font = new BitmapFont();
 
         // TODO: loading screen while assets are loading
 
@@ -71,10 +68,6 @@ public class JungleWarsGame extends Game {
 
     public void setGameDifficulty(int gameDifficulty) {
         this.gameDifficulty = gameDifficulty;
-    }
-
-    public BitmapFont getFont() {
-        return font;
     }
 
 }

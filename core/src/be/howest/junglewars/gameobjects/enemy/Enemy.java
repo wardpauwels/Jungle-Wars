@@ -7,6 +7,8 @@ import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -91,8 +93,14 @@ public class Enemy extends GameObject {
     }
 
     @Override
-    protected void setAnimationFrames() {
+    protected TextureAtlas setAtlas() {
+        return null;
+    }
+
+    @Override
+    protected TextureRegion[] setAnimationFrames() {
         // TODO
+        return new TextureRegion[0];
     }
 
     @Override

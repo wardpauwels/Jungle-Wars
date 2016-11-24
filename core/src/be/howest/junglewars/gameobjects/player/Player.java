@@ -6,7 +6,8 @@ import be.howest.junglewars.gameobjects.missile.Missile;
 import be.howest.junglewars.gameobjects.power.Power;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -31,6 +32,8 @@ public class Player extends GameObject {
     private String name;
     private int lives;
     private int score;
+    private int level;
+    private String textureUrl;
 
     private float shootTime;
     private float shootTimer;
@@ -38,14 +41,31 @@ public class Player extends GameObject {
 
     private boolean isLookingLeft;
 
-    private int level;
+    private TextureRegion[] shootAnimationFrames;
+    private Animation shootAnimation;
+    private boolean doShootAnimation;
+    private float shootAnimationTimer;
 
     public Player(String name, float width, float height, String textureUrl) {
-        super(width, height, "images/characters/player/" + textureUrl);
+        super(width, height, "harambe");
         this.name = name;
+        this.textureUrl = textureUrl;
+
+        shootAnimationFrames = new TextureRegion[]{
+                atlas.findRegion("harambe-shoot")
+        };
+        shootAnimation = new Animation(.25f, shootAnimationFrames);
+        shootAnimation.setPlayMode(Animation.PlayMode.NORMAL);
+        doShootAnimation = false;
+        shootAnimationTimer = 0f;
+
+
     }
 
-    public void handleInput() {
+    private void handleInput() {
+
+        System.out.println("handle input");
+
         keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
@@ -86,13 +106,11 @@ public class Player extends GameObject {
             if (topBorderTouch || bottomBorderTouch) currentSpeed = speed;
             position.x = rightBorderTouch ? Gdx.graphics.getWidth() - bounds.getWidth() : position.x + currentSpeed;
         }
-
-        if (activeSprite.isFlipX() != isLookingLeft) {
-            activeSprite.flip(true, false);
-        }
     }
 
     private void shoot(float x, float y) {
+        doShootAnimation = true;
+
         canShoot = false;
         shootTimer = 0;
         x -= 16;
@@ -107,17 +125,23 @@ public class Player extends GameObject {
     }
 
     @Override
-    protected void setAnimationFrames() {
+    protected TextureAtlas setAtlas() {
+        return new TextureAtlas("atlas/players.atlas");
+    }
 
+    @Override
+    protected TextureRegion[] setAnimationFrames() {
+
+        return new TextureRegion[0];
     }
 
     @Override
     protected Vector2 generateSpawnPosition() {
-        return new Vector2();
+        return new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
     }
 
     @Override
-    protected void update(float dt) {
+    public void update(float dt) {
         handleInput();
 
         // TODO remove missiles
@@ -137,8 +161,26 @@ public class Player extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
+        if (doShootAnimation) {
+            shootAnimationTimer = 0;
+            doShootAnimation = false;
+        }
+        if (!shootAnimation.isAnimationFinished(shootAnimationTimer)) {
+
+            activeSprite.setTexture(shootAnimation.getKeyFrame(shootAnimationTimer, false).getTexture());
+        } else {
+            activeSprite.setTexture(defaultTexture);
+        }
+
+        activeSprite = new Sprite(new Texture(Gdx.files.internal("images/players/harambe-normal.png")));
+
+        activeSprite.flip(isLookingLeft, false);
         activeSprite.setPosition(position.x, position.y);
         activeSprite.draw(batch);
+
+
+//        activeSprite.setPosition(position.x, position.y);
+//        activeSprite.draw(batch);
 
         // TODO render missiles and helper?
         /*

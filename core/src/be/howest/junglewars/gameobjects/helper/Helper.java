@@ -5,8 +5,8 @@ import be.howest.junglewars.gameobjects.GameObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Helper extends GameObject {
@@ -26,13 +26,19 @@ public class Helper extends GameObject {
         this.movementType = movementType;
         this.specialActionType = specialActionType;
 
-        texture = new Texture(Gdx.files.internal(textureUrl));
+//        texture = new Texture(Gdx.files.internal(textureUrl));
     }
 
     @Override
-    protected void setAnimationFrames() {
+    protected TextureAtlas setAtlas() {
+        return null;
+    }
+
+    @Override
+    protected TextureRegion[] setAnimationFrames() {
         // TODO
-        animationFrames[ANIMATION_WINGS_UP] = new TextureRegion(texture, 0, 0, 80, 80);
+//        animationFrames[ANIMATION_WINGS_UP] = new TextureRegion(texture, 0, 0, 80, 80);
+        return new TextureRegion[0];
     }
 
     @Override
