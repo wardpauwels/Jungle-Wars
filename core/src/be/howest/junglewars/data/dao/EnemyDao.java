@@ -1,0 +1,32 @@
+package be.howest.junglewars.data.dao;
+
+import be.howest.junglewars.data.entities.EnemyEntity;
+import be.howest.junglewars.data.util.HibernateUtil;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class EnemyDao {
+
+    public static List<EnemyEntity> getAllEnemies() {
+        Session session = HibernateUtil.createSession();
+        List<EnemyEntity> entities = new LinkedList<>();
+
+        try {
+            session.beginTransaction();
+            entities = session.createQuery("from EnemyEntity").list();
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
+        } finally {
+            session.close();
+        }
+
+        return entities;
+    }
+
+}
