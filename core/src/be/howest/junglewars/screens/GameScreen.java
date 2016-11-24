@@ -58,7 +58,7 @@ public class GameScreen extends ScreenAdapter {
 
         // Players
         players = new ArrayList<Player>();
-        players.add(new Player("John", 70, 80, "harambe", 50));
+        players.add(new Player("John", 70, 80, "harambe", 20));
 
         // Enemies
         enemies = new ArrayList<Enemy>();

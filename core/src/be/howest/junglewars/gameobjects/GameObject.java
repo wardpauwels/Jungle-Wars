@@ -24,7 +24,7 @@ public abstract class GameObject {
         atlas = setAtlas();
         position = generateSpawnPosition();
         activeSprite = new Sprite();
-        defaultSprite = atlas.createSprite(textureName + "-normal");
+        defaultSprite = atlas.createSprite(textureName);
         this.bounds = new Rectangle(position.x - width / 2, position.y - height / 2, width, height);
     }
 

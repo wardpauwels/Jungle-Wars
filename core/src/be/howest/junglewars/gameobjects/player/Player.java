@@ -43,6 +43,10 @@ public class Player extends GameObject {
     private boolean isLookingLeft;
 
     private Sprite shootingSprite;
+    private boolean isShooting;
+    private float shootingAnimationTime;
+    private float shootingAnimationTimer;
+
 
     public Player(String name, float width, float height, String textureName, float speed) {
         super(width, height, "harambe");
@@ -50,10 +54,14 @@ public class Player extends GameObject {
         this.textureName = textureName;
         this.speed = speed;
 
-        this.shootTime = .25f;
+        this.shootTime = .3f;
         this.shootTimer = 0;
+        this.canShoot = true;
 
         shootingSprite = atlas.createSprite("harambe-shoot");
+        this.isShooting = false;
+        this.shootingAnimationTime = .15f;
+        this.shootingAnimationTimer = 0;
 
     }
 
@@ -91,7 +99,7 @@ public class Player extends GameObject {
         if (keyLeftPressed) {
             isLookingLeft = true;
             if (topBorderTouch || bottomBorderTouch) currentSpeed = speed;
-            position.x = rightBorderTouch ? 0 : position.x - currentSpeed;
+            position.x = leftBorderTouch ? 0 : position.x - currentSpeed;
         }
         if (keyRightPressed) {
             isLookingLeft = false;
@@ -102,6 +110,7 @@ public class Player extends GameObject {
 
     private void shoot(float x, float y) {
         canShoot = false;
+        isShooting = true;
         shootTimer = 0;
         x -= 16;
         y -= 14;
@@ -111,7 +120,8 @@ public class Player extends GameObject {
 
         float missileY = position.y + bounds.getHeight() - 28;
         float radians = MathUtils.atan2(y - missileY, x - missileX);
-        missiles.add(new Missile(this, missileX, missileY, radians, "banana.png", 10, 10, -10, 3));
+        Missile m = new Missile(this, missileX, missileY, radians, "banana", 10, 10, -10, 3);
+//        missiles.add(new Missile(this, missileX, missileY, radians, "banana", 10, 10, -10, 3));
     }
 
     @Override
@@ -127,6 +137,26 @@ public class Player extends GameObject {
     @Override
     public void update(float dt) {
         handleInput();
+
+        if(shootTimer>shootTime){
+            canShoot = true;
+            shootTimer = 0;
+        } else {
+            shootTimer += dt;
+        }
+
+        if(isShooting){
+
+            if(shootingAnimationTimer > shootingAnimationTime){
+                shootingAnimationTimer = 0;
+                isShooting = false;
+
+            }else{
+                shootingAnimationTimer += dt;
+            }
+        }
+
+
 
         // TODO remove missiles
 //        for (int i = 0; i < missiles.size(); i++) {
@@ -162,9 +192,18 @@ public class Player extends GameObject {
 //        activeSprite = new Sprite(new Texture(Gdx.files.internal("images/players/harambe-normal.png")));
 
         activeSprite = defaultSprite;
+        if(isShooting){
 
-        activeSprite.flip(isLookingLeft, false);
+            activeSprite = shootingSprite;
+        }
+
+
+
+        if(activeSprite.isFlipX() != isLookingLeft){
+            activeSprite.flip(true,false);
+        }
         activeSprite.setPosition(position.x, position.y);
+        activeSprite.setSize(bounds.getWidth(), bounds.getHeight());
         activeSprite.draw(batch);
 
 //        activeSprite.setPosition(position.x, position.y);
