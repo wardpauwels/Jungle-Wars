@@ -6,8 +6,9 @@ import be.howest.junglewars.gameobjects.missile.Missile;
 import be.howest.junglewars.gameobjects.power.Power;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -33,7 +34,7 @@ public class Player extends GameObject {
     private int lives;
     private int score;
     private int level;
-    private String textureUrl;
+    private String textureName;
 
     private float shootTime;
     private float shootTimer;
@@ -41,31 +42,22 @@ public class Player extends GameObject {
 
     private boolean isLookingLeft;
 
-    private TextureRegion[] shootAnimationFrames;
-    private Animation shootAnimation;
-    private boolean doShootAnimation;
-    private float shootAnimationTimer;
+    private Sprite shootingSprite;
 
-    public Player(String name, float width, float height, String textureUrl) {
+    public Player(String name, float width, float height, String textureName, float speed) {
         super(width, height, "harambe");
         this.name = name;
-        this.textureUrl = textureUrl;
+        this.textureName = textureName;
+        this.speed = speed;
 
-        shootAnimationFrames = new TextureRegion[]{
-                atlas.findRegion("harambe-shoot")
-        };
-        shootAnimation = new Animation(.25f, shootAnimationFrames);
-        shootAnimation.setPlayMode(Animation.PlayMode.NORMAL);
-        doShootAnimation = false;
-        shootAnimationTimer = 0f;
+        this.shootTime = .25f;
+        this.shootTimer = 0;
 
+        shootingSprite = atlas.createSprite("harambe-shoot");
 
     }
 
     private void handleInput() {
-
-        System.out.println("handle input");
-
         keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
@@ -109,8 +101,6 @@ public class Player extends GameObject {
     }
 
     private void shoot(float x, float y) {
-        doShootAnimation = true;
-
         canShoot = false;
         shootTimer = 0;
         x -= 16;
@@ -127,12 +117,6 @@ public class Player extends GameObject {
     @Override
     protected TextureAtlas setAtlas() {
         return new TextureAtlas("atlas/players.atlas");
-    }
-
-    @Override
-    protected TextureRegion[] setAnimationFrames() {
-
-        return new TextureRegion[0];
     }
 
     @Override
@@ -161,23 +145,27 @@ public class Player extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
-        if (doShootAnimation) {
+
+        /*if (doShootAnimation) {
             shootAnimationTimer = 0;
             doShootAnimation = false;
         }
         if (!shootAnimation.isAnimationFinished(shootAnimationTimer)) {
-
+            shootAnimationTimer += Gdx.graphics.getDeltaTime();
+            batch.draw(shootAnimation.getKeyFrame(shootAnimationTimer, false), position.x, position.y);
             activeSprite.setTexture(shootAnimation.getKeyFrame(shootAnimationTimer, false).getTexture());
         } else {
             activeSprite.setTexture(defaultTexture);
-        }
+            batch.draw(defaultTexture, position.x, position.y);
+        }*/
 
-        activeSprite = new Sprite(new Texture(Gdx.files.internal("images/players/harambe-normal.png")));
+//        activeSprite = new Sprite(new Texture(Gdx.files.internal("images/players/harambe-normal.png")));
+
+        activeSprite = defaultSprite;
 
         activeSprite.flip(isLookingLeft, false);
         activeSprite.setPosition(position.x, position.y);
         activeSprite.draw(batch);
-
 
 //        activeSprite.setPosition(position.x, position.y);
 //        activeSprite.draw(batch);

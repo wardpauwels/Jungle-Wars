@@ -58,7 +58,7 @@ public class GameScreen extends ScreenAdapter {
 
         // Players
         players = new ArrayList<Player>();
-        players.add(new Player("John", 70, 80, "harambe"));
+        players.add(new Player("John", 70, 80, "harambe", 50));
 
         // Enemies
         enemies = new ArrayList<Enemy>();
@@ -78,9 +78,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void updateReady(float dt) {
         // TODO: show some message like "press any key to start"
-        if (Gdx.input.justTouched()) {
-            gameState = GameState.RUNNING;
-        }
+        gameState = GameState.RUNNING;
     }
 
     private void updateRunning(float dt) {

@@ -28,12 +28,6 @@ public class Power extends GameObject {
     }
 
     @Override
-    protected TextureRegion[] setAnimationFrames() {
-
-        return new TextureRegion[0];
-    }
-
-    @Override
     protected Vector2 generateSpawnPosition() {
         return null;
     }

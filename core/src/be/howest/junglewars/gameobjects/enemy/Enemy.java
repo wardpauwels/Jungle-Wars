@@ -98,12 +98,6 @@ public class Enemy extends GameObject {
     }
 
     @Override
-    protected TextureRegion[] setAnimationFrames() {
-        // TODO
-        return new TextureRegion[0];
-    }
-
-    @Override
     protected Vector2 generateSpawnPosition() {
         float x = MathUtils.random(0, Gdx.graphics.getWidth());
         float y = MathUtils.random(0, Gdx.graphics.getHeight());

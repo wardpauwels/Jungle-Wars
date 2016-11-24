@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class JungleWarsGame extends Game {
     private FPSLogger fpsLogger;
-    public SpriteBatch batch;
+    private SpriteBatch batch;
     private int gameLevel;
     private int gameDifficulty;
 
@@ -22,7 +22,6 @@ public class JungleWarsGame extends Game {
             //TODO: still loading/updating all files
             System.out.printf("Loading assets: %f%n", Assets.manager.getProgress() * 100); // percentage for progress bar
         }
-        Assets.manager.finishLoading();
 
         fpsLogger = new FPSLogger();
         batch = new SpriteBatch();

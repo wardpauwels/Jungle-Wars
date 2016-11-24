@@ -35,13 +35,6 @@ public class Helper extends GameObject {
     }
 
     @Override
-    protected TextureRegion[] setAnimationFrames() {
-        // TODO
-//        animationFrames[ANIMATION_WINGS_UP] = new TextureRegion(texture, 0, 0, 80, 80);
-        return new TextureRegion[0];
-    }
-
-    @Override
     protected Vector2 generateSpawnPosition() {
         return new Vector2(owner.getPosition().x - bounds.x, owner.getPosition().y + bounds.y);
     }

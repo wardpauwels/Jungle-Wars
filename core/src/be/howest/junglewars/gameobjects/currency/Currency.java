@@ -18,12 +18,6 @@ public class Currency extends GameObject {
     }
 
     @Override
-    protected TextureRegion[] setAnimationFrames() {
-
-        return new TextureRegion[0];
-    }
-
-    @Override
     protected Vector2 generateSpawnPosition() {
         // TODO: random on the map
         return null;
