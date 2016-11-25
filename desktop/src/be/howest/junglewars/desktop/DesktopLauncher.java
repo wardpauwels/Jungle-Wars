@@ -7,15 +7,10 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 public class DesktopLauncher {
     public static void main(String[] arg) {
 
-        AtlasPacker.packAll();
+//        AtlasPacker.packAll();
 
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Jungle Wars: The Revenge of Harambe";
-
-//        Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-//        config.width = (int) screensize.getWidth();
-//        config.height = (int) screensize.getHeight();
-//        config.fullscreen = true;
         config.width = 1600;
         config.height = 900;
 
