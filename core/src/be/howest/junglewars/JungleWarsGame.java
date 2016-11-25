@@ -28,6 +28,9 @@ public class JungleWarsGame extends Game {
         fpsLogger = new FPSLogger();
         batch = new SpriteBatch();
 
+        gameLevel = 1;
+        gameDifficulty = Difficulty.EASY;
+
         bgAtlas = new TextureAtlas("atlas/backgrounds.atlas");
 
         // TODO: loading screen while assets are loading

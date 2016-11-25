@@ -94,7 +94,7 @@ public class GameScreen extends ScreenAdapter {
         checkCollision();
 
         availableEnemies = enemySpawner.generateEnemies();
-//
+
 //        for (Player player : players) {
 //            player.update(dt);
 //            player.getHelper().update(dt);
