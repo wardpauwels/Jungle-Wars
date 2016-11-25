@@ -95,7 +95,7 @@ public class Enemy extends GameObject {
 
     @Override
     protected TextureAtlas setAtlas() {
-        return null;
+        return new TextureAtlas("atlas/enemies.atlas");
     }
 
     private void calculateStats(int level, Difficulty difficulty, int baseDamage, int baseHitpoints, int baseSpeed, float baseAttackSpeed) {
