@@ -5,6 +5,7 @@ import be.howest.junglewars.JungleWarsGame;
 import be.howest.junglewars.gameobjects.currency.Currency;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.gameobjects.enemy.EnemySpawner;
+import be.howest.junglewars.gameobjects.missile.Missile;
 import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.gameobjects.power.Power;
 import com.badlogic.gdx.Gdx;
@@ -27,8 +28,9 @@ public class GameScreen extends ScreenAdapter {
     private Difficulty difficulty;
 
     private ArrayList<Player> players;
-    private Map<Enemy, Integer> availableEnemies;
+    private ArrayList<Missile> playerMissiles;
     private ArrayList<Enemy> enemies;
+    private ArrayList<Missile> enemyMissiles;
     private ArrayList<Power> powers;
     private ArrayList<Currency> currencies;
 
@@ -45,12 +47,10 @@ public class GameScreen extends ScreenAdapter {
         this.level = game.getGameLevel();
         this.difficulty = game.getGameDifficulty();
 
-        enemySpawner = new EnemySpawner(level, difficulty);
+        gameState = GameState.READY;
 
         backgroundSprite = game.getBgAtlas().createSprite("game");
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        gameState = GameState.READY;
 
         // Fonts
 //        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT));
@@ -61,13 +61,19 @@ public class GameScreen extends ScreenAdapter {
 //        bigFont = generator.generateFont(parameter);
 //        generator.dispose();
 
+        enemySpawner = new EnemySpawner(level, difficulty);
+
         // Players
         players = new ArrayList<>();
+        playerMissiles = new ArrayList<>();
         players.add(new Player("John", 80, 80, "harambe", 6));
 
         // Enemies
         enemies = new ArrayList<>();
+        enemyMissiles = new ArrayList<>();
 
+        powers = new ArrayList<>();
+        currencies = new ArrayList<>();
     }
 
     public void update(float dt) {
@@ -87,13 +93,15 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void updateRunning(float dt) {
+        // check all objects shouldremoves()
+
+        checkCollision();
+
         for (Player player : players) {
             player.update(dt);
         }
 
-        checkCollision();
-
-        availableEnemies = enemySpawner.generateEnemies();
+        enemySpawner.generateEnemies();
 
 //        for (Player player : players) {
 //            player.update(dt);
@@ -109,10 +117,6 @@ public class GameScreen extends ScreenAdapter {
 //        for (int i = 0; i < enemies.size(); i++) {
 //            enemies.get(i).update(dt);
 //        }
-    }
-
-    private void checkCollision() {
-        // TODO : global collision or collision function inside be.howest.junglewars.gameobjects.GameObject?
     }
 
     @Override
@@ -151,6 +155,12 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void resume() {
 //        if (gameState == GameState.PAUSED) gameState = GameState.RUNNING;
+    }
+
+    private void checkCollision(){
+        for(Player player: players){
+            player.checkCollision(this);
+        }
     }
 
     public GameState getGameState() {

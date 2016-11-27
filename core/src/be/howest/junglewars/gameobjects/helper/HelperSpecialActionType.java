@@ -4,13 +4,13 @@ public enum HelperSpecialActionType {
     SHOOTER {
         @Override
         public void doSpecialAction(Helper helper) {
-            // TODO: shoots at the nearest enemy
+            // TODO: search nearest enemy and shoot him
         }
     },
     MELEE {
         @Override
         public void doSpecialAction(Helper helper) {
-            // TODO: kill enemy on collision
+            // TODO: check collision with enemy and deal damage
         }
     },
     SHIELD {

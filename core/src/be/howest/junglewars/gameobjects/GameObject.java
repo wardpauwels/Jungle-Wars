@@ -1,5 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -36,14 +37,14 @@ public abstract class GameObject {
 
     protected abstract void draw(SpriteBatch batch);
 
+    protected abstract void checkCollision();
+
     public boolean shouldRemove() {
         return shouldRemove;
     }
 
-    //region getters/setters
-    public Vector2 getPosition() {
-        return position;
+    public Rectangle getBounds(){
+        return bounds;
     }
-    //endregion
 
 }

@@ -4,12 +4,12 @@ import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.helper.Helper;
 import be.howest.junglewars.gameobjects.missile.Missile;
 import be.howest.junglewars.gameobjects.power.Power;
+import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -119,7 +119,7 @@ public class Player extends GameObject {
         isShooting = true;
         shootTimer = 0;
 
-        float spawnX = position.x +18 ;
+        float spawnX = position.x + 18;
         if (!isLookingLeft) spawnX += bounds.getWidth() / 2;
         float spawnY = position.y + bounds.getHeight() - 10;
 
@@ -197,7 +197,17 @@ public class Player extends GameObject {
          */
     }
 
+//    @Override
+    public void checkCollision(GameScreen game) {
+        // check
+    }
+
     public ArrayList<Missile> getMissiles() {
         return missiles;
     }
+
+    public Helper getHelper() {
+        return helper;
+    }
+
 }
