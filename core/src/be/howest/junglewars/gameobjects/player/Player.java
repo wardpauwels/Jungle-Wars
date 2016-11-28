@@ -1,7 +1,7 @@
 package be.howest.junglewars.gameobjects.player;
 
+import be.howest.junglewars.GameData;
 import be.howest.junglewars.gameobjects.GameObject;
-import be.howest.junglewars.gameobjects.enemy.MovementType;
 import be.howest.junglewars.gameobjects.helper.Helper;
 import be.howest.junglewars.gameobjects.helper.HelperMovementType;
 import be.howest.junglewars.gameobjects.helper.actions.ShootingAction;
@@ -51,11 +51,12 @@ public class Player extends GameObject {
     private float shootingAnimationTimer;
 
 
-    public Player(GameScreen game, String name, float width, float height, String textureName, float speed) {
-        super(game, "harambe");
+    public Player(GameData game, String name, float width, float height, String textureName) {
+        super(game);
         this.name = name;
         this.textureName = textureName;
-        this.speed = speed;
+
+        // TODO: generator which accepts base stats and calculates your stats
 
         position = new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         initBounds(width, height);

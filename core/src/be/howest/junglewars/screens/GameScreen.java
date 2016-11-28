@@ -1,54 +1,34 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.JungleWarsGame;
-import be.howest.junglewars.gameobjects.currency.Currency;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
+import be.howest.junglewars.GameData;
+import be.howest.junglewars.GameState;
 import be.howest.junglewars.gameobjects.enemy.EnemySpawner;
-import be.howest.junglewars.gameobjects.missile.Missile;
 import be.howest.junglewars.gameobjects.player.Player;
-import be.howest.junglewars.gameobjects.power.Power;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class GameScreen extends ScreenAdapter {
 
-    private JungleWarsGame game;
+    private GameData gameData;
     private GameState gameState;
-    private int level;
-    private Difficulty difficulty;
-
-    private ArrayList<Player> players;
-    private ArrayList<Missile> playerMissiles;
-    private ArrayList<Enemy> enemies;
-    private ArrayList<Missile> enemyMissiles;
-    private ArrayList<Power> powers;
-    private ArrayList<Currency> currencies;
 
     private EnemySpawner enemySpawner;
 
     private Sprite backgroundSprite;
 
-    private FreeTypeFontGenerator fontGenerator;
-    private BitmapFont smallFont;
-    private BitmapFont bigFont;
-
-    public GameScreen(JungleWarsGame game) {
-        this.game = game;
-        this.level = game.getGameLevel();
-        this.difficulty = game.getGameDifficulty();
+    public GameScreen(GameData gameData) {
+        this.gameData = gameData;
 
         gameState = GameState.READY;
 
-        backgroundSprite = game.getBgAtlas().createSprite("game");
+        enemySpawner = new EnemySpawner(gameData.getLevel(), gameData.getDifficulty());
+
+        // create full screen background
+        backgroundSprite = new TextureAtlas("atlas/backgrounds.atlas").createSprite("game");
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // Fonts
@@ -60,19 +40,10 @@ public class GameScreen extends ScreenAdapter {
 //        bigFont = generator.generateFont(parameter);
 //        generator.dispose();
 
-        enemySpawner = new EnemySpawner(level, difficulty);
+        gameData.getPlayers().add(
+                new Player()
+        );
 
-        // Players
-        players = new ArrayList<>();
-        playerMissiles = new ArrayList<>();
-        players.add(new Player(this, "John", 80, 80, "harambe", 6));
-
-        // Enemies
-        enemies = new ArrayList<>();
-        enemyMissiles = new ArrayList<>();
-
-        powers = new ArrayList<>();
-        currencies = new ArrayList<>();
     }
 
     public void update(float dt) {
@@ -150,12 +121,12 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void pause() {
-//        if (gameState == GameState.RUNNING) gameState = GameState.PAUSED;
+//        if (gameState == be.howest.junglewars.GameState.RUNNING) gameState = be.howest.junglewars.GameState.PAUSED;
     }
 
     @Override
     public void resume() {
-//        if (gameState == GameState.PAUSED) gameState = GameState.RUNNING;
+//        if (gameState == be.howest.junglewars.GameState.PAUSED) gameState = be.howest.junglewars.GameState.RUNNING;
     }
 
     private void checkCollision() {
@@ -164,39 +135,4 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    public GameState getGameState() {
-        return gameState;
-    }
-
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public List<Enemy> getEnemies() {
-        return enemies;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public Difficulty getDifficulty() {
-        return difficulty;
-    }
-
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
-    }
-
-    private enum GameState {
-        READY,
-        RUNNING,
-        PAUSED,
-        GAME_OVER, // TODO: if (all) player(s) is/are dead
-        BETWEEN_WAVE; // TODO: if all enemies are dead
-    }
 }

@@ -1,6 +1,6 @@
 package be.howest.junglewars.desktop;
 
-import be.howest.junglewars.JungleWarsGame;
+import be.howest.junglewars.ApplicationMain;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -18,6 +18,6 @@ public class DesktopLauncher {
 
         config.useGL30 = false;
 
-        new LwjglApplication(new JungleWarsGame(), config);
+        new LwjglApplication(new ApplicationMain(), config);
     }
 }

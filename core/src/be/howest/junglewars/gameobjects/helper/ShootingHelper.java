@@ -1,11 +1,8 @@
 package be.howest.junglewars.gameobjects.helper;
 
-import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.gameobjects.helper.actions.HelperAction;
-import be.howest.junglewars.gameobjects.helper.actions.ShootingAction;
 import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.screens.GameScreen;
-import be.howest.junglewars.util.Distance;
 
 public class ShootingHelper extends Helper {
     public ShootingHelper(GameScreen game, String name, float width, float height, HelperMovementType movementType, HelperAction action, Player owner, String textureUrl) {

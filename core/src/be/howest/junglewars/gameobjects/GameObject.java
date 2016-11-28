@@ -1,53 +1,54 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.screens.GameScreen;
+import be.howest.junglewars.GameData;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public abstract class GameObject {
+import java.io.Serializable;
 
-    public GameScreen game;
+public abstract class GameObject implements Serializable {
 
-    // TODO: Sprite has width, height, x, y, texture, color, ...
-
-    protected float speed;
-    public Vector2 position; // position.x and position.y
-    public Rectangle bounds; // bounds.getWidth() and bounds.getHeight()
+    protected GameData gameData;
 
     protected TextureAtlas atlas;
 
+    protected Vector2 position; // position.x and position.y
+    protected Rectangle bounds; // bounds.width and bounds.height // .overlaps() for collision
+
     protected Sprite defaultSprite;
     protected Sprite activeSprite;
+
     protected boolean shouldRemove;
 
-    protected GameObject(GameScreen game, String textureName) {
-        this.game = game;
+    protected GameObject(GameData gameData, float width, float height) {
+        this.gameData = gameData;
         atlas = setAtlas();
-        activeSprite = new Sprite();
-        defaultSprite = atlas.createSprite(textureName);
-    }
+        defaultSprite = setDefaultSprite();
+        activeSprite = defaultSprite;
 
-    protected void initBounds(float width, float height) {
-        bounds = new Rectangle(position.x - width / 2, position.y - height / 2, width, height);
+        position = setSpawnPosition(width, height);
+        bounds = setBounds(width, height);
     }
 
     protected abstract TextureAtlas setAtlas();
+
+    protected abstract Sprite setDefaultSprite();
+
+    protected abstract Vector2 setSpawnPosition(float width, float height);
+
+    private Rectangle setBounds(float width, float height) {
+        return new Rectangle(position.x - width / 2, position.y - height / 2, width, height);
+    }
 
     protected abstract void update(float dt);
 
     protected abstract void draw(SpriteBatch batch);
 
-//    protected abstract void checkCollision();
-
     public boolean shouldRemove() {
         return shouldRemove;
-    }
-
-    public Rectangle getBounds() {
-        return bounds;
     }
 
 }

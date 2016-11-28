@@ -32,5 +32,8 @@ public enum AttackType {
         }
     };
 
+    private float attackTimer;
+    private float attackTime;
+
     public abstract void attack(Enemy enemy);
 }
