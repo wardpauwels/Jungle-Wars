@@ -2,6 +2,7 @@ package be.howest.junglewars.gameobjects.missile;
 
 import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -22,9 +23,9 @@ public class Missile extends GameObject {
     private float lifeTime;
     private float lifeTimer;
 
-    public Missile(Player owner, float width, float height, float x, float y, float destinationX, float destinationY, String textureName, int damage, int speed,
+    public Missile(GameScreen game, Player owner, float width, float height, float x, float y, float destinationX, float destinationY, String textureName, int damage, int speed,
                    int rotationSpeed, int lifeTime) {
-        super(textureName);
+        super(game, textureName);
         this.owner = owner;
 
         position = new Vector2(x, y);

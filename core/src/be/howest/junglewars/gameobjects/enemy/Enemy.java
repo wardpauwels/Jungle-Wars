@@ -37,11 +37,11 @@ public class Enemy extends GameObject {
     private TargetSelectionType targetSelection;
     private Player target;
 
-    public Enemy(String name, String textureUrl,
+    public Enemy(GameScreen game, String name, String textureUrl,
                  int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
                  int experienceWhenKilled, int scoreWhenKilled, int rarity,
                  MovementType[] movementType, TargetSelectionType[] targetSelection, AttackType[] attackTypes) {
-        super(textureUrl);
+        super(game, textureUrl);
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
@@ -57,8 +57,9 @@ public class Enemy extends GameObject {
 
     }
 
-    public Enemy(EnemyEntity entity) {
+    public Enemy(GameScreen game, EnemyEntity entity) {
         this(
+                game,
                 entity.getName(),
                 entity.getTextureFileName(),
                 entity.getBaseDamage(),
@@ -92,6 +93,11 @@ public class Enemy extends GameObject {
         sprite.setPosition(position.x, position.y);
         sprite.draw(batch);
     }
+
+//    @Override
+//    protected void checkCollision() {
+//
+//    }
 
     @Override
     protected TextureAtlas setAtlas() {

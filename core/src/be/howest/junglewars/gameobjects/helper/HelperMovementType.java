@@ -4,7 +4,7 @@ public enum HelperMovementType {
     CIRCLE_AROUND_PLAYER {
         @Override
         public void move(Helper helper) {
-            // TODO: circle around owner
+
         }
 
     },

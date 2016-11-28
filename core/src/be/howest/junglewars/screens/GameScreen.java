@@ -18,7 +18,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class GameScreen extends ScreenAdapter {
 
@@ -66,7 +65,7 @@ public class GameScreen extends ScreenAdapter {
         // Players
         players = new ArrayList<>();
         playerMissiles = new ArrayList<>();
-        players.add(new Player("John", 80, 80, "harambe", 6));
+        players.add(new Player(this, "John", 80, 80, "harambe", 6));
 
         // Enemies
         enemies = new ArrayList<>();
@@ -99,6 +98,7 @@ public class GameScreen extends ScreenAdapter {
 
         for (Player player : players) {
             player.update(dt);
+            player.getHelper().update(dt);
         }
 
         enemySpawner.generateEnemies();
@@ -134,6 +134,7 @@ public class GameScreen extends ScreenAdapter {
 
         for (Player player : players) {
             player.draw(batch);
+            player.getHelper().draw(batch);
 
             // TODO: score and stats
 //            bigFont.setColor(0, 0, 0, 1);
@@ -157,8 +158,8 @@ public class GameScreen extends ScreenAdapter {
 //        if (gameState == GameState.PAUSED) gameState = GameState.RUNNING;
     }
 
-    private void checkCollision(){
-        for(Player player: players){
+    private void checkCollision() {
+        for (Player player : players) {
             player.checkCollision(this);
         }
     }

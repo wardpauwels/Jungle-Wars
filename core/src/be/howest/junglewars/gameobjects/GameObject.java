@@ -9,11 +9,13 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameObject {
 
+    public GameScreen game;
+
     // TODO: Sprite has width, height, x, y, texture, color, ...
 
     protected float speed;
-    protected Vector2 position; // position.x and position.y
-    protected Rectangle bounds; // bounds.getWidth() and bounds.getHeight()
+    public Vector2 position; // position.x and position.y
+    public Rectangle bounds; // bounds.getWidth() and bounds.getHeight()
 
     protected TextureAtlas atlas;
 
@@ -21,15 +23,16 @@ public abstract class GameObject {
     protected Sprite activeSprite;
     protected boolean shouldRemove;
 
-    protected GameObject(String textureName) {
+    protected GameObject(GameScreen game, String textureName) {
+        this.game = game;
         atlas = setAtlas();
         activeSprite = new Sprite();
         defaultSprite = atlas.createSprite(textureName);
     }
 
-    protected void initBounds(float width, float height){
-        bounds = new Rectangle(position.x - width / 2, position.y - height /2, width, height);
-    };
+    protected void initBounds(float width, float height) {
+        bounds = new Rectangle(position.x - width / 2, position.y - height / 2, width, height);
+    }
 
     protected abstract TextureAtlas setAtlas();
 
@@ -37,13 +40,13 @@ public abstract class GameObject {
 
     protected abstract void draw(SpriteBatch batch);
 
-    protected abstract void checkCollision();
+//    protected abstract void checkCollision();
 
     public boolean shouldRemove() {
         return shouldRemove;
     }
 
-    public Rectangle getBounds(){
+    public Rectangle getBounds() {
         return bounds;
     }
 

@@ -1,49 +1,48 @@
 package be.howest.junglewars.gameobjects.helper;
 
-import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.gameobjects.GameObject;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import be.howest.junglewars.gameobjects.helper.actions.HelperAction;
+import be.howest.junglewars.gameobjects.player.Player;
+import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 
+// TODO: should be upgradable (in actions/HelperAction.java?)
 public class Helper extends GameObject {
-    private Player owner;
+    protected Player owner;
+    protected HelperMovementType movementType;
+    // TODO: create a general Action class for all kinds of Game Objects, etc?
+    private HelperAction action;
+
     private String name;
-    private HelperMovementType movementType;
-    private HelperSpecialActionType specialActionType;
 
-    private final int ANIMATION_WINGS_UP = 0;
-    private final int ANIMATION_WINGS_DOWN = 1;
-
-    public Helper(String name, float width, float height, HelperMovementType movementType,
-                  HelperSpecialActionType specialActionType, Player owner, String textureUrl) {
-        super(textureUrl);
+    public Helper(GameScreen game, String name, float width, float height, HelperMovementType movementType,
+                  HelperAction action, Player owner, String textureUrl) {
+        super(game, textureUrl);
         this.owner = owner;
         this.name = name;
         this.movementType = movementType;
-        this.specialActionType = specialActionType;
-
-//        texture = new Texture(Gdx.files.internal(textureUrl));
+        this.action = action;
     }
 
     @Override
     protected TextureAtlas setAtlas() {
-        return null;
+        return new TextureAtlas("atlas/helpers.atlas"); // TODO: each kind of helper looks different...
     }
 
     @Override
-    protected void update(float dt) {
-        specialActionType.doSpecialAction(this);
+    public void update(float dt) {
         movementType.move(this);
-
+        action.doAction();
     }
 
     @Override
-    protected void draw(SpriteBatch batch) {
-        activeSprite.setPosition(position.x, position.y);
+    public void draw(SpriteBatch batch) {
+        activeSprite = defaultSprite;
+    }
+
+    public Player getOwner() {
+        return owner;
     }
 
 }

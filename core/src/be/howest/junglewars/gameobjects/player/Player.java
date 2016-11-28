@@ -1,7 +1,10 @@
 package be.howest.junglewars.gameobjects.player;
 
 import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.gameobjects.enemy.MovementType;
 import be.howest.junglewars.gameobjects.helper.Helper;
+import be.howest.junglewars.gameobjects.helper.HelperMovementType;
+import be.howest.junglewars.gameobjects.helper.actions.ShootingAction;
 import be.howest.junglewars.gameobjects.missile.Missile;
 import be.howest.junglewars.gameobjects.power.Power;
 import be.howest.junglewars.screens.GameScreen;
@@ -48,8 +51,8 @@ public class Player extends GameObject {
     private float shootingAnimationTimer;
 
 
-    public Player(String name, float width, float height, String textureName, float speed) {
-        super("harambe");
+    public Player(GameScreen game, String name, float width, float height, String textureName, float speed) {
+        super(game, "harambe");
         this.name = name;
         this.textureName = textureName;
         this.speed = speed;
@@ -59,6 +62,8 @@ public class Player extends GameObject {
 
         powers = new ArrayList<>();
         missiles = new ArrayList<>();
+
+        helper = new Helper(game, "Shooty", 50,50, HelperMovementType.FOLLOW_PLAYER, new ShootingAction(this), this, "red-wings-up");
 
         this.shootTime = .3f;
         this.shootTimer = 0;
@@ -123,7 +128,7 @@ public class Player extends GameObject {
         if (!isLookingLeft) spawnX += bounds.getWidth() / 2;
         float spawnY = position.y + bounds.getHeight() - 10;
 
-        missiles.add(new Missile(this, 34, 20, spawnX, spawnY, destinationX, destinationY, "banana", 10, 500, -10, 3));
+        missiles.add(new Missile(game, this, 34, 20, spawnX, spawnY, destinationX, destinationY, "banana", 10, 500, -10, 3));
     }
 
     @Override
@@ -137,7 +142,6 @@ public class Player extends GameObject {
 
         if (shootTimer > shootTime) {
             canShoot = true;
-            shootTimer = 0;
         } else {
             shootTimer += dt;
         }
