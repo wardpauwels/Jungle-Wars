@@ -20,31 +20,28 @@ public abstract class Helper extends GameObject {
 
     public Helper(GameData gameData, String name, float width, float height, HelperMovement movement,
                   HelperAction action, Player owner, String textureUrl) {
-        super(gameData);
         this.owner = owner;
         this.name = name;
         this.movement = movement;
         this.action = action;
 
-        position = setSpawnPosition();
-        bounds = setBounds(width, height);
+        init(gameData, width, height);
     }
 
     @Override
-    protected TextureAtlas setAtlas() {
+    protected TextureAtlas initAtlas() {
         return new TextureAtlas("atlas/helpers.atlas");
     }
 
     @Override
-    protected Sprite setDefaultSprite() {
-        // TODO
-        throw new UnsupportedOperationException();
+    protected Sprite initDefaultSprite() {
+        return atlas.createSprite("red-wings-up");
     }
 
     @Override
-    protected Vector2 setSpawnPosition() {
-        // TODO
-        throw new UnsupportedOperationException();
+    protected Vector2 initSpawnPosition() {
+        // TODO: NW from player
+        return null;
     }
 
     @Override
