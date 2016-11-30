@@ -1,4 +1,7 @@
 package be.howest.junglewars.gameobjects.enemy.attack;
 
-public class RangedAttack {
+public interface AttackStrategy {
+
+    void attack();
+
 }

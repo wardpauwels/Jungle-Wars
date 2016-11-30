@@ -10,8 +10,9 @@ import com.badlogic.gdx.math.Vector2;
 // Buy upgrades for your helpers with these
 public class Currency extends GameObject {
 
-    public Currency(GameData gameData, float width, float height, int coinValue, float secondsOnField, String textureUrl) {
 
+
+    public Currency(GameData gameData, float width, float height, int coinValue, float secondsOnField, String textureUrl) {
 
         init(gameData, width, height);
     }

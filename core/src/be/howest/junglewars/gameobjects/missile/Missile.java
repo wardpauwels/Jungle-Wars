@@ -53,7 +53,7 @@ public class Missile extends GameObject {
 
         lifeTimer += dt;
         if (lifeTimer > lifeTime) {
-            shouldRemove = true;
+            owner.getMissiles().
         }
     }
 

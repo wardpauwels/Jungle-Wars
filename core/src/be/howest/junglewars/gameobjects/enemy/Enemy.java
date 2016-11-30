@@ -2,11 +2,11 @@ package be.howest.junglewars.gameobjects.enemy;
 
 import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.GameData;
-import be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.gameobjects.enemy.movement.MovementType;
+import be.howest.junglewars.gameobjects.enemy.targetselection.TargetSelectionType;
 import be.howest.junglewars.gameobjects.missile.Missile;
 import be.howest.junglewars.gameobjects.player.Player;
-import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -36,6 +36,8 @@ public class Enemy extends GameObject {
     private int scoreWhenKilled;
     private int experienceWhenKilled;
 
+    private ArrayList<Player> targets;
+
     private AttackType[] attackTypes;
     private MovementType movementType;
     private TargetSelectionType targetSelection;
@@ -55,32 +57,15 @@ public class Enemy extends GameObject {
         missiles = new ArrayList<>();
 
 //        calculateStats(gameScreen.getLevel(), gameScreen.getDifficulty(), baseDamage, baseHitpoints, baseSpeed, baseAttackSpeed);
-        target = chooseTarget();
 
 
         init(gameData, width, height);
     }
 
-    public Enemy(GameScreen game, EnemyEntity entity) {
-        this(
-                game,
-                entity.getName(),
-                entity.getTextureFileName(),
-                entity.getBaseDamage(),
-                entity.getBaseSpeed(),
-                entity.getBaseHitpoints(),
-                entity.getBaseAttackSpeed(),
-                entity.getExperienceWhenKilled(),
-                entity.getScoreWhenKilled(),
-                entity.getRarity(),
-                entity.getMovementTypeEnums(),
-                entity.getTargetSelectionTypeEnums(),
-                entity.getAttackTypeEnums()
-        );
-    }
-
     @Override
     public void update(float dt) {
+        dPosition = movementType.get().moveTo();
+
         float radians = MathUtils.atan2(dPosition.y - position.y, dPosition.x - position.x);
         dPosition.set(
                 MathUtils.cos(radians) * speed,
@@ -126,12 +111,8 @@ public class Enemy extends GameObject {
 //        this.attackSpeed = level * difficulty * baseAttackSpeed;
     }
 
-    private Player chooseTarget() {
-        return targetSelection.selectTarget(this);
-    }
-
-    public void move() {
-        movementType.move(this);
+    private ArrayList<Player> chooseTarget() {
+        return targetSelection.get()
     }
 
     public void attack() {
