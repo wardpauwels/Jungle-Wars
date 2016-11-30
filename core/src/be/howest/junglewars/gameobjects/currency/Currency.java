@@ -11,27 +11,25 @@ import com.badlogic.gdx.math.Vector2;
 public class Currency extends GameObject {
 
     public Currency(GameData gameData, float width, float height, int coinValue, float secondsOnField, String textureUrl) {
-        super(gameData);
 
 
-        position = setSpawnPosition();
-        bounds = setBounds(width, height);
+        init(gameData, width, height);
     }
 
     @Override
-    protected TextureAtlas setAtlas() {
+    protected TextureAtlas initAtlas() {
         // TODO
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected Sprite setDefaultSprite() {
+    protected Sprite initDefaultSprite() {
         // TODO
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected Vector2 setSpawnPosition() {
+    protected Vector2 initSpawnPosition() {
         // TODO
         throw new UnsupportedOperationException();
     }

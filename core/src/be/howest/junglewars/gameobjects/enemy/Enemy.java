@@ -44,7 +44,6 @@ public class Enemy extends GameObject {
                  int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
                  int experienceWhenKilled, int scoreWhenKilled, int rarity,
                  MovementType[] movementType, TargetSelectionType[] targetSelection, AttackType[] attackTypes) {
-        super(gameData);
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
@@ -59,8 +58,7 @@ public class Enemy extends GameObject {
         target = chooseTarget();
 
 
-        position = setSpawnPosition();
-        bounds = setBounds(width, height);
+        init(gameData, width, height);
     }
 
     public Enemy(GameScreen game, EnemyEntity entity) {
@@ -106,17 +104,17 @@ public class Enemy extends GameObject {
 //    }
 
     @Override
-    protected TextureAtlas setAtlas() {
+    protected TextureAtlas initAtlas() {
         return new TextureAtlas("atlas/enemies.atlas");
     }
 
     @Override
-    protected Sprite setDefaultSprite() {
+    protected Sprite initDefaultSprite() {
         return null;
     }
 
     @Override
-    protected Vector2 setSpawnPosition() {
+    protected Vector2 initSpawnPosition() {
         return null;
     }
 

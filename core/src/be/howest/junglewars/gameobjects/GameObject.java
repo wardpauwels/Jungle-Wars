@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,22 +25,23 @@ public abstract class GameObject implements Serializable {
 
 
 
-    protected GameObject(GameData gameData) {
+    protected void init(GameData gameData, float width, float height) {
         this.gameData = gameData;
-
-        atlas = setAtlas();
-        defaultSprite = setDefaultSprite();
+        atlas = initAtlas();
+        position = initSpawnPosition();
+        bounds = initBounds(width, height);
+        defaultSprite = initDefaultSprite();
         activeSprite = defaultSprite;
     }
 
     // TODO: should not be necessary when using one global atlas (loaded at game startup...)
-    protected abstract TextureAtlas setAtlas();
+    protected abstract TextureAtlas initAtlas();
 
-    protected abstract Sprite setDefaultSprite();
+    protected abstract Sprite initDefaultSprite();
 
-    protected abstract Vector2 setSpawnPosition();
+    protected abstract Vector2 initSpawnPosition();
 
-    protected Rectangle setBounds(float width, float height) {
+    protected Rectangle initBounds(float width, float height) {
         return new Rectangle(position.x - width / 2, position.y - height / 2, width, height);
     }
 

@@ -48,8 +48,6 @@ public class Player extends GameObject {
     private int enemiesKilled;
 
     public Player(GameData gameData, String name, float width, float height, String textureName, Helper helper) {
-        super(gameData);
-
         this.name = name;
         this.textureName = textureName;
         this.helper = helper;
@@ -67,9 +65,7 @@ public class Player extends GameObject {
         this.shootingAnimationTime = .15f;
         this.shootingAnimationTimer = 0;
 
-        // TODO: this has to be done in every GameObject class -> get rid of this
-        position = setSpawnPosition();
-        bounds = setBounds(width, height);
+        init(gameData, width, height);
     }
 
     private void handleInput() {
@@ -151,17 +147,17 @@ public class Player extends GameObject {
     }
 
     @Override
-    protected TextureAtlas setAtlas() {
+    protected TextureAtlas initAtlas() {
         return new TextureAtlas("atlas/players.atlas");
     }
 
     @Override
-    protected Sprite setDefaultSprite() {
+    protected Sprite initDefaultSprite() {
         return new Sprite(atlas.createSprite(textureName));
     }
 
     @Override
-    protected Vector2 setSpawnPosition() {
+    protected Vector2 initSpawnPosition() {
         return new Vector2(Gdx.graphics.getWidth() - bounds.width, Gdx.graphics.getHeight() - bounds.height);
     }
 

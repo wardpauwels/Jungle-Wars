@@ -1,9 +1,8 @@
 package be.howest.junglewars.gameobjects.power;
 
 import be.howest.junglewars.GameData;
-import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.gameobjects.GameObject;
-import be.howest.junglewars.screens.GameScreen;
+import be.howest.junglewars.gameobjects.player.Player;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -19,26 +18,24 @@ public class Power extends GameObject {
     private Player owner;
 
     public Power(GameData gameData, float width, float height, String textureUrl, PowerAction powerAction, boolean isPowerUp) {
-        super(gameData);
         this.powerAction = powerAction;
         this.isPowerUp = isPowerUp;
 
-        position = setSpawnPosition();
-        bounds = setBounds(width, height);
+        init(gameData, width, height);
     }
 
     @Override
-    protected TextureAtlas setAtlas() {
+    protected TextureAtlas initAtlas() {
         return null;
     }
 
     @Override
-    protected Sprite setDefaultSprite() {
+    protected Sprite initDefaultSprite() {
         return null;
     }
 
     @Override
-    protected Vector2 setSpawnPosition() {
+    protected Vector2 initSpawnPosition() {
         return null;
     }
 
