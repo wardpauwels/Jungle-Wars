@@ -1,6 +1,7 @@
 package be.howest.junglewars.gameobjects.enemy;
 
 import be.howest.junglewars.Difficulty;
+import be.howest.junglewars.GameData;
 import be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.missile.Missile;
@@ -39,11 +40,11 @@ public class Enemy extends GameObject {
     private MovementType movementType;
     private TargetSelectionType targetSelection;
 
-    public Enemy(GameScreen game, String name, String textureUrl,
+    public Enemy(GameData gameData, String name, String textureUrl, float width, float height,
                  int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
                  int experienceWhenKilled, int scoreWhenKilled, int rarity,
                  MovementType[] movementType, TargetSelectionType[] targetSelection, AttackType[] attackTypes) {
-        super(game, textureUrl);
+        super(gameData);
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
@@ -58,6 +59,8 @@ public class Enemy extends GameObject {
         target = chooseTarget();
 
 
+        position = setSpawnPosition();
+        bounds = setBounds(width, height);
     }
 
     public Enemy(GameScreen game, EnemyEntity entity) {
@@ -113,7 +116,7 @@ public class Enemy extends GameObject {
     }
 
     @Override
-    protected Vector2 setSpawnPosition(float width, float height) {
+    protected Vector2 setSpawnPosition() {
         return null;
     }
 

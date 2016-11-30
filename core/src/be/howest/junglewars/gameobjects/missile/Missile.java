@@ -1,5 +1,6 @@
 package be.howest.junglewars.gameobjects.missile;
 
+import be.howest.junglewars.GameData;
 import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.screens.GameScreen;
@@ -21,13 +22,12 @@ public class Missile extends GameObject {
     private float lifeTime;
     private float lifeTimer;
 
-    public Missile(GameScreen game, Player owner, float width, float height, float x, float y, float destinationX, float destinationY, String textureName, int damage, int speed,
+    public Missile(GameData gameData, Player owner, float width, float height, float x, float y, float destinationX, float destinationY, String textureName, int damage, int speed,
                    int rotationSpeed, int lifeTime) {
-        super(game, textureName);
+        super(gameData);
         this.owner = owner;
 
         position = new Vector2(x, y);
-        initBounds(width, height);
 
         this.damage = damage;
         this.speed = speed;
@@ -39,6 +39,9 @@ public class Missile extends GameObject {
 
         this.lifeTime = lifeTime;
         this.lifeTimer = 0;
+
+        position = setSpawnPosition();
+        bounds = setBounds(width, height);
     }
 
     @Override

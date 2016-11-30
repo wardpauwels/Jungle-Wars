@@ -7,13 +7,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GameObject implements Serializable {
 
-    protected GameData gameData;
+    public GameData gameData;
 
     protected TextureAtlas atlas;
 
@@ -23,10 +24,10 @@ public abstract class GameObject implements Serializable {
     protected Sprite defaultSprite;
     protected Sprite activeSprite;
 
-    protected GameObject(GameData gameData, float width, float height) {
+
+
+    protected GameObject(GameData gameData) {
         this.gameData = gameData;
-        position = setSpawnPosition(width, height);
-        bounds = setBounds(width, height);
 
         atlas = setAtlas();
         defaultSprite = setDefaultSprite();
@@ -38,9 +39,9 @@ public abstract class GameObject implements Serializable {
 
     protected abstract Sprite setDefaultSprite();
 
-    protected abstract Vector2 setSpawnPosition(float width, float height);
+    protected abstract Vector2 setSpawnPosition();
 
-    private Rectangle setBounds(float width, float height) {
+    protected Rectangle setBounds(float width, float height) {
         return new Rectangle(position.x - width / 2, position.y - height / 2, width, height);
     }
 

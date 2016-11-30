@@ -4,7 +4,7 @@ import be.howest.junglewars.GameData;
 import be.howest.junglewars.GameState;
 import be.howest.junglewars.JungleWars;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
-import be.howest.junglewars.gameobjects.enemy.EnemySpawner;
+import be.howest.junglewars.spawners.EnemySpawner;
 import be.howest.junglewars.gameobjects.player.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;

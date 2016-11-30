@@ -1,8 +1,9 @@
-package be.howest.junglewars.gameobjects.enemy;
+package be.howest.junglewars.spawners;
 
 import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.data.dao.EnemyDao;
 import be.howest.junglewars.data.entities.EnemyEntity;
+import be.howest.junglewars.gameobjects.enemy.Enemy;
 
 import java.util.HashMap;
 import java.util.HashSet;
