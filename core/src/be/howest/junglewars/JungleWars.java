@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class ApplicationMain extends Game {
+public class JungleWars extends Game {
 
     private FPSLogger fpsLogger;
 
@@ -30,7 +30,7 @@ public class ApplicationMain extends Game {
         // TODO: get level and difficulty from settings/savings
         GameData gameData = new GameData(1, Difficulty.EASY);
 
-        setScreen(new GameScreen(gameData));
+        setScreen(new GameScreen(this, gameData));
     }
 
     @Override

@@ -2,12 +2,10 @@ package be.howest.junglewars.gameobjects.player;
 
 import be.howest.junglewars.GameData;
 import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.gameobjects.helper.Helper;
-import be.howest.junglewars.gameobjects.helper.HelperMovementType;
-import be.howest.junglewars.gameobjects.helper.actions.ShootingAction;
 import be.howest.junglewars.gameobjects.missile.Missile;
 import be.howest.junglewars.gameobjects.power.Power;
-import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -16,77 +14,69 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+import java.util.Currency;
 
 public class Player extends GameObject {
 
-    private boolean keyUpPressed;
-    private boolean keyDownPressed;
-    private boolean keyLeftPressed;
-    private boolean keyRightPressed;
+    private final Sprite SHOOTING_SPRITE = atlas.createSprite("harambe-shoot");
 
-    private boolean topBorderTouch;
-    private boolean bottomBorderTouch;
-    private boolean leftBorderTouch;
-    private boolean rightBorderTouch;
-
-    private Helper helper;
-    private ArrayList<Power> powers;
-    private ArrayList<Missile> missiles;
-
-    private String name;
-    private int lives;
-    private int score;
-    private int level;
     private String textureName;
+
+    private boolean isLookingLeft;
+
+    private boolean isShooting;
+    private float shootingAnimationTime;
+    private float shootingAnimationTimer;
 
     private float shootTime;
     private float shootTimer;
     private boolean canShoot;
 
-    private boolean isLookingLeft;
+    private Helper helper;
+    private ArrayList<Power> collectedPowers;
+    private ArrayList<Power> activePowers;
+    private ArrayList<Currency> collectedCurrencies; // TODO: calculate points of this list
+    private ArrayList<Missile> missiles;
 
-    private Sprite shootingSprite;
-    private boolean isShooting;
-    private float shootingAnimationTime;
-    private float shootingAnimationTimer;
+    private String name;
+    private int hitpoints;
+    private float speed;
+    private float scoreMultiplier; // TODO: when multiplier? over time? when x score is reached, ...?
+    private int score;
+    private int totalDamageTaken;
+    private int totalDamageGiven;
+    private int enemiesKilled;
 
-
-    public Player(GameData game, String name, float width, float height, String textureName) {
-        super(game);
+    public Player(GameData gameData, String name, float width, float height, String textureName, Helper helper) {
+        super(gameData, width, height);
         this.name = name;
         this.textureName = textureName;
+        this.helper = helper;
 
-        // TODO: generator which accepts base stats and calculates your stats
-
-        position = new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-        initBounds(width, height);
-
-        powers = new ArrayList<>();
+        collectedPowers = new ArrayList<>();
+        activePowers = new ArrayList<>();
+        collectedCurrencies = new ArrayList<>();
         missiles = new ArrayList<>();
-
-        helper = new Helper(game, "Shooty", 50,50, HelperMovementType.FOLLOW_PLAYER, new ShootingAction(this), this, "red-wings-up");
 
         this.shootTime = .3f;
         this.shootTimer = 0;
         this.canShoot = true;
 
-        shootingSprite = atlas.createSprite("harambe-shoot");
         this.isShooting = false;
         this.shootingAnimationTime = .15f;
         this.shootingAnimationTimer = 0;
-
     }
 
     private void handleInput() {
-        keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
-        keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
-        keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
-        keyRightPressed = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+        boolean keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
+        boolean keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
+        boolean keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
+        boolean keyRightPressed = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
 
-        topBorderTouch = position.y >= Gdx.graphics.getHeight() - bounds.getHeight();
-        bottomBorderTouch = position.y <= 0;
-        leftBorderTouch = position.x <= 0;
-        rightBorderTouch = position.x >= Gdx.graphics.getWidth() - bounds.getWidth();
+        boolean topBorderTouch = position.y >= Gdx.graphics.getHeight() - bounds.getHeight();
+        boolean bottomBorderTouch = position.y <= 0;
+        boolean leftBorderTouch = position.x <= 0;
+        boolean rightBorderTouch = position.x >= Gdx.graphics.getWidth() - bounds.getWidth();
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && canShoot) {
             shoot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
@@ -120,6 +110,29 @@ public class Player extends GameObject {
         }
     }
 
+    private void handleCollision() {
+        // Enemy missile -> player
+        for (Enemy enemy : gameData.getEnemies()) {
+            for (Missile missile : this.checkCollision(enemy.getMissiles())) {
+                enemy.getMissiles().remove(missile);
+                // TODO: player is hit
+            }
+        }
+
+        // Player -> currency
+        for (Currency currency : this.gameData.getCurrencies()) {
+            collectedCurrencies.add(currency);
+            this.gameData.getCurrencies().remove(currency);
+        }
+
+        // Player -> power
+        for (Power power : this.gameData.getPowers()) {
+            collectedPowers.add(power);
+            this.gameData.getPowers().remove(power);
+            // TODO: instant activate (=add to activatedPowers) or wait for manual activation?
+        }
+    }
+
     private void shoot(float destinationX, float destinationY) {
         canShoot = false;
         isShooting = true;
@@ -129,12 +142,22 @@ public class Player extends GameObject {
         if (!isLookingLeft) spawnX += bounds.getWidth() / 2;
         float spawnY = position.y + bounds.getHeight() - 10;
 
-        missiles.add(new Missile(game, this, 34, 20, spawnX, spawnY, destinationX, destinationY, "banana", 10, 500, -10, 3));
+        // TODO: add new missile to players ArrayList
     }
 
     @Override
     protected TextureAtlas setAtlas() {
         return new TextureAtlas("atlas/players.atlas");
+    }
+
+    @Override
+    protected Sprite setDefaultSprite() {
+        return new Sprite(atlas.createSprite(textureName));
+    }
+
+    @Override
+    protected Vector2 setSpawnPosition(float width, float height) {
+        return new Vector2(Gdx.graphics.getWidth() - bounds.width, Gdx.graphics.getHeight() - bounds.height);
     }
 
     @Override
@@ -148,38 +171,25 @@ public class Player extends GameObject {
         }
 
         if (isShooting) {
-
             if (shootingAnimationTimer > shootingAnimationTime) {
                 shootingAnimationTimer = 0;
                 isShooting = false;
-
             } else {
                 shootingAnimationTimer += dt;
             }
         }
 
-        for (int i = 0; i < missiles.size(); i++) {
-            missiles.get(i).update(dt);
-            if (missiles.get(i).shouldRemove()) {
-                missiles.remove(i);
-                i--;
-            }
+        for (Missile missile : missiles) {
+            missile.update(dt);
         }
+        helper.update(dt);
 
-//        for (int i = 0; i < getHelper().getMissiles().size(); i++) {
-//            if (getHelper().getMissiles().get(i).shouldRemove()) {
-//                getHelper().getMissiles().remove(i);
-//                i--;
-//            }
-//        }
+        handleCollision();
     }
 
     @Override
     public void draw(SpriteBatch batch) {
-        activeSprite = defaultSprite;
-        if (isShooting) {
-            activeSprite = shootingSprite;
-        }
+        activeSprite = isShooting ? SHOOTING_SPRITE : defaultSprite;
 
         if (activeSprite.isFlipX() != isLookingLeft) {
             activeSprite.flip(true, false);
@@ -189,22 +199,10 @@ public class Player extends GameObject {
         activeSprite.setSize(bounds.getWidth(), bounds.getHeight());
         activeSprite.draw(batch);
 
-        // TODO render missiles and helper?
-
         for (Missile missile : missiles) {
             missile.draw(batch);
         }
-        /*
-        helper.render(batch);
-        for (HelperMissile missile : helper.getMissiles()) {
-            missile.draw(batch);
-        }
-         */
-    }
-
-//    @Override
-    public void checkCollision(GameScreen game) {
-        // check
+        helper.draw(batch);
     }
 
     public ArrayList<Missile> getMissiles() {

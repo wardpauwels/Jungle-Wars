@@ -1,8 +1,9 @@
 package be.howest.junglewars.gameobjects.enemy;
 
 import be.howest.junglewars.Difficulty;
-import      be.howest.junglewars.data.entities.EnemyEntity;
+import be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.gameobjects.missile.Missile;
 import be.howest.junglewars.gameobjects.player.Player;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.ArrayList;
 
 public class Enemy extends GameObject {
     private static final float ENEMY_WIDTH = 70;
@@ -27,13 +30,14 @@ public class Enemy extends GameObject {
 
     private int rarity;
 
+    private ArrayList<Missile> missiles;
+
     private int scoreWhenKilled;
     private int experienceWhenKilled;
 
     private AttackType[] attackTypes;
     private MovementType movementType;
     private TargetSelectionType targetSelection;
-    private Player target;
 
     public Enemy(GameScreen game, String name, String textureUrl,
                  int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
@@ -48,9 +52,10 @@ public class Enemy extends GameObject {
         this.movementType = movementType[0];
         this.targetSelection = targetSelection[0];
 
+        missiles = new ArrayList<>();
+
 //        calculateStats(gameScreen.getLevel(), gameScreen.getDifficulty(), baseDamage, baseHitpoints, baseSpeed, baseAttackSpeed);
         target = chooseTarget();
-
 
 
     }
@@ -102,6 +107,16 @@ public class Enemy extends GameObject {
         return new TextureAtlas("atlas/enemies.atlas");
     }
 
+    @Override
+    protected Sprite setDefaultSprite() {
+        return null;
+    }
+
+    @Override
+    protected Vector2 setSpawnPosition(float width, float height) {
+        return null;
+    }
+
     private void calculateStats(int level, Difficulty difficulty, int baseDamage, int baseHitpoints, int baseSpeed, float baseAttackSpeed) {
         // TODO: algorithm (see: EnemySpawner)
 //        this.damage = level * difficulty * baseDamage;
@@ -134,5 +149,9 @@ public class Enemy extends GameObject {
 
     public int getRarity() {
         return rarity;
+    }
+
+    public ArrayList<Missile> getMissiles() {
+        return missiles;
     }
 }

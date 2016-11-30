@@ -18,7 +18,6 @@ public class GameData {
     private List<Player> players;
     private List<Helper> helpers;
     private List<Enemy> enemies;
-    private List<Missile> missiles;
     private List<Power> powers;
     private List<Currency> currencies;
 
@@ -29,7 +28,6 @@ public class GameData {
         this.players = new ArrayList<>();
         this.helpers = new ArrayList<>();
         this.enemies = new ArrayList<>();
-        this.missiles = new ArrayList<>();
         this.powers = new ArrayList<>();
         this.currencies = new ArrayList<>();
     }
@@ -60,10 +58,6 @@ public class GameData {
 
     public List<Enemy> getEnemies() {
         return enemies;
-    }
-
-    public List<Missile> getMissiles() {
-        return missiles;
     }
 
     public List<Power> getPowers() {

@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class GameObject implements Serializable {
 
@@ -21,18 +23,17 @@ public abstract class GameObject implements Serializable {
     protected Sprite defaultSprite;
     protected Sprite activeSprite;
 
-    protected boolean shouldRemove;
-
     protected GameObject(GameData gameData, float width, float height) {
         this.gameData = gameData;
+        position = setSpawnPosition(width, height);
+        bounds = setBounds(width, height);
+
         atlas = setAtlas();
         defaultSprite = setDefaultSprite();
         activeSprite = defaultSprite;
-
-        position = setSpawnPosition(width, height);
-        bounds = setBounds(width, height);
     }
 
+    // TODO: should not be necessary when using one global atlas (loaded at game startup...)
     protected abstract TextureAtlas setAtlas();
 
     protected abstract Sprite setDefaultSprite();
@@ -47,8 +48,40 @@ public abstract class GameObject implements Serializable {
 
     protected abstract void draw(SpriteBatch batch);
 
-    public boolean shouldRemove() {
-        return shouldRemove;
+    protected <T extends GameObject> ArrayList<T> checkCollision(List<T> objects) {
+        ArrayList<T> collision = new ArrayList<>();
+
+        for (T go : objects) {
+            if (this.bounds.overlaps(go.bounds)) {
+                collision.add(go);
+            }
+        }
+
+        return collision;
+    }
+
+    protected <T extends GameObject> T getNearest(T[] objects) {
+        T nearest = objects[0];
+        float dist = this.getDistanceTo(objects[0]);
+
+        for (T go : objects) {
+            float nDist = this.getDistanceTo(go);
+            if (dist > nDist) {
+                nearest = go;
+                dist = nDist;
+            }
+        }
+
+        return nearest;
+    }
+
+    protected float getDistanceTo(GameObject object) {
+        float diffX = Math.abs(this.bounds.x - object.bounds.y);
+        float diffY = Math.abs(this.bounds.y - object.bounds.y);
+
+        double dist = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+
+        return (float) dist;
     }
 
 }

@@ -2,6 +2,8 @@ package be.howest.junglewars.screens;
 
 import be.howest.junglewars.GameData;
 import be.howest.junglewars.GameState;
+import be.howest.junglewars.JungleWars;
+import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.gameobjects.enemy.EnemySpawner;
 import be.howest.junglewars.gameobjects.player.Player;
 import com.badlogic.gdx.Gdx;
@@ -13,6 +15,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class GameScreen extends ScreenAdapter {
 
+    private JungleWars game;
+
     private GameData gameData;
     private GameState gameState;
 
@@ -20,7 +24,10 @@ public class GameScreen extends ScreenAdapter {
 
     private Sprite backgroundSprite;
 
-    public GameScreen(GameData gameData) {
+    private SpriteBatch batch;
+
+    public GameScreen(JungleWars game, GameData gameData) {
+        this.game = game;
         this.gameData = gameData;
 
         gameState = GameState.READY;
@@ -28,9 +35,11 @@ public class GameScreen extends ScreenAdapter {
         enemySpawner = new EnemySpawner(gameData.getLevel(), gameData.getDifficulty());
 
         // create full screen background
+        // TODO: change backgrounds.atlas to a "gamescreen-assets.atlas" or something... (or one assets atlas for all screens in JungleWars.java?)
         backgroundSprite = new TextureAtlas("atlas/backgrounds.atlas").createSprite("game");
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+        // TODO: https://github.com/libgdx/libgdx/wiki/Managing-your-assets#loading-a-ttf-using-the-assethandler
         // Fonts
 //        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT));
 //        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -63,31 +72,21 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void updateRunning(float dt) {
-        // check all objects shouldremoves()
 
-        checkCollision();
-
-        for (Player player : players) {
+        for (Player player : gameData.getPlayers()) {
             player.update(dt);
-            player.getHelper().update(dt);
         }
 
-        enemySpawner.generateEnemies();
+        enemySpawner.generateEnemies(); // TODO: return enemy/enemies if one/multiple should join and add them to GameData
 
-//        for (Player player : players) {
-//            player.update(dt);
-//            player.getHelper().update(dt);
-//            for (Missile missile : player.getMissiles()) {
-//                missile.update(dt);
-//            }
-//            for (HelperMissile missile : player.getHelper().getMissiles()) {
-//                missile.update(dt);
-//            }
-//        }
-//
-//        for (int i = 0; i < enemies.size(); i++) {
-//            enemies.get(i).update(dt);
-//        }
+        for (Enemy enemy : gameData.getEnemies()) {
+            enemy.update(dt);
+        }
+
+        // TODO: currencySpawner.generateCurrencies() + update currencies
+
+        // TODO: powerSpawner.generatePowers() + update powers
+
     }
 
     @Override
@@ -97,23 +96,27 @@ public class GameScreen extends ScreenAdapter {
 
         update(delta);
 
-        SpriteBatch batch = game.getBatch();
+        SpriteBatch batch = game.batch;
         batch.begin();
         batch.disableBlending();
         backgroundSprite.draw(batch);
         batch.enableBlending();
 
-        for (Player player : players) {
+        for (Player player : gameData.getPlayers()) {
             player.draw(batch);
             player.getHelper().draw(batch);
 
-            // TODO: score and stats
+            // TODO: score and stats (handle font with assets manager -> https://github.com/libgdx/libgdx/wiki/Managing-your-assets#loading-a-ttf-using-the-assethandler
 //            bigFont.setColor(0, 0, 0, 1);
 //            bigFont.draw(batch, "Player 1", 20, JungleWarsGame.HEIGHT - 20);
 //            smallFont.draw(batch, "Score: " + player.getName(), 20, JungleWarsGame.HEIGHT - 40);
 //            smallFont.draw(batch, "Score: " + player.getScore(), 20, JungleWarsGame.HEIGHT - 60);
 //            smallFont.draw(batch, "Lives: " + player.getLives(), 20, JungleWarsGame.HEIGHT - 80);
         }
+
+        // TODO: draw currencies
+
+        // TODO: draw powers
 
 //        bigFont.draw(batch, "LEVEL " + level, JungleWarsGame.WIDTH / 2, JungleWarsGame.HEIGHT - 20);
         batch.end();
@@ -127,12 +130,6 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void resume() {
 //        if (gameState == be.howest.junglewars.GameState.PAUSED) gameState = be.howest.junglewars.GameState.RUNNING;
-    }
-
-    private void checkCollision() {
-        for (Player player : players) {
-            player.checkCollision(this);
-        }
     }
 
 }
