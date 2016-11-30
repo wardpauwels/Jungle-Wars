@@ -3,7 +3,7 @@ package be.howest.junglewars.spawners;
 import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.data.dao.EnemyDao;
 import be.howest.junglewars.data.entities.EnemyEntity;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
+import be.howest.junglewars.gameobjects.Enemy;
 
 import java.util.HashMap;
 import java.util.HashSet;

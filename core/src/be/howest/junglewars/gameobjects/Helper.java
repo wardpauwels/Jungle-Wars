@@ -1,31 +1,25 @@
-package be.howest.junglewars.gameobjects.helper;
+package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.gameobjects.GameObject;
-import be.howest.junglewars.gameobjects.helper.actions.HelperAction;
-import be.howest.junglewars.gameobjects.helper.movement.HelperMovement;
-import be.howest.junglewars.gameobjects.player.Player;
+import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 // TODO: should be upgradable
-public abstract class Helper extends GameObject {
+public class Helper extends GameObject {
     private Player owner;
-    private HelperMovement movement;
-    private HelperAction action;
+
+    private String textureUrl;
 
     private String name;
 
-    public Helper(GameData gameData, String name, float width, float height, HelperMovement movement,
-                  HelperAction action, Player owner, String textureUrl) {
+    public Helper(GameScreen game, String name, float width, float height, Player owner, String textureUrl) {
         this.owner = owner;
         this.name = name;
-        this.movement = movement;
-        this.action = action;
+        this.textureUrl = textureUrl;
 
-        init(gameData, width, height);
+        init(game, width, height);
     }
 
     @Override
@@ -40,14 +34,13 @@ public abstract class Helper extends GameObject {
 
     @Override
     protected Vector2 initSpawnPosition() {
-        // TODO: NW from player
-        return null;
+        // TODO: topleft from player
+        return new Vector2(owner.position.x - 1.5f * bounds.getWidth(), owner.position.y - 1.5f * bounds.getHeight());
     }
 
     @Override
     public void update(float dt) {
-        movement.move();
-        action.doAction();
+
     }
 
     @Override

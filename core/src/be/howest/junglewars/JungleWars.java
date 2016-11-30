@@ -28,9 +28,8 @@ public class JungleWars extends Game {
         // TODO: loading screen while assets are loading
 
         // TODO: get level and difficulty from settings/savings
-        GameData gameData = new GameData(1, Difficulty.EASY);
 
-        setScreen(new GameScreen(this, gameData));
+        setScreen(new GameScreen(this, 1, Difficulty.EASY));
     }
 
     @Override

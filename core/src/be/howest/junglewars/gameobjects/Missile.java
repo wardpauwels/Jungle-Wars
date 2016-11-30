@@ -1,8 +1,7 @@
-package be.howest.junglewars.gameobjects.missile;
+package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.gameobjects.player.Player;
-import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.screens.GameScreen;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
@@ -21,7 +20,7 @@ public class Missile extends GameObject {
     private float lifeTime;
     private float lifeTimer;
 
-    public Missile(GameData gameData, Player owner, float width, float height, float x, float y, float destinationX, float destinationY, String textureName, int damage, int speed,
+    public Missile(GameScreen game, Player owner, float width, float height, float x, float y, float destinationX, float destinationY, String textureName, int damage, int speed,
                    int rotationSpeed, int lifeTime) {
         this.owner = owner;
 
@@ -38,12 +37,22 @@ public class Missile extends GameObject {
         this.lifeTime = lifeTime;
         this.lifeTimer = 0;
 
-        init(gameData, width, height);
+        init(game, width, height);
     }
 
     @Override
     protected TextureAtlas initAtlas() {
         return new TextureAtlas("atlas/missiles.atlas");
+    }
+
+    @Override
+    protected Sprite initDefaultSprite() {
+        return null;
+    }
+
+    @Override
+    protected Vector2 initSpawnPosition() {
+        return null;
     }
 
     @Override
@@ -53,7 +62,7 @@ public class Missile extends GameObject {
 
         lifeTimer += dt;
         if (lifeTimer > lifeTime) {
-            owner.getMissiles().
+            owner.getMissiles().remove(this);
         }
     }
 

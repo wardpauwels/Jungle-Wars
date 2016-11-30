@@ -1,11 +1,6 @@
-package be.howest.junglewars.gameobjects.player;
+package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.gameobjects.GameObject;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
-import be.howest.junglewars.gameobjects.helper.Helper;
-import be.howest.junglewars.gameobjects.missile.Missile;
-import be.howest.junglewars.gameobjects.power.Power;
+import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -14,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
-import java.util.Currency;
 
 public class Player extends GameObject {
 
@@ -47,7 +41,7 @@ public class Player extends GameObject {
     private int totalDamageGiven;
     private int enemiesKilled;
 
-    public Player(GameData gameData, String name, float width, float height, String textureName, Helper helper) {
+    public Player(GameScreen game, String name, float width, float height, String textureName, Helper helper) {
         this.name = name;
         this.textureName = textureName;
         this.helper = helper;
@@ -65,7 +59,7 @@ public class Player extends GameObject {
         this.shootingAnimationTime = .15f;
         this.shootingAnimationTimer = 0;
 
-        init(gameData, width, height);
+        init(game, width, height);
     }
 
     private void handleInput() {
@@ -111,9 +105,9 @@ public class Player extends GameObject {
         }
     }
 
-    private void handleCollision() {
+    private void checkCollision() {
         // Enemy missile -> player
-        for (Enemy enemy : gameData.getEnemies()) {
+        for (Enemy enemy : game.getEnemies()) {
             for (Missile missile : this.checkCollision(enemy.getMissiles())) {
                 enemy.getMissiles().remove(missile);
                 // TODO: player is hit
@@ -121,15 +115,15 @@ public class Player extends GameObject {
         }
 
         // Player -> currency
-        for (Currency currency : this.gameData.getCurrencies()) {
+        for (Currency currency : game.getCurrencies()) {
             collectedCurrencies.add(currency);
-            this.gameData.getCurrencies().remove(currency);
+            game.getCurrencies().remove(currency);
         }
 
         // Player -> power
-        for (Power power : this.gameData.getPowers()) {
+        for (Power power : game.getPowers()) {
             collectedPowers.add(power);
-            this.gameData.getPowers().remove(power);
+            game.getPowers().remove(power);
             // TODO: instant activate (=add to activatedPowers) or wait for manual activation?
         }
     }
@@ -184,8 +178,6 @@ public class Player extends GameObject {
             missile.update(dt);
         }
         helper.update(dt);
-
-        handleCollision();
     }
 
     @Override
@@ -214,4 +206,27 @@ public class Player extends GameObject {
         return helper;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public int getHitpoints() {
+        return hitpoints;
+    }
+
+    public ArrayList<Power> getCollectedPowers() {
+        return collectedPowers;
+    }
+
+    public ArrayList<Power> getActivePowers() {
+        return activePowers;
+    }
+
+    public ArrayList<Currency> getCollectedCurrencies() {
+        return collectedCurrencies;
+    }
 }

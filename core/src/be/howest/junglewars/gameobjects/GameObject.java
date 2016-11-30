@@ -1,6 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.GameData;
+import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -13,20 +13,20 @@ import java.util.List;
 
 public abstract class GameObject implements Serializable {
 
-    public GameData gameData;
+    public GameScreen game;
 
     protected TextureAtlas atlas;
 
     protected Vector2 position; // position.x and position.y
     protected Rectangle bounds; // bounds.width and bounds.height // .overlaps() for collision
+    protected float speed = 0;
 
     protected Sprite defaultSprite;
     protected Sprite activeSprite;
 
 
-
-    protected void init(GameData gameData, float width, float height) {
-        this.gameData = gameData;
+    protected void init(GameScreen game, float width, float height) {
+        this.game = game;
         atlas = initAtlas();
         position = initSpawnPosition();
         bounds = initBounds(width, height);

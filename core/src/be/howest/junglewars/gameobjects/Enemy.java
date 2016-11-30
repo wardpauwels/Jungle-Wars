@@ -1,12 +1,7 @@
-package be.howest.junglewars.gameobjects.enemy;
+package be.howest.junglewars.gameobjects;
 
 import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.gameobjects.GameObject;
-import be.howest.junglewars.gameobjects.enemy.movement.MovementType;
-import be.howest.junglewars.gameobjects.enemy.targetselection.TargetSelectionType;
-import be.howest.junglewars.gameobjects.missile.Missile;
-import be.howest.junglewars.gameobjects.player.Player;
+import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -16,8 +11,8 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 
 public class Enemy extends GameObject {
-    private static final float ENEMY_WIDTH = 70;
-    private static final float ENEMY_HEIGHT = 80;
+    private static float ENEMY_WIDTH = 70;
+    private static float ENEMY_HEIGHT = 80;
 
     private String name;
     private Sprite sprite;
@@ -36,36 +31,25 @@ public class Enemy extends GameObject {
     private int scoreWhenKilled;
     private int experienceWhenKilled;
 
-    private ArrayList<Player> targets;
+    private Player target;
 
-    private AttackType[] attackTypes;
-    private MovementType movementType;
-    private TargetSelectionType targetSelection;
-
-    public Enemy(GameData gameData, String name, String textureUrl, float width, float height,
+    public Enemy(GameScreen game, String name, String textureUrl, float width, float height,
                  int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
-                 int experienceWhenKilled, int scoreWhenKilled, int rarity,
-                 MovementType[] movementType, TargetSelectionType[] targetSelection, AttackType[] attackTypes) {
+                 int experienceWhenKilled, int scoreWhenKilled, int rarity) {
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
         this.rarity = rarity;
-        this.attackTypes = attackTypes;
-        this.movementType = movementType[0];
-        this.targetSelection = targetSelection[0];
 
         missiles = new ArrayList<>();
 
 //        calculateStats(gameScreen.getLevel(), gameScreen.getDifficulty(), baseDamage, baseHitpoints, baseSpeed, baseAttackSpeed);
 
-
-        init(gameData, width, height);
+        init(game, width, height);
     }
 
     @Override
     public void update(float dt) {
-        dPosition = movementType.get().moveTo();
-
         float radians = MathUtils.atan2(dPosition.y - position.y, dPosition.x - position.x);
         dPosition.set(
                 MathUtils.cos(radians) * speed,
@@ -82,11 +66,6 @@ public class Enemy extends GameObject {
         sprite.setPosition(position.x, position.y);
         sprite.draw(batch);
     }
-
-//    @Override
-//    protected void checkCollision() {
-//
-//    }
 
     @Override
     protected TextureAtlas initAtlas() {
@@ -111,14 +90,12 @@ public class Enemy extends GameObject {
 //        this.attackSpeed = level * difficulty * baseAttackSpeed;
     }
 
-    private ArrayList<Player> chooseTarget() {
-        return targetSelection.get()
+    private void chooseTarget() {
+        target = getNearest()
     }
 
     public void attack() {
-        for (AttackType attackType : attackTypes) {
-            attackType.attack(this);
-        }
+        // TODO
     }
 
     public int getScoreWhenKilled() {
