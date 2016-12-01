@@ -11,8 +11,10 @@ public class Helper extends GameObject {
     private Player owner;
 
     private String textureUrl;
-
     private String name;
+
+    private float shootTime;
+    private float shootTimer;
 
     public Helper(GameScreen game, String name, float width, float height, Player owner, String textureUrl) {
         this.owner = owner;
@@ -33,19 +35,28 @@ public class Helper extends GameObject {
     }
 
     @Override
-    protected Vector2 initSpawnPosition() {
+    protected Vector2 initSpawnPosition(float width, float height) {
         // TODO: topleft from player
-        return new Vector2(owner.position.x - 1.5f * bounds.getWidth(), owner.position.y - 1.5f * bounds.getHeight());
+        return new Vector2(owner.position.x - 1.5f * width, owner.position.y + 1.5f * height);
+    }
+
+    private Enemy chooseTarget() {
+        return getNearest(game.getEnemies());
+    }
+
+    private Vector2 leftTopOfOwnerPosition() {
+        return new Vector2(owner.position.x - 1.5f * bounds.width, owner.position.y + 1.5f * bounds.height);
     }
 
     @Override
     public void update(float dt) {
-
+        position = leftTopOfOwnerPosition();
     }
 
     @Override
     public void draw(SpriteBatch batch) {
-        activeSprite = defaultSprite;
+        defaultSprite.setPosition(position.x, position.y);
+        defaultSprite.draw(batch);
     }
 
     public Player getOwner() {

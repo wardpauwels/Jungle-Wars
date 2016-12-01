@@ -52,7 +52,7 @@ public class Power extends GameObject {
     }
 
     @Override
-    protected Vector2 initSpawnPosition() {
+    protected Vector2 initSpawnPosition(float widht, float height) {
         return new Vector2(
                 ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()),
                 ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight())
@@ -60,15 +60,15 @@ public class Power extends GameObject {
     }
 
     @Override
-    protected void update(float dt) {
+    public void update(float dt) {
         if (lifeTime < lifeTimer) {
-            game.getCurrencies().remove(this);
+            game.getPowers().remove(this);
         }
         lifeTimer += dt;
     }
 
     @Override
-    protected void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch) {
         activeSprite.setPosition(position.x, position.y);
         activeSprite.setSize(bounds.getWidth(), bounds.getHeight());
         activeSprite.draw(batch);

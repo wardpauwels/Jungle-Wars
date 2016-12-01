@@ -15,7 +15,6 @@ public class Enemy extends GameObject {
     private static float ENEMY_HEIGHT = 80;
 
     private String name;
-    private Sprite sprite;
 
     private Vector2 dPosition;
 
@@ -24,14 +23,12 @@ public class Enemy extends GameObject {
     private int speed;
     private float attackSpeed; // shoot per x seconds (e.g. "0.25" shoots 4 times a second)
 
-    private int rarity;
-
     private ArrayList<Missile> missiles;
+
+    private int rarity;
 
     private int scoreWhenKilled;
     private int experienceWhenKilled;
-
-    private Player target;
 
     public Enemy(GameScreen game, String name, String textureUrl, float width, float height,
                  int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
@@ -43,6 +40,11 @@ public class Enemy extends GameObject {
 
         missiles = new ArrayList<>();
 
+        this.damage = baseDamage;
+        this.speed = baseSpeed;
+        this.hitpoints = baseHitpoints;
+        this.attackSpeed = baseAttackSpeed;
+
 //        calculateStats(gameScreen.getLevel(), gameScreen.getDifficulty(), baseDamage, baseHitpoints, baseSpeed, baseAttackSpeed);
 
         init(game, width, height);
@@ -50,6 +52,8 @@ public class Enemy extends GameObject {
 
     @Override
     public void update(float dt) {
+        dPosition = new Vector2(chooseTarget().position);
+
         float radians = MathUtils.atan2(dPosition.y - position.y, dPosition.x - position.x);
         dPosition.set(
                 MathUtils.cos(radians) * speed,
@@ -63,8 +67,8 @@ public class Enemy extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
-        sprite.setPosition(position.x, position.y);
-        sprite.draw(batch);
+        defaultSprite.setPosition(position.x, position.y);
+        defaultSprite.draw(batch);
     }
 
     @Override
@@ -74,12 +78,23 @@ public class Enemy extends GameObject {
 
     @Override
     protected Sprite initDefaultSprite() {
-        return null;
+        return atlas.createSprite("zookeeper");
     }
 
     @Override
-    protected Vector2 initSpawnPosition() {
-        return null;
+    protected Vector2 initSpawnPosition(float width, float height) {
+        boolean spawnLeft = (Math.random() < 0.5);
+        boolean spawnTop = (Math.random() < 0.5);
+
+        float x = 0;
+        float y = 0;
+//        if (!spawnLeft) x = Gdx.graphics.getWidth();
+//        if (spawnTop) y = Gdx.graphics.getHeight();
+
+        x = 50;
+        y = 200;
+
+        return new Vector2(x, y);
     }
 
     private void calculateStats(int level, Difficulty difficulty, int baseDamage, int baseHitpoints, int baseSpeed, float baseAttackSpeed) {
@@ -90,8 +105,8 @@ public class Enemy extends GameObject {
 //        this.attackSpeed = level * difficulty * baseAttackSpeed;
     }
 
-    private void chooseTarget() {
-        target = getNearest()
+    private Player chooseTarget() {
+        return getNearest(game.getPlayers());
     }
 
     public void attack() {

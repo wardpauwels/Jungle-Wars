@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
@@ -50,6 +51,12 @@ public class GameScreen extends ScreenAdapter {
 
         gameState = GameState.READY;
 
+        players = new ArrayList<>();
+        helpers = new ArrayList<>();
+        enemies = new ArrayList<>();
+        powers = new ArrayList<>();
+        currencies = new ArrayList<>();
+
         // create full screen background
         // TODO: change backgrounds.atlas to a "gamescreen-assets.atlas" or something... (or one assets atlas for all screens in JungleWars.java?)
         backgroundSprite = new TextureAtlas("atlas/backgrounds.atlas").createSprite("game");
@@ -65,6 +72,10 @@ public class GameScreen extends ScreenAdapter {
         bigFont = generator.generateFont(parameter);
         generator.dispose();
 
+        players.add(new Player(this, "Barry", 80, 70, "harambe"));
+
+        startingEnemies = 10;
+        mulitplierEnemies = 0.5f;
     }
 
     public void update(float dt) {
@@ -81,23 +92,68 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
+    private void checkCollisions() {
+
+        for (Player player : players) {
+            for (Currency currency : player.checkCollision(currencies)) {
+                currency.collectedBy(player);
+            }
+            for (Power power : player.checkCollision(powers)) {
+                power.collectedBy(player);
+            }
+            for (Enemy enemy : enemies) {
+                for (Missile missile : player.checkCollision(enemy.getMissiles())) {
+                    // TODO: player hit by missile
+                }
+            }
+        }
+
+        for (Enemy enemy : enemies) {
+            for (Player player : players) {
+                for (Missile missile : enemy.checkCollision(player.getMissiles())) {
+                    missile.remove = true;
+                    enemy.remove = true;
+                }
+            }
+        }
+
+    }
+
     private void updateReady(float dt) {
         // TODO: show some message like "press any key to start"
         gameState = GameState.RUNNING;
     }
 
     private void updateRunning(float dt) {
+        if (enemies.size() == 0) {
+            amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * level));
+            for (int i = 0; i < amountEnemies; i++) {
+                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 80, 70, 5, 150, 10, 2, 10, 15, 5));
+            }
+            level++;
+        }
+
         for (Player player : players) {
             player.update(dt);
         }
 
-        for (Enemy enemy : enemies) {
-            enemy.update(dt);
+        for (int i = 0; i < enemies.size(); i++) {
+            enemies.get(i).update(dt);
+            if (enemies.get(i).shouldRemove()) {
+                enemies.remove(i);
+                i--;
+            }
         }
 
-        // TODO: currencySpawner.generateCurrencies() + update currencies
+        for (Currency currency : currencies) {
+            currency.update(dt);
+        }
 
-        // TODO: powerSpawner.generatePowers() + update powers
+        for (Power power : powers) {
+            power.update(dt);
+        }
+
+        checkCollisions();
 
     }
 
@@ -109,6 +165,12 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+        SpriteBatch batch = game.batch;
+        batch.begin();
+        batch.disableBlending();
+        backgroundSprite.draw(batch);
+        batch.enableBlending();
 
         // if all players have 0 hitpoints => game over
         boolean isGameOver = true;
@@ -126,12 +188,6 @@ public class GameScreen extends ScreenAdapter {
 
         update(delta);
 
-        SpriteBatch batch = game.batch;
-        batch.begin();
-        batch.disableBlending();
-        backgroundSprite.draw(batch);
-        batch.enableBlending();
-
         for (Player player : players) {
             player.draw(batch);
             player.getHelper().draw(batch);
@@ -143,9 +199,17 @@ public class GameScreen extends ScreenAdapter {
             smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 80);
         }
 
-        // TODO: draw currencies
+        for (Enemy enemy : enemies) {
+            enemy.draw(batch);
+        }
 
-        // TODO: draw powers
+        for (Currency currency : currencies) {
+            currency.draw(batch);
+        }
+
+        for (Power power : powers) {
+            power.draw(batch);
+        }
 
         bigFont.draw(batch, "LEVEL " + level, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 20);
         batch.end();

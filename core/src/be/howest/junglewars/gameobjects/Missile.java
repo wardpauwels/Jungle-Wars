@@ -17,27 +17,30 @@ public class Missile extends GameObject {
     private float dx;
     private float dy;
 
+    private float spawnX;
+    private float spawnY;
+
     private float lifeTime;
     private float lifeTimer;
 
-    public Missile(GameScreen game, Player owner, float width, float height, float x, float y, float destinationX, float destinationY, String textureName, int damage, int speed,
+    public Missile(GameScreen game, Player owner, float width, float height, float spawnX, float spawnY, float destinationX, float destinationY, String textureName, int damage, int speed,
                    int rotationSpeed, int lifeTime) {
         this.owner = owner;
-
-        position = new Vector2(x, y);
+        this.spawnX = spawnX;
+        this.spawnY = spawnY;
 
         this.damage = damage;
         this.speed = speed;
         this.rotationSpeed = rotationSpeed;
 
-        float radians = MathUtils.atan2(destinationY - position.y, destinationX - position.x);
-        dx = MathUtils.cos(radians) * speed;
-        dy = MathUtils.sin(radians) * speed;
-
         this.lifeTime = lifeTime;
         this.lifeTimer = 0;
 
         init(game, width, height);
+
+        float radians = MathUtils.atan2(destinationY - position.y, destinationX - position.x);
+        dx = MathUtils.cos(radians) * speed;
+        dy = MathUtils.sin(radians) * speed;
     }
 
     @Override
@@ -47,12 +50,12 @@ public class Missile extends GameObject {
 
     @Override
     protected Sprite initDefaultSprite() {
-        return null;
+        return atlas.createSprite("banana");
     }
 
     @Override
-    protected Vector2 initSpawnPosition() {
-        return null;
+    protected Vector2 initSpawnPosition(float width, float height) {
+        return new Vector2(spawnX, spawnY);
     }
 
     @Override
@@ -62,7 +65,7 @@ public class Missile extends GameObject {
 
         lifeTimer += dt;
         if (lifeTimer > lifeTime) {
-            owner.getMissiles().remove(this);
+            remove = true;
         }
     }
 

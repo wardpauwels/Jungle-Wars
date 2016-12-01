@@ -26,9 +26,9 @@ public class Currency extends GameObject {
         init(game, width, height);
     }
 
-    public void takenBy(Player player) {
+    public void collectedBy(Player player) {
         player.getCollectedCurrencies().add(this);
-        game.getCurrencies().remove(this);
+        remove = true;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class Currency extends GameObject {
     }
 
     @Override
-    protected Vector2 initSpawnPosition() {
+    protected Vector2 initSpawnPosition(float width, float height) {
         return new Vector2(
                 ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()),
                 ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight())
@@ -50,7 +50,7 @@ public class Currency extends GameObject {
     }
 
     @Override
-    protected void update(float dt) {
+    public void update(float dt) {
         if (lifeTime < lifeTimer) {
             game.getCurrencies().remove(this);
         }
@@ -58,7 +58,7 @@ public class Currency extends GameObject {
     }
 
     @Override
-    protected void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch) {
         activeSprite.setPosition(position.x, position.y);
         activeSprite.setSize(bounds.getWidth(), bounds.getHeight());
         activeSprite.draw(batch);

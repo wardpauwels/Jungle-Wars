@@ -24,11 +24,12 @@ public abstract class GameObject implements Serializable {
     protected Sprite defaultSprite;
     protected Sprite activeSprite;
 
+    public boolean remove = false;
 
     protected void init(GameScreen game, float width, float height) {
         this.game = game;
         atlas = initAtlas();
-        position = initSpawnPosition();
+        position = initSpawnPosition(width, height);
         bounds = initBounds(width, height);
         defaultSprite = initDefaultSprite();
         activeSprite = defaultSprite;
@@ -39,7 +40,7 @@ public abstract class GameObject implements Serializable {
 
     protected abstract Sprite initDefaultSprite();
 
-    protected abstract Vector2 initSpawnPosition();
+    protected abstract Vector2 initSpawnPosition(float width, float height);
 
     protected Rectangle initBounds(float width, float height) {
         return new Rectangle(position.x - width / 2, position.y - height / 2, width, height);
@@ -49,7 +50,7 @@ public abstract class GameObject implements Serializable {
 
     protected abstract void draw(SpriteBatch batch);
 
-    protected <T extends GameObject> ArrayList<T> checkCollision(List<T> objects) {
+    public <T extends GameObject> ArrayList<T> checkCollision(List<T> objects) {
         ArrayList<T> collision = new ArrayList<>();
 
         for (T go : objects) {
@@ -61,9 +62,9 @@ public abstract class GameObject implements Serializable {
         return collision;
     }
 
-    protected <T extends GameObject> T getNearest(T[] objects) {
-        T nearest = objects[0];
-        float dist = this.getDistanceTo(objects[0]);
+    public <T extends GameObject> T getNearest(List<T> objects) {
+        T nearest = objects.get(0);
+        float dist = this.getDistanceTo(objects.get(0));
 
         for (T go : objects) {
             float nDist = this.getDistanceTo(go);
@@ -83,6 +84,10 @@ public abstract class GameObject implements Serializable {
         double dist = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
 
         return (float) dist;
+    }
+
+    public boolean shouldRemove() {
+        return remove;
     }
 
 }

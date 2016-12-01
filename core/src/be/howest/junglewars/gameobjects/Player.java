@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Player extends GameObject {
 
-    private final Sprite SHOOTING_SPRITE = atlas.createSprite("harambe-shoot");
+    private final Sprite SHOOTING_SPRITE;
 
     private String textureName;
 
@@ -27,10 +27,10 @@ public class Player extends GameObject {
     private boolean canShoot;
 
     private Helper helper;
+    private ArrayList<Missile> missiles;
     private ArrayList<Power> collectedPowers;
     private ArrayList<Power> activePowers;
     private ArrayList<Currency> collectedCurrencies; // TODO: calculate points of this list
-    private ArrayList<Missile> missiles;
 
     private String name;
     private int hitpoints;
@@ -41,15 +41,14 @@ public class Player extends GameObject {
     private int totalDamageGiven;
     private int enemiesKilled;
 
-    public Player(GameScreen game, String name, float width, float height, String textureName, Helper helper) {
+    public Player(GameScreen game, String name, float width, float height, String textureName) {
         this.name = name;
         this.textureName = textureName;
-        this.helper = helper;
 
+        missiles = new ArrayList<>();
         collectedPowers = new ArrayList<>();
         activePowers = new ArrayList<>();
         collectedCurrencies = new ArrayList<>();
-        missiles = new ArrayList<>();
 
         this.shootTime = .3f;
         this.shootTimer = 0;
@@ -59,7 +58,13 @@ public class Player extends GameObject {
         this.shootingAnimationTime = .15f;
         this.shootingAnimationTimer = 0;
 
+        this.speed = 6;
+
         init(game, width, height);
+
+        helper = new Helper(game, "Little Helper", 50, 50, this, "red-wings-down");
+
+        SHOOTING_SPRITE = atlas.createSprite("harambe-shoot");
     }
 
     private void handleInput() {
@@ -105,29 +110,6 @@ public class Player extends GameObject {
         }
     }
 
-    private void checkCollision() {
-        // Enemy missile -> player
-        for (Enemy enemy : game.getEnemies()) {
-            for (Missile missile : this.checkCollision(enemy.getMissiles())) {
-                enemy.getMissiles().remove(missile);
-                // TODO: player is hit
-            }
-        }
-
-        // Player -> currency
-        for (Currency currency : game.getCurrencies()) {
-            collectedCurrencies.add(currency);
-            game.getCurrencies().remove(currency);
-        }
-
-        // Player -> power
-        for (Power power : game.getPowers()) {
-            collectedPowers.add(power);
-            game.getPowers().remove(power);
-            // TODO: instant activate (=add to activatedPowers) or wait for manual activation?
-        }
-    }
-
     private void shoot(float destinationX, float destinationY) {
         canShoot = false;
         isShooting = true;
@@ -137,7 +119,9 @@ public class Player extends GameObject {
         if (!isLookingLeft) spawnX += bounds.getWidth() / 2;
         float spawnY = position.y + bounds.getHeight() - 10;
 
-        // TODO: add new missile to players ArrayList
+        missiles.add(
+                new Missile(game, this, 30, 30, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 10, 500, -10, 3)
+        );
     }
 
     @Override
@@ -151,8 +135,8 @@ public class Player extends GameObject {
     }
 
     @Override
-    protected Vector2 initSpawnPosition() {
-        return new Vector2(Gdx.graphics.getWidth() - bounds.width, Gdx.graphics.getHeight() - bounds.height);
+    protected Vector2 initSpawnPosition(float width, float height) {
+        return new Vector2(Gdx.graphics.getWidth() / 2 - width / 2, Gdx.graphics.getHeight() / 2 - height / 2);
     }
 
     @Override
@@ -174,9 +158,14 @@ public class Player extends GameObject {
             }
         }
 
-        for (Missile missile : missiles) {
-            missile.update(dt);
+        for (int i = 0; i < missiles.size(); i++) {
+            missiles.get(i).update(dt);
+            if (missiles.get(i).shouldRemove()) {
+                missiles.remove(i);
+                i--;
+            }
         }
+
         helper.update(dt);
     }
 
@@ -192,14 +181,10 @@ public class Player extends GameObject {
         activeSprite.setSize(bounds.getWidth(), bounds.getHeight());
         activeSprite.draw(batch);
 
+        helper.draw(batch);
         for (Missile missile : missiles) {
             missile.draw(batch);
         }
-        helper.draw(batch);
-    }
-
-    public ArrayList<Missile> getMissiles() {
-        return missiles;
     }
 
     public Helper getHelper() {
@@ -228,5 +213,9 @@ public class Player extends GameObject {
 
     public ArrayList<Currency> getCollectedCurrencies() {
         return collectedCurrencies;
+    }
+
+    public ArrayList<Missile> getMissiles() {
+        return missiles;
     }
 }
