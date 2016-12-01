@@ -63,6 +63,7 @@ public class GameScreen extends ScreenAdapter {
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // TODO: https://github.com/libgdx/libgdx/wiki/Managing-your-assets#loading-a-ttf-using-the-assethandler
+        // TODO: work with Actors for GUI layout (buttons, menu, etc...)?
         // Fonts
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/roboto-regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -72,10 +73,11 @@ public class GameScreen extends ScreenAdapter {
         bigFont = generator.generateFont(parameter);
         generator.dispose();
 
-        players.add(new Player(this, "Barry", 80, 70, "harambe"));
+        players.add(new Player(this, "John", 80, 70, "harambe"));
 
         startingEnemies = 10;
         mulitplierEnemies = 0.5f;
+        spawnEnemies(false);
     }
 
     public void update(float dt) {
@@ -93,7 +95,6 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void checkCollisions() {
-
         for (Player player : players) {
             for (Currency currency : player.checkCollision(currencies)) {
                 currency.collectedBy(player);
@@ -125,13 +126,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void updateRunning(float dt) {
-        if (enemies.size() == 0) {
-            amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * level));
-            for (int i = 0; i < amountEnemies; i++) {
-                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 80, 70, 5, 150, 10, 2, 10, 15, 5));
-            }
-            level++;
-        }
+        spawnEnemies(true);
 
         for (Player player : players) {
             player.update(dt);
@@ -155,6 +150,16 @@ public class GameScreen extends ScreenAdapter {
 
         checkCollisions();
 
+    }
+
+    private void spawnEnemies(boolean nextLevel) {
+        if (enemies.size() == 0) {
+            amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * level));
+            for (int i = 0; i < amountEnemies; i++) {
+                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 80, 70, 5, 150, 10, 2, 10, 15, 5));
+            }
+            if(nextLevel) level++;
+        }
     }
 
     private void updateGameOver(float dt) {

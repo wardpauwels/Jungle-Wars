@@ -15,6 +15,7 @@ public class AtlasPacker {
         TexturePacker.process("images/missiles", "atlas", "missiles");
         TexturePacker.process("images/players", "atlas", "players");
         TexturePacker.process("images/currencies", "atlas", "currencies");
+        TexturePacker.process("images/powers", "atlas", "powers");
     }
 
 }
