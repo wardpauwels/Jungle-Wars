@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Missile extends GameObject {
+    private static final String ATLAS_PREFIX = "missile/";
 
     private Player owner;
 
@@ -21,7 +22,7 @@ public class Missile extends GameObject {
 
     public Missile(GameScreen game, Player owner, float width, float height, float spawnX, float spawnY, float destinationX, float destinationY, String defaultSpriteUrl, int damage, int speed,
                    int rotationSpeed, int lifeTime) {
-        super(game, defaultSpriteUrl, width, height, spawnX, spawnY);
+        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, spawnX, spawnY);
 
         this.owner = owner;
         this.damage = damage;
@@ -34,11 +35,6 @@ public class Missile extends GameObject {
         float radians = MathUtils.atan2(destinationY - body.y, destinationX - body.x);
         dx = MathUtils.cos(radians) * speed;
         dy = MathUtils.sin(radians) * speed;
-    }
-
-    @Override
-    protected TextureAtlas initAtlas() {
-        return new TextureAtlas("atlas/missiles.atlas");
     }
 
     @Override

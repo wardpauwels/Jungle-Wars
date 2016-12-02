@@ -14,8 +14,6 @@ public abstract class GameObject implements Serializable {
 
     public GameScreen game;
 
-    protected TextureAtlas atlas;
-
     protected Rectangle body; // has: .width, .height, .overlaps(), .x, .y
     protected float speed = 0;
 
@@ -27,13 +25,9 @@ public abstract class GameObject implements Serializable {
     protected GameObject(GameScreen game, String defaultSpriteUrl, float width, float height, float x, float y) {
         this.game = game;
         body = initBody(width, height, x, y);
-        atlas = initAtlas();
-        DEFAULT_SPRITE = atlas.createSprite(defaultSpriteUrl);
+        DEFAULT_SPRITE = game.atlas.createSprite(defaultSpriteUrl);
         changeSprite(DEFAULT_SPRITE);
     }
-
-    // TODO: should not be necessary when using one global atlas (loaded at game startup...)
-    protected abstract TextureAtlas initAtlas();
 
     protected Rectangle initBody(float width, float height, float x, float y) {
         return new Rectangle(x - width / 2, y - height / 2, width, height);

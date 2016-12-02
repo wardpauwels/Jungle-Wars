@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Enemy extends GameObject {
+    private static final String ATLAS_PREFIX = "enemy/";
+
     private String name;
 
     private int damage;
@@ -27,7 +29,7 @@ public class Enemy extends GameObject {
     public Enemy(GameScreen game, String name, String defaultSpriteUrl, float width, float height,
                  int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
                  int experienceWhenKilled, int scoreWhenKilled, int rarity) {
-        super(game, defaultSpriteUrl, width, height,
+        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height,
                 ThreadLocalRandom.current().nextInt(0 - Math.round(width), Gdx.graphics.getWidth() + Math.round(width)),
                 ThreadLocalRandom.current().nextBoolean() ? 0 - height : Gdx.graphics.getHeight() + height); // TODO: spawns only top or bottom now
 
@@ -59,11 +61,6 @@ public class Enemy extends GameObject {
     public void draw(SpriteBatch batch) {
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
-    }
-
-    @Override
-    protected TextureAtlas initAtlas() {
-        return new TextureAtlas("atlas/enemies.atlas");
     }
 
     private Player chooseTarget() {

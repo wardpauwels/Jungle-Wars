@@ -2,14 +2,12 @@ package be.howest.junglewars.gameobjects;
 
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Power extends GameObject {
-
+    private static final String ATLAS_PREFIX = "power/";
 
     private boolean isHidden;
     private boolean isPowerUp;
@@ -20,7 +18,7 @@ public class Power extends GameObject {
     private Player owner;
 
     public Power(GameScreen game, float width, float height, String defaultSpriteUrl, float lifeTime, boolean isPowerUp) {
-        super(game,defaultSpriteUrl, width, height, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
+        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
 
         this.isPowerUp = isPowerUp;
         this.lifeTime = lifeTime;
@@ -35,11 +33,6 @@ public class Power extends GameObject {
         this.owner = player;
         owner.getCollectedPowers().add(this);
         game.getPowers().remove(this);
-    }
-
-    @Override
-    protected TextureAtlas initAtlas() {
-        return new TextureAtlas("powers.atlas");
     }
 
     @Override

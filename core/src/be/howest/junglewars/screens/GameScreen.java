@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: check and implement https://github.com/libgdx/libgdx/wiki/Collections
 public class GameScreen extends ScreenAdapter {
 
     private JungleWars game;
@@ -38,8 +39,7 @@ public class GameScreen extends ScreenAdapter {
     private float timeLastEnemySpawn;
 
     private Sprite backgroundSprite;
-
-    private SpriteBatch batch;
+    public TextureAtlas atlas;
 
     private BitmapFont smallFont;
     private BitmapFont bigFont;
@@ -48,6 +48,7 @@ public class GameScreen extends ScreenAdapter {
         this.game = game;
         this.level = level;
         this.difficulty = difficulty;
+        this.atlas = game.atlas;
 
         gameState = GameState.READY;
 
@@ -59,7 +60,7 @@ public class GameScreen extends ScreenAdapter {
 
         // create full screen background
         // TODO: change backgrounds.atlas to a "gamescreen-assets.atlas" or something... (or one assets atlas for all screens in JungleWars.java?)
-        backgroundSprite = new TextureAtlas("atlas/backgrounds.atlas").createSprite("game");
+        backgroundSprite = atlas.createSprite("background/game");
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // TODO: https://github.com/libgdx/libgdx/wiki/Managing-your-assets#loading-a-ttf-using-the-assethandler
@@ -81,6 +82,8 @@ public class GameScreen extends ScreenAdapter {
     }
 
     public void update(float dt) {
+        if (dt > .02f) dt = .02f;
+
         switch (gameState) {
             case READY:
                 updateReady(dt);
@@ -158,7 +161,7 @@ public class GameScreen extends ScreenAdapter {
             for (int i = 0; i < amountEnemies; i++) {
                 enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 80, 70, 5, 150, 10, 2, 10, 15, 5));
             }
-            if(nextLevel) level++;
+            if (nextLevel) level++;
         }
     }
 

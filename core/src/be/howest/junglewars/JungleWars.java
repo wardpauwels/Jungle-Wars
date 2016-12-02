@@ -7,12 +7,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class JungleWars extends Game {
-
     private FPSLogger fpsLogger;
 
     public SpriteBatch batch;
+    public TextureAtlas atlas;
 
     @Override
     public void create() {
@@ -23,7 +24,9 @@ public class JungleWars extends Game {
         }
 
         fpsLogger = new FPSLogger();
+
         batch = new SpriteBatch();
+        atlas = new TextureAtlas(Assets.IMAGES_ATLAS);
 
         // TODO: loading screen while assets are loading
 

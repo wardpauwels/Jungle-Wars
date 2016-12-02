@@ -5,13 +5,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import java.util.ArrayList;
 
 public class Player extends GameObject {
+    private static final String ATLAS_PREFIX = "player/";
 
-    private final Sprite SHOOTING_SPRITE = atlas.createSprite("harambe-shoot");
+    private final Sprite SHOOTING_SPRITE = game.atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
 
     private boolean isLookingLeft;
 
@@ -39,7 +39,7 @@ public class Player extends GameObject {
     private int enemiesKilled;
 
     public Player(GameScreen game, String name, float width, float height, String defaultSpriteUrl) {
-        super(game, defaultSpriteUrl, width, height, Gdx.graphics.getWidth() / 2 - width / 2, Gdx.graphics.getHeight() / 2 - height / 2);
+        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, Gdx.graphics.getWidth() / 2 - width / 2, Gdx.graphics.getHeight() / 2 - height / 2);
 
         this.name = name;
 
@@ -116,11 +116,6 @@ public class Player extends GameObject {
         missiles.add(
                 new Missile(game, this, 30, 30, spawnX, spawnY, destinationX, destinationY, "banana", 10, 500, -10, 3)
         );
-    }
-
-    @Override
-    protected TextureAtlas initAtlas() {
-        return new TextureAtlas("atlas/players.atlas");
     }
 
     @Override

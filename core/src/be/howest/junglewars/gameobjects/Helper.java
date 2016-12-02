@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Vector2;
 
 // TODO: should be upgradable
 public class Helper extends GameObject {
+    private static final String ATLAS_PREFIX = "helper/";
+
     private Player owner;
     private String name;
 
@@ -14,15 +16,10 @@ public class Helper extends GameObject {
     private float shootTimer;
 
     public Helper(GameScreen game, float width, float height, String name, Player owner, String defaultSpriteUrl) {
-        super(game, defaultSpriteUrl, width, height, owner.body.x, owner.body.y);
+        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, owner.body.x, owner.body.y);
 
         this.owner = owner;
         this.name = name;
-    }
-
-    @Override
-    protected TextureAtlas initAtlas() {
-        return new TextureAtlas("atlas/helpers.atlas");
     }
 
     private Enemy chooseTarget() {
