@@ -5,13 +5,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Power extends GameObject {
 
-    private String textureUrl;
 
     private boolean isHidden;
     private boolean isPowerUp;
@@ -21,14 +19,12 @@ public class Power extends GameObject {
 
     private Player owner;
 
-    public Power(GameScreen game, float width, float height, String textureUrl, boolean isPowerUp) {
-        this.game = game;
+    public Power(GameScreen game, float width, float height, String defaultSpriteUrl, float lifeTime, boolean isPowerUp) {
+        super(game,defaultSpriteUrl, width, height, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
+
         this.isPowerUp = isPowerUp;
-        this.textureUrl = textureUrl;
-
+        this.lifeTime = lifeTime;
         this.isHidden = (Math.random() < 0.5); // Random true or false
-
-        init(game, width, height);
     }
 
     public void activatePower() {
@@ -47,19 +43,6 @@ public class Power extends GameObject {
     }
 
     @Override
-    protected Sprite initDefaultSprite() {
-        return atlas.createSprite(textureUrl);
-    }
-
-    @Override
-    protected Vector2 initSpawnPosition(float widht, float height) {
-        return new Vector2(
-                ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()),
-                ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight())
-        );
-    }
-
-    @Override
     public void update(float dt) {
         if (lifeTime < lifeTimer) {
             game.getPowers().remove(this);
@@ -69,8 +52,7 @@ public class Power extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
-        activeSprite.setPosition(position.x, position.y);
-        activeSprite.setSize(bounds.getWidth(), bounds.getHeight());
+        activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
     }
 }
