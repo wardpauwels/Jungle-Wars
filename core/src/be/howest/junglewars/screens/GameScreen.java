@@ -1,7 +1,6 @@
 package be.howest.junglewars.screens;
 
 import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.GameState;
 import be.howest.junglewars.JungleWars;
 import be.howest.junglewars.gameobjects.*;
 import com.badlogic.gdx.Gdx;
@@ -15,6 +14,14 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+
+enum GameState {
+    READY,
+    RUNNING,
+    PAUSED,
+    GAME_OVER, // TODO: if (all) player(s) is/are dead
+    BETWEEN_WAVE; // TODO: if all enemies are dead
+}
 
 // TODO: check and implement https://github.com/libgdx/libgdx/wiki/Collections
 public class GameScreen extends ScreenAdapter {
@@ -59,7 +66,6 @@ public class GameScreen extends ScreenAdapter {
         currencies = new ArrayList<>();
 
         // create full screen background
-        // TODO: change backgrounds.atlas to a "gamescreen-assets.atlas" or something... (or one assets atlas for all screens in JungleWars.java?)
         backgroundSprite = atlas.createSprite("background/game");
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -81,6 +87,7 @@ public class GameScreen extends ScreenAdapter {
         spawnEnemies(false);
     }
 
+    // TODO: clean up the update and render methods
     public void update(float dt) {
         if (dt > .02f) dt = .02f;
 
@@ -224,13 +231,8 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
-    public void pause() {
-//        if (gameState == be.howest.junglewars.GameState.RUNNING) gameState = be.howest.junglewars.GameState.PAUSED;
-    }
+    public void dispose() {
 
-    @Override
-    public void resume() {
-//        if (gameState == be.howest.junglewars.GameState.PAUSED) gameState = be.howest.junglewars.GameState.RUNNING;
     }
 
     public int getLevel() {

@@ -3,7 +3,6 @@ package be.howest.junglewars.gameobjects;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 
 import java.util.ArrayList;
@@ -61,6 +60,15 @@ public class Enemy extends GameObject {
     public void draw(SpriteBatch batch) {
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
+    }
+
+    public void killedBy(Missile missile) {
+        Player owner = missile.getOwner();
+        owner.addScore(scoreWhenKilled);
+        owner.addXp(experienceWhenKilled);
+
+        this.remove = true;
+        missile.remove = true;
     }
 
     private Player chooseTarget() {
