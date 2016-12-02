@@ -1,13 +1,13 @@
 package be.howest.junglewars.desktop;
 
-import be.howest.junglewars.JungleWarsGame;
+import be.howest.junglewars.JungleWars;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {
 
-//        AtlasPacker.packAll();
+        AtlasPacker.packAll();
 
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Jungle Wars: The Revenge of Harambe";
@@ -18,6 +18,6 @@ public class DesktopLauncher {
 
         config.useGL30 = false;
 
-        new LwjglApplication(new JungleWarsGame(), config);
+        new LwjglApplication(new JungleWars(), config);
     }
 }

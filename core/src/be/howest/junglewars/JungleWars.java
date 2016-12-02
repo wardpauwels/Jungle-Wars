@@ -7,15 +7,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
-public class JungleWarsGame extends Game {
+public class JungleWars extends Game {
+
     private FPSLogger fpsLogger;
-    private SpriteBatch batch;
-    private int gameLevel;
-    private Difficulty gameDifficulty;
 
-    private TextureAtlas bgAtlas;
+    public SpriteBatch batch;
 
     @Override
     public void create() {
@@ -28,16 +25,11 @@ public class JungleWarsGame extends Game {
         fpsLogger = new FPSLogger();
         batch = new SpriteBatch();
 
-        gameLevel = 1;
-        gameDifficulty = Difficulty.EASY;
-
-        bgAtlas = new TextureAtlas("atlas/backgrounds.atlas");
-
         // TODO: loading screen while assets are loading
 
-        // TODO: load settings here
+        // TODO: get level and difficulty from settings/savings
 
-        setScreen(new GameScreen(this));
+        setScreen(new GameScreen(this, 1, Difficulty.EASY));
     }
 
     @Override
@@ -56,27 +48,4 @@ public class JungleWarsGame extends Game {
         Assets.dispose();
     }
 
-    public SpriteBatch getBatch() {
-        return batch;
-    }
-
-    public int getGameLevel() {
-        return gameLevel;
-    }
-
-    public void setGameLevel(int gameLevel) {
-        this.gameLevel = gameLevel;
-    }
-
-    public Difficulty getGameDifficulty() {
-        return gameDifficulty;
-    }
-
-    public void setGameDifficulty(Difficulty gameDifficulty) {
-        this.gameDifficulty = gameDifficulty;
-    }
-
-    public TextureAtlas getBgAtlas() {
-        return bgAtlas;
-    }
 }

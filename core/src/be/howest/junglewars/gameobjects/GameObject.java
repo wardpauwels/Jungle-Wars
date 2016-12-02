@@ -1,49 +1,92 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 
-public abstract class GameObject {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-    // TODO: Sprite has width, height, x, y, texture, color, ...
+public abstract class GameObject implements Serializable {
 
-    protected float speed;
-    protected Vector2 position; // position.x and position.y
-    protected Rectangle bounds; // bounds.getWidth() and bounds.getHeight()
+    public GameScreen game;
 
     protected TextureAtlas atlas;
 
-    protected Sprite defaultSprite;
-    protected Sprite activeSprite;
-    protected boolean shouldRemove;
+    protected Rectangle body; // has: .width, .height, .overlaps(), .x, .y
+    protected float speed = 0;
 
-    protected GameObject(String textureName) {
-        atlas = setAtlas();
-        activeSprite = new Sprite();
-        defaultSprite = atlas.createSprite(textureName);
+    protected final Sprite DEFAULT_SPRITE;
+    protected Sprite activeSprite;
+
+    public boolean remove = false;
+
+    protected GameObject(GameScreen game, String defaultSpriteUrl, float width, float height, float x, float y) {
+        this.game = game;
+        body = initBody(width, height, x, y);
+        atlas = initAtlas();
+        DEFAULT_SPRITE = atlas.createSprite(defaultSpriteUrl);
+        changeSprite(DEFAULT_SPRITE);
     }
 
-    protected void initBounds(float width, float height){
-        bounds = new Rectangle(position.x - width / 2, position.y - height /2, width, height);
-    };
+    // TODO: should not be necessary when using one global atlas (loaded at game startup...)
+    protected abstract TextureAtlas initAtlas();
 
-    protected abstract TextureAtlas setAtlas();
+    protected Rectangle initBody(float width, float height, float x, float y) {
+        return new Rectangle(x - width / 2, y - height / 2, width, height);
+    }
 
     protected abstract void update(float dt);
 
     protected abstract void draw(SpriteBatch batch);
 
-    public boolean shouldRemove() {
-        return shouldRemove;
+    protected void changeSprite(Sprite sprite) {
+        activeSprite = sprite;
+        activeSprite.setSize(body.width, body.height);
+        activeSprite.setOriginCenter();
     }
 
-    //region getters/setters
-    public Vector2 getPosition() {
-        return position;
+    public <T extends GameObject> ArrayList<T> checkCollision(List<T> objects) {
+        ArrayList<T> collision = new ArrayList<>();
+
+        for (T go : objects) {
+            if (this.body.overlaps(go.body)) {
+                collision.add(go);
+            }
+        }
+
+        return collision;
     }
-    //endregion
+
+    public <T extends GameObject> T getNearest(List<T> objects) {
+        T nearest = objects.get(0);
+        float dist = this.getDistanceTo(objects.get(0));
+
+        for (T go : objects) {
+            float nDist = this.getDistanceTo(go);
+            if (dist > nDist) {
+                nearest = go;
+                dist = nDist;
+            }
+        }
+
+        return nearest;
+    }
+
+    protected float getDistanceTo(GameObject object) {
+        float diffX = Math.abs(this.body.x - object.body.y);
+        float diffY = Math.abs(this.body.y - object.body.y);
+
+        double dist = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+
+        return (float) dist;
+    }
+
+    public boolean shouldRemove() {
+        return remove;
+    }
 
 }

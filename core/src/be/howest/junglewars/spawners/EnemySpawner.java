@@ -1,8 +1,9 @@
-package be.howest.junglewars.gameobjects.enemy;
+package be.howest.junglewars.spawners;
 
 import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.data.dao.EnemyDao;
 import be.howest.junglewars.data.entities.EnemyEntity;
+import be.howest.junglewars.gameobjects.Enemy;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,27 +58,27 @@ public class EnemySpawner {
 
     }
 
-    private Enemy generateEnemy(EnemyEntity entity) {
-        return new Enemy(
-                entity.getName(),
-                entity.getTextureFileName(),
-                Math.round(entity.getBaseDamage() * multiplier),
-                Math.round(entity.getBaseSpeed() * multiplier),
-                Math.round(entity.getBaseHitpoints() * multiplier),
-                Math.round(entity.getBaseAttackSpeed() * multiplier),
-                entity.getExperienceWhenKilled(),
-                entity.getScoreWhenKilled(),
-                entity.getRarity(),
-                entity.getMovementTypeEnums(),
-                entity.getTargetSelectionTypeEnums(),
-                entity.getAttackTypeEnums()
-        );
-    }
+//    private Enemy generateEnemy(EnemyEntity entity) {
+//        return new Enemy(
+//                entity.getName(),
+//                entity.getTextureFileName(),
+//                Math.round(entity.getBaseDamage() * multiplier),
+//                Math.round(entity.getBaseSpeed() * multiplier),
+//                Math.round(entity.getBaseHitpoints() * multiplier),
+//                Math.round(entity.getBaseAttackSpeed() * multiplier),
+//                entity.getExperienceWhenKilled(),
+//                entity.getScoreWhenKilled(),
+//                entity.getRarity(),
+//                entity.getMovementTypeEnums(),
+//                entity.getTargetSelectionTypeEnums(),
+//                entity.getAttackTypeEnums()
+//        );
+//    }
 
     public Map<Enemy, Integer> generateEnemies() {
         HashMap<Enemy, Integer> enemies = new HashMap<>();
         for (EnemyEntity entity : availableEnemies) {
-            enemies.put(generateEnemy(entity), 1);
+//            enemies.put(generateEnemy(entity), 1);
         }
 
         return enemies;

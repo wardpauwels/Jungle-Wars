@@ -1,73 +1,83 @@
 package be.howest.junglewars.screens;
 
 import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.JungleWarsGame;
-import be.howest.junglewars.gameobjects.currency.Currency;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
-import be.howest.junglewars.gameobjects.enemy.EnemySpawner;
-import be.howest.junglewars.gameobjects.player.Player;
-import be.howest.junglewars.gameobjects.power.Power;
+import be.howest.junglewars.GameState;
+import be.howest.junglewars.JungleWars;
+import be.howest.junglewars.gameobjects.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class GameScreen extends ScreenAdapter {
 
-    private JungleWarsGame game;
+    private JungleWars game;
+
     private GameState gameState;
+
     private int level;
     private Difficulty difficulty;
 
-    private ArrayList<Player> players;
-    private Map<Enemy, Integer> availableEnemies;
-    private ArrayList<Enemy> enemies;
-    private ArrayList<Power> powers;
-    private ArrayList<Currency> currencies;
+    private List<Player> players;
+    private List<Helper> helpers;
+    private List<Enemy> enemies;
+    private List<Power> powers;
+    private List<Currency> currencies;
 
-    private EnemySpawner enemySpawner;
+    private int startingEnemies;
+    private float mulitplierEnemies;
+    private float amountEnemies;
+    private float timeBetweenEnemySpawn;
+    private float timeLastEnemySpawn;
 
     private Sprite backgroundSprite;
 
-    private FreeTypeFontGenerator fontGenerator;
+    private SpriteBatch batch;
+
     private BitmapFont smallFont;
     private BitmapFont bigFont;
 
-    public GameScreen(JungleWarsGame game) {
+    public GameScreen(JungleWars game, int level, Difficulty difficulty) {
         this.game = game;
-        this.level = game.getGameLevel();
-        this.difficulty = game.getGameDifficulty();
-
-        enemySpawner = new EnemySpawner(level, difficulty);
-
-        backgroundSprite = game.getBgAtlas().createSprite("game");
-        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.level = level;
+        this.difficulty = difficulty;
 
         gameState = GameState.READY;
 
-        // Fonts
-//        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT));
-//        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-//        parameter.size = 20;
-//        smallFont = generator.generateFont(parameter);
-//        parameter.size = 24;
-//        bigFont = generator.generateFont(parameter);
-//        generator.dispose();
-
-        // Players
         players = new ArrayList<>();
-        players.add(new Player("John", 80, 80, "harambe", 6));
-
-        // Enemies
+        helpers = new ArrayList<>();
         enemies = new ArrayList<>();
+        powers = new ArrayList<>();
+        currencies = new ArrayList<>();
 
+        // create full screen background
+        // TODO: change backgrounds.atlas to a "gamescreen-assets.atlas" or something... (or one assets atlas for all screens in JungleWars.java?)
+        backgroundSprite = new TextureAtlas("atlas/backgrounds.atlas").createSprite("game");
+        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        // TODO: https://github.com/libgdx/libgdx/wiki/Managing-your-assets#loading-a-ttf-using-the-assethandler
+        // TODO: work with Actors for GUI layout (buttons, menu, etc...)?
+        // Fonts
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/roboto-regular.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 20;
+        smallFont = generator.generateFont(parameter);
+        parameter.size = 24;
+        bigFont = generator.generateFont(parameter);
+        generator.dispose();
+
+        players.add(new Player(this, "John", 80, 70, "harambe"));
+
+        startingEnemies = 10;
+        mulitplierEnemies = 0.5f;
+        spawnEnemies(false);
     }
 
     public void update(float dt) {
@@ -78,7 +88,36 @@ public class GameScreen extends ScreenAdapter {
             case RUNNING:
                 updateRunning(dt);
                 break;
+            case GAME_OVER:
+                updateGameOver(dt);
+                break;
         }
+    }
+
+    private void checkCollisions() {
+        for (Player player : players) {
+            for (Currency currency : player.checkCollision(currencies)) {
+                currency.collectedBy(player);
+            }
+            for (Power power : player.checkCollision(powers)) {
+                power.collectedBy(player);
+            }
+            for (Enemy enemy : enemies) {
+                for (Missile missile : player.checkCollision(enemy.getMissiles())) {
+                    // TODO: player hit by missile
+                }
+            }
+        }
+
+        for (Enemy enemy : enemies) {
+            for (Player player : players) {
+                for (Missile missile : enemy.checkCollision(player.getMissiles())) {
+                    missile.remove = true;
+                    enemy.remove = true;
+                }
+            }
+        }
+
     }
 
     private void updateReady(float dt) {
@@ -87,32 +126,44 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void updateRunning(float dt) {
+        spawnEnemies(true);
+
         for (Player player : players) {
             player.update(dt);
         }
 
-        checkCollision();
+        for (int i = 0; i < enemies.size(); i++) {
+            enemies.get(i).update(dt);
+            if (enemies.get(i).shouldRemove()) {
+                enemies.remove(i);
+                i--;
+            }
+        }
 
-        availableEnemies = enemySpawner.generateEnemies();
+        for (Currency currency : currencies) {
+            currency.update(dt);
+        }
 
-//        for (Player player : players) {
-//            player.update(dt);
-//            player.getHelper().update(dt);
-//            for (Missile missile : player.getMissiles()) {
-//                missile.update(dt);
-//            }
-//            for (HelperMissile missile : player.getHelper().getMissiles()) {
-//                missile.update(dt);
-//            }
-//        }
-//
-//        for (int i = 0; i < enemies.size(); i++) {
-//            enemies.get(i).update(dt);
-//        }
+        for (Power power : powers) {
+            power.update(dt);
+        }
+
+        checkCollisions();
+
     }
 
-    private void checkCollision() {
-        // TODO : global collision or collision function inside be.howest.junglewars.gameobjects.GameObject?
+    private void spawnEnemies(boolean nextLevel) {
+        if (enemies.size() == 0) {
+            amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * level));
+            for (int i = 0; i < amountEnemies; i++) {
+                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 80, 70, 5, 150, 10, 2, 10, 15, 5));
+            }
+            if(nextLevel) level++;
+        }
+    }
+
+    private void updateGameOver(float dt) {
+
     }
 
     @Override
@@ -120,49 +171,63 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        update(delta);
-
-        SpriteBatch batch = game.getBatch();
+        SpriteBatch batch = game.batch;
         batch.begin();
         batch.disableBlending();
         backgroundSprite.draw(batch);
         batch.enableBlending();
 
-        for (Player player : players) {
-            player.draw(batch);
-
-            // TODO: score and stats
-//            bigFont.setColor(0, 0, 0, 1);
-//            bigFont.draw(batch, "Player 1", 20, JungleWarsGame.HEIGHT - 20);
-//            smallFont.draw(batch, "Score: " + player.getName(), 20, JungleWarsGame.HEIGHT - 40);
-//            smallFont.draw(batch, "Score: " + player.getScore(), 20, JungleWarsGame.HEIGHT - 60);
-//            smallFont.draw(batch, "Lives: " + player.getLives(), 20, JungleWarsGame.HEIGHT - 80);
+        // if all players have 0 hitpoints => game over
+        boolean isGameOver = true;
+        for (Player p : players) {
+            if (p.getHitpoints() >= 0) {
+                isGameOver = false;
+                break;
+            }
         }
 
-//        bigFont.draw(batch, "LEVEL " + level, JungleWarsGame.WIDTH / 2, JungleWarsGame.HEIGHT - 20);
+        if (isGameOver) {
+            gameState = GameState.GAME_OVER;
+            return;
+        }
+
+        update(delta);
+
+        for (Player player : players) {
+            player.draw(batch);
+            player.getHelper().draw(batch);
+
+            bigFont.setColor(0, 0, 0, 1);
+            bigFont.draw(batch, "Player 1", 20, Gdx.graphics.getHeight() - 20);
+            smallFont.draw(batch, "Name: " + player.getName(), 20, Gdx.graphics.getHeight() - 40);
+            smallFont.draw(batch, "Score: " + player.getScore(), 20, Gdx.graphics.getHeight() - 60);
+            smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 80);
+        }
+
+        for (Enemy enemy : enemies) {
+            enemy.draw(batch);
+        }
+
+        for (Currency currency : currencies) {
+            currency.draw(batch);
+        }
+
+        for (Power power : powers) {
+            power.draw(batch);
+        }
+
+        bigFont.draw(batch, "LEVEL " + level, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 20);
         batch.end();
     }
 
     @Override
     public void pause() {
-//        if (gameState == GameState.RUNNING) gameState = GameState.PAUSED;
+//        if (gameState == be.howest.junglewars.GameState.RUNNING) gameState = be.howest.junglewars.GameState.PAUSED;
     }
 
     @Override
     public void resume() {
-//        if (gameState == GameState.PAUSED) gameState = GameState.RUNNING;
-    }
-
-    public GameState getGameState() {
-        return gameState;
-    }
-
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public List<Enemy> getEnemies() {
-        return enemies;
+//        if (gameState == be.howest.junglewars.GameState.PAUSED) gameState = be.howest.junglewars.GameState.RUNNING;
     }
 
     public int getLevel() {
@@ -181,11 +246,43 @@ public class GameScreen extends ScreenAdapter {
         this.difficulty = difficulty;
     }
 
-    private enum GameState {
-        READY,
-        RUNNING,
-        PAUSED,
-        GAME_OVER, // TODO: if (all) player(s) is/are dead
-        BETWEEN_WAVE; // TODO: if all enemies are dead
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    public List<Helper> getHelpers() {
+        return helpers;
+    }
+
+    public void setHelpers(List<Helper> helpers) {
+        this.helpers = helpers;
+    }
+
+    public List<Enemy> getEnemies() {
+        return enemies;
+    }
+
+    public void setEnemies(List<Enemy> enemies) {
+        this.enemies = enemies;
+    }
+
+    public List<Power> getPowers() {
+        return powers;
+    }
+
+    public void setPowers(List<Power> powers) {
+        this.powers = powers;
+    }
+
+    public List<Currency> getCurrencies() {
+        return currencies;
+    }
+
+    public void setCurrencies(List<Currency> currencies) {
+        this.currencies = currencies;
     }
 }
