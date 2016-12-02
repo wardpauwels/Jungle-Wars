@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 
 public class Missile extends GameObject {
 
@@ -17,18 +16,14 @@ public class Missile extends GameObject {
     private float dx;
     private float dy;
 
-    private float spawnX;
-    private float spawnY;
-
     private float lifeTime;
     private float lifeTimer;
 
-    public Missile(GameScreen game, Player owner, float width, float height, float spawnX, float spawnY, float destinationX, float destinationY, String textureName, int damage, int speed,
+    public Missile(GameScreen game, Player owner, float width, float height, float spawnX, float spawnY, float destinationX, float destinationY, String defaultSpriteUrl, int damage, int speed,
                    int rotationSpeed, int lifeTime) {
-        this.owner = owner;
-        this.spawnX = spawnX;
-        this.spawnY = spawnY;
+        super(game, defaultSpriteUrl, width, height, spawnX, spawnY);
 
+        this.owner = owner;
         this.damage = damage;
         this.speed = speed;
         this.rotationSpeed = rotationSpeed;
@@ -36,9 +31,7 @@ public class Missile extends GameObject {
         this.lifeTime = lifeTime;
         this.lifeTimer = 0;
 
-        init(game, width, height);
-
-        float radians = MathUtils.atan2(destinationY - position.y, destinationX - position.x);
+        float radians = MathUtils.atan2(destinationY - body.y, destinationX - body.x);
         dx = MathUtils.cos(radians) * speed;
         dy = MathUtils.sin(radians) * speed;
     }
@@ -49,19 +42,9 @@ public class Missile extends GameObject {
     }
 
     @Override
-    protected Sprite initDefaultSprite() {
-        return atlas.createSprite("banana");
-    }
-
-    @Override
-    protected Vector2 initSpawnPosition(float width, float height) {
-        return new Vector2(spawnX, spawnY);
-    }
-
-    @Override
     public void update(float dt) {
-        position.x += dx * dt;
-        position.y += dy * dt;
+        body.x += dx * dt;
+        body.y += dy * dt;
 
         lifeTimer += dt;
         if (lifeTimer > lifeTime) {
@@ -71,11 +54,7 @@ public class Missile extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
-        activeSprite = defaultSprite;
-
-        activeSprite.setPosition(position.x - bounds.getWidth() / 2, position.y - bounds.getHeight() / 2);
-        activeSprite.setSize(bounds.getWidth(), bounds.getHeight());
-        activeSprite.setOriginCenter();
+        activeSprite.setPosition(body.x - body.getWidth() / 2, body.y - body.getHeight() / 2);
         activeSprite.rotate(rotationSpeed);
         activeSprite.draw(batch);
     }

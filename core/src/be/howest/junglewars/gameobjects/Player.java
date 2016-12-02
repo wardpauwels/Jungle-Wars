@@ -6,15 +6,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
 public class Player extends GameObject {
 
-    private final Sprite SHOOTING_SPRITE;
-
-    private String textureName;
+    private final Sprite SHOOTING_SPRITE = atlas.createSprite("harambe-shoot");
 
     private boolean isLookingLeft;
 
@@ -41,9 +38,10 @@ public class Player extends GameObject {
     private int totalDamageGiven;
     private int enemiesKilled;
 
-    public Player(GameScreen game, String name, float width, float height, String textureName) {
+    public Player(GameScreen game, String name, float width, float height, String defaultSpriteUrl) {
+        super(game, defaultSpriteUrl, width, height, Gdx.graphics.getWidth() / 2 - width / 2, Gdx.graphics.getHeight() / 2 - height / 2);
+
         this.name = name;
-        this.textureName = textureName;
 
         missiles = new ArrayList<>();
         collectedPowers = new ArrayList<>();
@@ -60,11 +58,7 @@ public class Player extends GameObject {
 
         this.speed = 6;
 
-        init(game, width, height);
-
-        helper = new Helper(game, "Little Helper", 50, 50, this, "red-wings-down");
-
-        SHOOTING_SPRITE = atlas.createSprite("harambe-shoot");
+        helper = new Helper(game, 50, 50, "Little Helper", this, "red-wings-up");
     }
 
     private void handleInput() {
@@ -73,10 +67,10 @@ public class Player extends GameObject {
         boolean keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
         boolean keyRightPressed = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
 
-        boolean topBorderTouch = position.y >= Gdx.graphics.getHeight() - bounds.getHeight();
-        boolean bottomBorderTouch = position.y <= 0;
-        boolean leftBorderTouch = position.x <= 0;
-        boolean rightBorderTouch = position.x >= Gdx.graphics.getWidth() - bounds.getWidth();
+        boolean topBorderTouch = body.y >= Gdx.graphics.getHeight() - body.getHeight();
+        boolean bottomBorderTouch = body.y <= 0;
+        boolean leftBorderTouch = body.x <= 0;
+        boolean rightBorderTouch = body.x >= Gdx.graphics.getWidth() - body.getWidth();
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && canShoot) {
             shoot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
@@ -92,21 +86,21 @@ public class Player extends GameObject {
 
         if (keyUpPressed) {
             if (leftBorderTouch || rightBorderTouch) currentSpeed = speed;
-            position.y = topBorderTouch ? Gdx.graphics.getHeight() - bounds.getHeight() : position.y + currentSpeed;
+            body.y = topBorderTouch ? Gdx.graphics.getHeight() - body.getHeight() : body.y + currentSpeed;
         }
         if (keyDownPressed) {
             if (leftBorderTouch || rightBorderTouch) currentSpeed = speed;
-            position.y = bottomBorderTouch ? 0 : position.y - currentSpeed;
+            body.y = bottomBorderTouch ? 0 : body.y - currentSpeed;
         }
         if (keyLeftPressed) {
             isLookingLeft = true;
             if (topBorderTouch || bottomBorderTouch) currentSpeed = speed;
-            position.x = leftBorderTouch ? 0 : position.x - currentSpeed;
+            body.x = leftBorderTouch ? 0 : body.x - currentSpeed;
         }
         if (keyRightPressed) {
             isLookingLeft = false;
             if (topBorderTouch || bottomBorderTouch) currentSpeed = speed;
-            position.x = rightBorderTouch ? Gdx.graphics.getWidth() - bounds.getWidth() : position.x + currentSpeed;
+            body.x = rightBorderTouch ? Gdx.graphics.getWidth() - body.getWidth() : body.x + currentSpeed;
         }
     }
 
@@ -115,28 +109,18 @@ public class Player extends GameObject {
         isShooting = true;
         shootTimer = 0;
 
-        float spawnX = position.x + 18;
-        if (!isLookingLeft) spawnX += bounds.getWidth() / 2;
-        float spawnY = position.y + bounds.getHeight() - 10;
+        float spawnX = body.x + 18;
+        if (!isLookingLeft) spawnX += body.getWidth() / 2;
+        float spawnY = body.y + body.getHeight() - 10;
 
         missiles.add(
-                new Missile(game, this, 30, 30, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 10, 500, -10, 3)
+                new Missile(game, this, 30, 30, spawnX, spawnY, destinationX, destinationY, "banana", 10, 500, -10, 3)
         );
     }
 
     @Override
     protected TextureAtlas initAtlas() {
         return new TextureAtlas("atlas/players.atlas");
-    }
-
-    @Override
-    protected Sprite initDefaultSprite() {
-        return new Sprite(atlas.createSprite(textureName));
-    }
-
-    @Override
-    protected Vector2 initSpawnPosition(float width, float height) {
-        return new Vector2(Gdx.graphics.getWidth() / 2 - width / 2, Gdx.graphics.getHeight() / 2 - height / 2);
     }
 
     @Override
@@ -171,20 +155,22 @@ public class Player extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
-        activeSprite = isShooting ? SHOOTING_SPRITE : defaultSprite;
+        if (isShooting)
+            changeSprite(SHOOTING_SPRITE);
+        else
+            changeSprite(DEFAULT_SPRITE);
 
         if (activeSprite.isFlipX() != isLookingLeft) {
             activeSprite.flip(true, false);
         }
 
-        activeSprite.setPosition(position.x, position.y);
-        activeSprite.setSize(bounds.getWidth(), bounds.getHeight());
-        activeSprite.draw(batch);
-
         helper.draw(batch);
         for (Missile missile : missiles) {
             missile.draw(batch);
         }
+
+        activeSprite.setPosition(body.x, body.y);
+        activeSprite.draw(batch);
     }
 
     public Helper getHelper() {

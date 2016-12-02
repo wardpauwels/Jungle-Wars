@@ -1,7 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
 import be.howest.junglewars.screens.GameScreen;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -9,19 +8,16 @@ import com.badlogic.gdx.math.Vector2;
 // TODO: should be upgradable
 public class Helper extends GameObject {
     private Player owner;
-
-    private String textureUrl;
     private String name;
 
     private float shootTime;
     private float shootTimer;
 
-    public Helper(GameScreen game, String name, float width, float height, Player owner, String textureUrl) {
+    public Helper(GameScreen game, float width, float height, String name, Player owner, String defaultSpriteUrl) {
+        super(game, defaultSpriteUrl, width, height, owner.body.x, owner.body.y);
+
         this.owner = owner;
         this.name = name;
-        this.textureUrl = textureUrl;
-
-        init(game, width, height);
     }
 
     @Override
@@ -29,34 +25,24 @@ public class Helper extends GameObject {
         return new TextureAtlas("atlas/helpers.atlas");
     }
 
-    @Override
-    protected Sprite initDefaultSprite() {
-        return atlas.createSprite("red-wings-up");
-    }
-
-    @Override
-    protected Vector2 initSpawnPosition(float width, float height) {
-        // TODO: topleft from player
-        return new Vector2(owner.position.x - 1.5f * width, owner.position.y + 1.5f * height);
-    }
-
     private Enemy chooseTarget() {
         return getNearest(game.getEnemies());
     }
 
     private Vector2 leftTopOfOwnerPosition() {
-        return new Vector2(owner.position.x - 1.5f * bounds.width, owner.position.y + 1.5f * bounds.height);
+        return new Vector2(owner.body.x - 1.5f * body.width, owner.body.y + 1.5f * body.height);
     }
 
     @Override
     public void update(float dt) {
-        position = leftTopOfOwnerPosition();
+        body.x = owner.body.x - 1.5f * body.width;
+        body.y = owner.body.y + 1.5f * body.height;
     }
 
     @Override
     public void draw(SpriteBatch batch) {
-        defaultSprite.setPosition(position.x, position.y);
-        defaultSprite.draw(batch);
+        activeSprite.setPosition(body.x, body.y);
+        activeSprite.draw(batch);
     }
 
     public Player getOwner() {

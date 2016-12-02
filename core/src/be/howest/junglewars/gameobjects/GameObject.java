@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,44 +16,44 @@ public abstract class GameObject implements Serializable {
 
     protected TextureAtlas atlas;
 
-    protected Vector2 position; // position.x and position.y
-    protected Rectangle bounds; // bounds.width and bounds.height // .overlaps() for collision
+    protected Rectangle body; // has: .width, .height, .overlaps(), .x, .y
     protected float speed = 0;
 
-    protected Sprite defaultSprite;
+    protected final Sprite DEFAULT_SPRITE;
     protected Sprite activeSprite;
 
     public boolean remove = false;
 
-    protected void init(GameScreen game, float width, float height) {
+    protected GameObject(GameScreen game, String defaultSpriteUrl, float width, float height, float x, float y) {
         this.game = game;
+        body = initBody(width, height, x, y);
         atlas = initAtlas();
-        position = initSpawnPosition(width, height);
-        bounds = initBounds(width, height);
-        defaultSprite = initDefaultSprite();
-        activeSprite = defaultSprite;
+        DEFAULT_SPRITE = atlas.createSprite(defaultSpriteUrl);
+        changeSprite(DEFAULT_SPRITE);
     }
 
     // TODO: should not be necessary when using one global atlas (loaded at game startup...)
     protected abstract TextureAtlas initAtlas();
 
-    protected abstract Sprite initDefaultSprite();
-
-    protected abstract Vector2 initSpawnPosition(float width, float height);
-
-    protected Rectangle initBounds(float width, float height) {
-        return new Rectangle(position.x - width / 2, position.y - height / 2, width, height);
+    protected Rectangle initBody(float width, float height, float x, float y) {
+        return new Rectangle(x - width / 2, y - height / 2, width, height);
     }
 
     protected abstract void update(float dt);
 
     protected abstract void draw(SpriteBatch batch);
 
+    protected void changeSprite(Sprite sprite) {
+        activeSprite = sprite;
+        activeSprite.setSize(body.width, body.height);
+        activeSprite.setOriginCenter();
+    }
+
     public <T extends GameObject> ArrayList<T> checkCollision(List<T> objects) {
         ArrayList<T> collision = new ArrayList<>();
 
         for (T go : objects) {
-            if (this.bounds.overlaps(go.bounds)) {
+            if (this.body.overlaps(go.body)) {
                 collision.add(go);
             }
         }
@@ -78,8 +77,8 @@ public abstract class GameObject implements Serializable {
     }
 
     protected float getDistanceTo(GameObject object) {
-        float diffX = Math.abs(this.bounds.x - object.bounds.y);
-        float diffY = Math.abs(this.bounds.y - object.bounds.y);
+        float diffX = Math.abs(this.body.x - object.body.y);
+        float diffY = Math.abs(this.body.y - object.body.y);
 
         double dist = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
 
