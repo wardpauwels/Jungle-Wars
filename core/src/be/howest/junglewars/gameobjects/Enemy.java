@@ -48,6 +48,8 @@ public class Enemy extends GameObject {
 
     @Override
     public void update(float dt) {
+        if (this.hitpoints <= 0) this.remove = true;
+
         Player target = chooseTarget();
 
         float radians = MathUtils.atan2(target.body.y - body.y, target.body.x - body.x);
@@ -62,13 +64,22 @@ public class Enemy extends GameObject {
         activeSprite.draw(batch);
     }
 
-    public void killedBy(Missile missile) {
-        Player owner = missile.getOwner();
-        owner.addScore(scoreWhenKilled);
-        owner.addXp(experienceWhenKilled);
+    public void hitBy(Missile missile, Player player) {
+        if (catchDamage(missile.getDamage()) <= 0) {
+            player.addScore(scoreWhenKilled);
+            player.addXp(experienceWhenKilled);
+        }
 
-        this.remove = true;
         missile.remove = true;
+    }
+
+    public void hitBy(Missile missile, Helper helper) {
+        hitBy(missile, helper.getOwner());
+    }
+
+    public int catchDamage(int dmg) {
+        this.hitpoints -= dmg;
+        return hitpoints;
     }
 
     private Player chooseTarget() {

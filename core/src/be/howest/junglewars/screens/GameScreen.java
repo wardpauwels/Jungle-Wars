@@ -122,8 +122,7 @@ public class GameScreen extends ScreenAdapter {
         for (Enemy enemy : enemies) {
             for (Player player : players) {
                 for (Missile missile : enemy.checkCollision(player.getMissiles())) {
-                    missile.remove = true;
-                    enemy.remove = true;
+                    enemy.hitBy(missile, player);
                 }
             }
         }
@@ -166,7 +165,7 @@ public class GameScreen extends ScreenAdapter {
         if (enemies.size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * level));
             for (int i = 0; i < amountEnemies; i++) {
-                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 80, 70, 5, 150, 10, 2, 10, 15, 5));
+                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 80, 70, 5, 150, 15, 2, 10, 15, 5));
             }
             if (nextLevel) level++;
         }

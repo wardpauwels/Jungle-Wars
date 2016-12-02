@@ -58,4 +58,8 @@ public class Missile extends GameObject {
     public Player getOwner() {
         return owner;
     }
+
+    public int getDamage() {
+        return damage;
+    }
 }
