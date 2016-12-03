@@ -27,16 +27,16 @@ public class Player extends GameObject {
     private ArrayList<Missile> missiles;
     private ArrayList<Power> collectedPowers;
     private ArrayList<Power> activePowers;
-    private ArrayList<Currency> collectedCurrencies; // TODO: calculate points of this list
 
     private String name;
     private int hitpoints;
     private float speed;
-    private float scoreMultiplier; // TODO: when multiplier? over time? when x score is reached, ...?
-    private int score;
-    private int totalDamageTaken;
-    private int totalDamageGiven;
-    private int enemiesKilled;
+    private float scoreMultiplier = 1; // TODO: when multiplier? over time? when x score is reached, ...?
+    private int xp = 0;
+    private int level = 1;
+    private int score = 0;
+    private int collectedCoins = 0;
+    private int enemiesKilled = 0;
 
     public Player(GameScreen game, String name, float width, float height, String defaultSpriteUrl) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, Gdx.graphics.getWidth() / 2 - width / 2, Gdx.graphics.getHeight() / 2 - height / 2);
@@ -46,7 +46,6 @@ public class Player extends GameObject {
         missiles = new ArrayList<>();
         collectedPowers = new ArrayList<>();
         activePowers = new ArrayList<>();
-        collectedCurrencies = new ArrayList<>();
 
         this.shootTime = .3f;
         this.shootTimer = 0;
@@ -57,6 +56,7 @@ public class Player extends GameObject {
         this.shootingAnimationTimer = 0;
 
         this.speed = 6;
+        this.hitpoints = 100;
 
         helper = new Helper(game, 50, 50, "Little Helper", this, "red-wings-up");
     }
@@ -168,6 +168,24 @@ public class Player extends GameObject {
         activeSprite.draw(batch);
     }
 
+    public void addScore(int score) {
+        this.score += Math.round(scoreMultiplier * score);
+    }
+
+    public void addXp(int xp) {
+        this.xp += xp;
+        checkLevelUp();
+    }
+
+    public int addCoin(int coin) {
+        this.collectedCoins += coin;
+        return collectedCoins;
+    }
+
+    private void checkLevelUp() {
+        // TODO: if level up condition true => level++
+    }
+
     public Helper getHelper() {
         return helper;
     }
@@ -192,11 +210,19 @@ public class Player extends GameObject {
         return activePowers;
     }
 
-    public ArrayList<Currency> getCollectedCurrencies() {
-        return collectedCurrencies;
-    }
-
     public ArrayList<Missile> getMissiles() {
         return missiles;
+    }
+
+    public int getXp() {
+        return xp;
+    }
+
+    public int getCollectedCoins() {
+        return collectedCoins;
+    }
+
+    public int getLevel() {
+        return level;
     }
 }

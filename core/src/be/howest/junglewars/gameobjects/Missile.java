@@ -54,4 +54,12 @@ public class Missile extends GameObject {
         activeSprite.rotate(rotationSpeed);
         activeSprite.draw(batch);
     }
+
+    public Player getOwner() {
+        return owner;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
 }

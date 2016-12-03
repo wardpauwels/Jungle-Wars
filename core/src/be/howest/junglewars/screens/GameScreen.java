@@ -1,7 +1,6 @@
 package be.howest.junglewars.screens;
 
 import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.GameState;
 import be.howest.junglewars.JungleWars;
 import be.howest.junglewars.gameobjects.*;
 import com.badlogic.gdx.Gdx;
@@ -44,6 +43,14 @@ public class GameScreen extends ScreenAdapter {
     private BitmapFont smallFont;
     private BitmapFont bigFont;
 
+    enum GameState {
+        READY,
+        RUNNING,
+        PAUSED,
+        GAME_OVER, // TODO: if (all) player(s) is/are dead
+        BETWEEN_WAVE; // TODO: if all enemies are dead
+    }
+
     public GameScreen(JungleWars game, int level, Difficulty difficulty) {
         this.game = game;
         this.level = level;
@@ -59,7 +66,6 @@ public class GameScreen extends ScreenAdapter {
         currencies = new ArrayList<>();
 
         // create full screen background
-        // TODO: change backgrounds.atlas to a "gamescreen-assets.atlas" or something... (or one assets atlas for all screens in JungleWars.java?)
         backgroundSprite = atlas.createSprite("background/game");
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -81,6 +87,7 @@ public class GameScreen extends ScreenAdapter {
         spawnEnemies(false);
     }
 
+    // TODO: clean up the update and render methods
     public void update(float dt) {
         if (dt > .02f) dt = .02f;
 
@@ -115,8 +122,7 @@ public class GameScreen extends ScreenAdapter {
         for (Enemy enemy : enemies) {
             for (Player player : players) {
                 for (Missile missile : enemy.checkCollision(player.getMissiles())) {
-                    missile.remove = true;
-                    enemy.remove = true;
+                    enemy.hitBy(missile, player);
                 }
             }
         }
@@ -130,6 +136,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void updateRunning(float dt) {
         spawnEnemies(true);
+        spawnCurrencies();
 
         for (Player player : players) {
             player.update(dt);
@@ -143,8 +150,12 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
-        for (Currency currency : currencies) {
-            currency.update(dt);
+        for (int i = 0; i < currencies.size(); i++) {
+            currencies.get(i).update(dt);
+            if (currencies.get(i).shouldRemove()) {
+                currencies.remove(i);
+                i--;
+            }
         }
 
         for (Power power : powers) {
@@ -159,10 +170,15 @@ public class GameScreen extends ScreenAdapter {
         if (enemies.size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * level));
             for (int i = 0; i < amountEnemies; i++) {
-                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 80, 70, 5, 150, 10, 2, 10, 15, 5));
+                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 80, 70, 5, 150, 15, 2, 10, 15, 5));
             }
             if (nextLevel) level++;
         }
+    }
+
+    private void spawnCurrencies() {
+        int maxCurrenciesOnField = 2;
+        if (currencies.size() < maxCurrenciesOnField) currencies.add(new Currency(this, 30, 30, 5, "coin"));
     }
 
     private void updateGameOver(float dt) {
@@ -204,7 +220,10 @@ public class GameScreen extends ScreenAdapter {
             bigFont.draw(batch, "Player 1", 20, Gdx.graphics.getHeight() - 20);
             smallFont.draw(batch, "Name: " + player.getName(), 20, Gdx.graphics.getHeight() - 40);
             smallFont.draw(batch, "Score: " + player.getScore(), 20, Gdx.graphics.getHeight() - 60);
-            smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 80);
+            smallFont.draw(batch, "Level: " + player.getLevel(), 20, Gdx.graphics.getHeight() - 80);
+            smallFont.draw(batch, "XP: " + player.getXp(), 20, Gdx.graphics.getHeight() - 100); // TODO: xp till next level
+            smallFont.draw(batch, "Coins collected: " + player.getCollectedCoins(), 20, Gdx.graphics.getHeight() - 120);
+            smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
         }
 
         for (Enemy enemy : enemies) {
@@ -224,13 +243,8 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
-    public void pause() {
-//        if (gameState == be.howest.junglewars.GameState.RUNNING) gameState = be.howest.junglewars.GameState.PAUSED;
-    }
+    public void dispose() {
 
-    @Override
-    public void resume() {
-//        if (gameState == be.howest.junglewars.GameState.PAUSED) gameState = be.howest.junglewars.GameState.RUNNING;
     }
 
     public int getLevel() {
