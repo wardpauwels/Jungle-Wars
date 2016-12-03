@@ -15,14 +15,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
-enum GameState {
-    READY,
-    RUNNING,
-    PAUSED,
-    GAME_OVER, // TODO: if (all) player(s) is/are dead
-    BETWEEN_WAVE; // TODO: if all enemies are dead
-}
-
 // TODO: check and implement https://github.com/libgdx/libgdx/wiki/Collections
 public class GameScreen extends ScreenAdapter {
 
@@ -50,6 +42,14 @@ public class GameScreen extends ScreenAdapter {
 
     private BitmapFont smallFont;
     private BitmapFont bigFont;
+
+    enum GameState {
+        READY,
+        RUNNING,
+        PAUSED,
+        GAME_OVER, // TODO: if (all) player(s) is/are dead
+        BETWEEN_WAVE; // TODO: if all enemies are dead
+    }
 
     public GameScreen(JungleWars game, int level, Difficulty difficulty) {
         this.game = game;
@@ -136,6 +136,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void updateRunning(float dt) {
         spawnEnemies(true);
+        spawnCurrencies();
 
         for (Player player : players) {
             player.update(dt);
@@ -149,8 +150,12 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
-        for (Currency currency : currencies) {
-            currency.update(dt);
+        for (int i = 0; i < currencies.size(); i++) {
+            currencies.get(i).update(dt);
+            if (currencies.get(i).shouldRemove()) {
+                currencies.remove(i);
+                i--;
+            }
         }
 
         for (Power power : powers) {
@@ -169,6 +174,11 @@ public class GameScreen extends ScreenAdapter {
             }
             if (nextLevel) level++;
         }
+    }
+
+    private void spawnCurrencies() {
+        int maxCurrenciesOnField = 2;
+        if (currencies.size() < maxCurrenciesOnField) currencies.add(new Currency(this, 30, 30, 5, "coin"));
     }
 
     private void updateGameOver(float dt) {
@@ -210,7 +220,10 @@ public class GameScreen extends ScreenAdapter {
             bigFont.draw(batch, "Player 1", 20, Gdx.graphics.getHeight() - 20);
             smallFont.draw(batch, "Name: " + player.getName(), 20, Gdx.graphics.getHeight() - 40);
             smallFont.draw(batch, "Score: " + player.getScore(), 20, Gdx.graphics.getHeight() - 60);
-            smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 80);
+            smallFont.draw(batch, "Level: " + player.getLevel(), 20, Gdx.graphics.getHeight() - 80);
+            smallFont.draw(batch, "XP: " + player.getXp(), 20, Gdx.graphics.getHeight() - 100); // TODO: xp till next level
+            smallFont.draw(batch, "Coins collected: " + player.getCollectedCoins(), 20, Gdx.graphics.getHeight() - 120);
+            smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
         }
 
         for (Enemy enemy : enemies) {

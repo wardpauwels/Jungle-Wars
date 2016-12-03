@@ -27,7 +27,6 @@ public class Player extends GameObject {
     private ArrayList<Missile> missiles;
     private ArrayList<Power> collectedPowers;
     private ArrayList<Power> activePowers;
-    private ArrayList<Currency> collectedCurrencies; // TODO: calculate points of this list
 
     private String name;
     private int hitpoints;
@@ -36,6 +35,7 @@ public class Player extends GameObject {
     private int xp = 0;
     private int level = 1;
     private int score = 0;
+    private int collectedCoins = 0;
     private int enemiesKilled = 0;
 
     public Player(GameScreen game, String name, float width, float height, String defaultSpriteUrl) {
@@ -46,7 +46,6 @@ public class Player extends GameObject {
         missiles = new ArrayList<>();
         collectedPowers = new ArrayList<>();
         activePowers = new ArrayList<>();
-        collectedCurrencies = new ArrayList<>();
 
         this.shootTime = .3f;
         this.shootTimer = 0;
@@ -178,7 +177,12 @@ public class Player extends GameObject {
         checkLevelUp();
     }
 
-    private void checkLevelUp(){
+    public int addCoin(int coin) {
+        this.collectedCoins += coin;
+        return collectedCoins;
+    }
+
+    private void checkLevelUp() {
         // TODO: if level up condition true => level++
     }
 
@@ -206,11 +210,19 @@ public class Player extends GameObject {
         return activePowers;
     }
 
-    public ArrayList<Currency> getCollectedCurrencies() {
-        return collectedCurrencies;
-    }
-
     public ArrayList<Missile> getMissiles() {
         return missiles;
+    }
+
+    public int getXp() {
+        return xp;
+    }
+
+    public int getCollectedCoins() {
+        return collectedCoins;
+    }
+
+    public int getLevel() {
+        return level;
     }
 }
