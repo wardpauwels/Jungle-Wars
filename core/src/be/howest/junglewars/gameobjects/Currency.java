@@ -9,12 +9,15 @@ import java.util.concurrent.ThreadLocalRandom;
 // Buy upgrades for your helpers with these
 // Looks like a Power where the "power" just adds some coins...
 public class Currency extends GameObject {
+    private static float width = 30;
+    private static float height = 30;
+
     private static final String ATLAS_PREFIX = "currency/";
 
     private float lifeTime;
     private float lifeTimer;
 
-    public Currency(GameScreen game, float width, float height, float lifeTime, String defaultSpriteUrl) {
+    public Currency(GameScreen game, float lifeTime, String defaultSpriteUrl) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
 
         this.lifeTime = lifeTime;

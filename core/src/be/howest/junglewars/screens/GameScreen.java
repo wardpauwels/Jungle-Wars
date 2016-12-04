@@ -80,7 +80,7 @@ public class GameScreen extends ScreenAdapter {
         bigFont = generator.generateFont(parameter);
         generator.dispose();
 
-        players.add(new Player(this, "John", 80, 70, "harambe"));
+        players.add(new Player(this, "John", "harambe"));
 
         startingEnemies = 1;
         mulitplierEnemies = 0.5f;
@@ -177,7 +177,7 @@ public class GameScreen extends ScreenAdapter {
         if (enemies.size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * level));
             for (int i = 0; i < amountEnemies; i++) {
-                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 80, 70, 5, 150, 15, 2, 10, 15, 5));
+                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 2, 10, 15, 5));
             }
             if (nextLevel) level++;
         }
@@ -186,13 +186,13 @@ public class GameScreen extends ScreenAdapter {
     private void spawnCurrencies() {
         int maxCurrenciesOnField = 2;
         if (currencies.size() < maxCurrenciesOnField)
-            currencies.add(new Currency(this, 30, 30, 5, "coin"));
+            currencies.add(new Currency(this,  5, "coin"));
     }
 
     private void spawnPowers() {
         int maxPowersOnField = 2;
         if (powers.size() < maxPowersOnField)
-            powers.add(new Power(this, "More Damage", 30, 30, "power-up", 5, 10, true, Power.PowerType.EXTRA_DAMAGE, 40));
+            powers.add(new Power(this, "More Damage", "power-up", 5, 10, true, Power.PowerType.EXTRA_DAMAGE, 40));
     }
 
     private void updateGameOver(float dt) {

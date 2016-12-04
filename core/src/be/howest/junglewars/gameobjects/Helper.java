@@ -7,6 +7,9 @@ import com.badlogic.gdx.math.Vector2;
 
 // TODO: should be upgradable
 public class Helper extends GameObject {
+    private static float width = 50;
+    private static float height = 50;
+
     private static final String ATLAS_PREFIX = "helper/";
 
     private Player owner;
@@ -15,7 +18,7 @@ public class Helper extends GameObject {
     private float shootTime;
     private float shootTimer;
 
-    public Helper(GameScreen game, float width, float height, String name, Player owner, String defaultSpriteUrl) {
+    public Helper(GameScreen game, String name, Player owner, String defaultSpriteUrl) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, owner.body.x, owner.body.y);
 
         this.owner = owner;

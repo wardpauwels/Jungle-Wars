@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Enemy extends GameObject {
+    private static float width = 70;
+    private static float height = 80;
+
     private static final String ATLAS_PREFIX = "enemy/";
 
     private String name;
@@ -25,7 +28,7 @@ public class Enemy extends GameObject {
     private int scoreWhenKilled;
     private int experienceWhenKilled;
 
-    public Enemy(GameScreen game, String name, String defaultSpriteUrl, float width, float height,
+    public Enemy(GameScreen game, String name, String defaultSpriteUrl,
                  int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
                  int experienceWhenKilled, int scoreWhenKilled, int rarity) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height,

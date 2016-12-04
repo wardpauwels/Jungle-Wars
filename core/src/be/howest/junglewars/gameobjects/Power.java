@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Power extends GameObject {
+    private static float width = 30;
+    private static float height = 30;
+
     private static final String ATLAS_PREFIX = "power/";
 
     private final Sprite HIDDEN_SPRITE = game.atlas.createSprite(ATLAS_PREFIX + "hidden");
@@ -41,7 +44,7 @@ public class Power extends GameObject {
         EXTRA_DAMAGE
     }
 
-    public Power(GameScreen game, String name, float width, float height, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp, PowerType powerType, float percentage) {
+    public Power(GameScreen game, String name, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp, PowerType powerType, float percentage) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
 
         this.name = name;

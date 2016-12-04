@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 
 public class Player extends GameObject {
+    private static float width = 70;
+    private static float height = 80;
+
     private static final String ATLAS_PREFIX = "player/";
 
     private final Sprite SHOOTING_SPRITE = game.atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
@@ -37,7 +40,7 @@ public class Player extends GameObject {
     private int collectedCoins = 0;
     private int damage;
 
-    public Player(GameScreen game, String name, float width, float height, String defaultSpriteUrl) {
+    public Player(GameScreen game, String name, String defaultSpriteUrl) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, Gdx.graphics.getWidth() / 2 - width / 2, Gdx.graphics.getHeight() / 2 - height / 2);
 
         this.name = name;
@@ -57,7 +60,7 @@ public class Player extends GameObject {
         this.hitpoints = 100;
         this.damage = 10;
 
-        helper = new Helper(game, 50, 50, "Little Helper", this, "red-wings-up");
+        helper = new Helper(game, "Little Helper", this, "red-wings-up");
     }
 
     private void handleInput(float dt) {
@@ -86,21 +89,25 @@ public class Player extends GameObject {
         }
 
         if (keyUpPressed) {
-            if (leftBorderTouch || rightBorderTouch) currentSpeed = normalizedSpeed;
+            if (leftBorderTouch || rightBorderTouch)
+                currentSpeed = normalizedSpeed;
             body.y = topBorderTouch ? Gdx.graphics.getHeight() - body.getHeight() : body.y + currentSpeed;
         }
         if (keyDownPressed) {
-            if (leftBorderTouch || rightBorderTouch) currentSpeed = normalizedSpeed;
+            if (leftBorderTouch || rightBorderTouch)
+                currentSpeed = normalizedSpeed;
             body.y = bottomBorderTouch ? 0 : body.y - currentSpeed;
         }
         if (keyLeftPressed) {
             isLookingLeft = true;
-            if (topBorderTouch || bottomBorderTouch) currentSpeed = normalizedSpeed;
+            if (topBorderTouch || bottomBorderTouch)
+                currentSpeed = normalizedSpeed;
             body.x = leftBorderTouch ? 0 : body.x - currentSpeed;
         }
         if (keyRightPressed) {
             isLookingLeft = false;
-            if (topBorderTouch || bottomBorderTouch) currentSpeed = normalizedSpeed;
+            if (topBorderTouch || bottomBorderTouch)
+                currentSpeed = normalizedSpeed;
             body.x = rightBorderTouch ? Gdx.graphics.getWidth() - body.getWidth() : body.x + currentSpeed;
         }
     }
