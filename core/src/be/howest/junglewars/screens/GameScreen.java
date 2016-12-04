@@ -21,7 +21,7 @@ public class GameScreen extends ScreenAdapter {
     public TextureAtlas atlas;
     private JungleWars game;
     private GameState gameState;
-    private int level;
+    private int wave;
     private Difficulty difficulty;
     private List<Player> players;
     private List<Helper> helpers;
@@ -39,7 +39,7 @@ public class GameScreen extends ScreenAdapter {
 
     public GameScreen(JungleWars game, int level, Difficulty difficulty) {
         this.game = game;
-        this.level = level;
+        this.wave = level;
         this.difficulty = difficulty;
         this.atlas = game.atlas;
 
@@ -159,13 +159,13 @@ public class GameScreen extends ScreenAdapter {
 
     }
 
-    private void spawnEnemies(boolean nextLevel) {
+    private void spawnEnemies(boolean nextWave) {
         if (enemies.size() == 0) {
-            amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * level));
+            amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * wave));
             for (int i = 0; i < amountEnemies; i++) {
                 enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 2, 10, 15, 5));
             }
-            if (nextLevel) level++;
+            if (nextWave) wave++;
         }
     }
 
@@ -224,8 +224,8 @@ public class GameScreen extends ScreenAdapter {
             bigFont.draw(batch, "Player 1", 20, Gdx.graphics.getHeight() - 20);
             smallFont.draw(batch, "Name: " + player.getName(), 20, Gdx.graphics.getHeight() - 40);
             smallFont.draw(batch, "Score: " + player.getScore(), 20, Gdx.graphics.getHeight() - 60);
-            smallFont.draw(batch, "Level: " + player.getLevel(), 20, Gdx.graphics.getHeight() - 80);
-            smallFont.draw(batch, "XP: " + player.getXp(), 20, Gdx.graphics.getHeight() - 100); // TODO: xp till next level
+            smallFont.draw(batch, "Wave: " + player.getWave(), 20, Gdx.graphics.getHeight() - 80);
+            smallFont.draw(batch, "XP: " + player.getXp(), 20, Gdx.graphics.getHeight() - 100); // TODO: xp till next wave
             smallFont.draw(batch, "Coins collected: " + player.getCollectedCoins(), 20, Gdx.graphics.getHeight() - 120);
             smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
             smallFont.draw(batch, "ACTIVE POWERS: ", 300, Gdx.graphics.getHeight() - 20);
@@ -247,7 +247,7 @@ public class GameScreen extends ScreenAdapter {
             power.draw(batch);
         }
 
-        bigFont.draw(batch, "LEVEL " + level, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 20);
+        bigFont.draw(batch, "LEVEL " + wave, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 20);
         batch.end();
     }
 
@@ -256,12 +256,12 @@ public class GameScreen extends ScreenAdapter {
 
     }
 
-    public int getLevel() {
-        return level;
+    public int getWave() {
+        return wave;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public void setWave(int wave) {
+        this.wave = wave;
     }
 
     public Difficulty getDifficulty() {

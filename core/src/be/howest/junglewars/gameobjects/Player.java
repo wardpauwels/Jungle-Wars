@@ -243,7 +243,7 @@ public class Player extends GameObject {
         return collectedCoins;
     }
 
-    public int getLevel() {
+    public int getWave() {
         return level;
     }
 
