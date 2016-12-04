@@ -137,19 +137,21 @@ public class Player extends GameObject {
         }
 
         for (int i = 0; i < missiles.size(); i++) {
-            missiles.get(i).update(dt);
             if (missiles.get(i).shouldRemove()) {
                 missiles.remove(i);
                 i--;
+                continue;
             }
+            missiles.get(i).update(dt);
         }
 
         for (int i = 0; i < powers.size(); i++) {
-            powers.get(i).update(dt);
             if (powers.get(i).isActionEnded()) {
                 powers.remove(i); // FIXME: crashes while deleting last power
                 i--;
+                continue;
             }
+            powers.get(i).update(dt);
         }
 
         helper.update(dt);
@@ -188,8 +190,15 @@ public class Player extends GameObject {
         this.collectedCoins += coin;
     }
 
-    public void addPowers(Power power) {
+    public boolean addPower(Power power) {
+        for (Power p : powers) {
+            if (p.getType() == power.getType()) {
+                p.resetActiveTimer();
+                return false;
+            }
+        }
         this.powers.add(power);
+        return true;
     }
 
     private void checkLevelUp() {

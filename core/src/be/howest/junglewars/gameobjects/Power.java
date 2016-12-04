@@ -24,16 +24,23 @@ public class Power extends GameObject {
     private float activeTimer;
     private boolean actionEnded = false;
 
+    private CollectedState collectedState;
+
     private int bonusDamage;
 
     private Player owner;
+    private PowerType powerType;
 
-    public enum CollectedState{
+    public enum CollectedState {
         ON_FIELD,
         COLLECTED
     }
 
-    public Power(GameScreen game, String name, float width, float height, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp) {
+    public enum PowerType {
+        PLUS_TWENTY_PERCENT_DAMAGE
+    }
+
+    public Power(GameScreen game, String name, float width, float height, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp, PowerType powerType) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
 
         this.name = name;
@@ -41,9 +48,12 @@ public class Power extends GameObject {
         this.lifeTime = lifeTime;
         this.activeTime = activeTime;
         this.isHidden = (Math.random() < 0.5);
+        this.powerType = powerType;
+
+        this.collectedState = CollectedState.ON_FIELD;
     }
 
-    public void activatePower() {
+    private void activatePower() {
         bonusDamage = owner.getDamage();
         owner.setDamage(owner.getDamage() + bonusDamage);
     }
@@ -53,16 +63,30 @@ public class Power extends GameObject {
         actionEnded = true;
     }
 
+    public void resetActiveTimer() {
+        this.activeTimer = 0;
+    }
+
     public void collectedBy(Player player) {
+        collectedState = CollectedState.COLLECTED;
         this.owner = player;
-        owner.addPowers(this);
         remove = true;
-        activatePower();
+        if (owner.addPower(this)) activatePower();
     }
 
     // TODO: work with states to know what to update
     @Override
     public void update(float dt) {
+        switch (collectedState) {
+            case ON_FIELD:
+                updateOnField(dt);
+                break;
+            case COLLECTED:
+                updateCollected(dt);
+        }
+    }
+
+    private void updateOnField(float dt) {
         if (isHidden) {
             this.changeSprite(HIDDEN_SPRITE);
         }
@@ -70,9 +94,13 @@ public class Power extends GameObject {
         if (lifeTime < lifeTimer) {
             remove = true;
         }
-        lifeTimer += dt;
 
+        lifeTimer += dt;
+    }
+
+    private void updateCollected(float dt) {
         if (activeTime < activeTimer) {
+            endAction();
             owner.getPowers().remove(this);
         }
         activeTimer += dt;
@@ -80,8 +108,23 @@ public class Power extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
+        switch (collectedState) {
+            case ON_FIELD:
+                drawOnField(batch);
+                break;
+            case COLLECTED:
+                drawCollected(batch);
+                break;
+        }
+    }
+
+    private void drawOnField(SpriteBatch batch) {
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
+    }
+
+    private void drawCollected(SpriteBatch batch) {
+
     }
 
     public String getName() {
@@ -95,5 +138,10 @@ public class Power extends GameObject {
     public boolean isActionEnded() {
         return actionEnded;
     }
+
+    public PowerType getType() {
+        return powerType;
+    }
+
 }
 

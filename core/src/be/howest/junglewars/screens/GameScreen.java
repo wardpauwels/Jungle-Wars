@@ -130,9 +130,9 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void updateReady(float dt) {
-        // TODO: show some message like "press any key to start"
+        // TODO: show some message like "press any key to start wave X"
 //        if (Gdx.input.isTouched()) {
-            gameState = GameState.RUNNING;
+        gameState = GameState.RUNNING;
 //        }
     }
 
@@ -192,7 +192,7 @@ public class GameScreen extends ScreenAdapter {
     private void spawnPowers() {
         int maxPowersOnField = 2;
         if (powers.size() < maxPowersOnField)
-            powers.add(new Power(this, "Double Damage", 30, 30, "power-up", 5, 10, true));
+            powers.add(new Power(this, "Double Damage", 30, 30, "power-up", 5, 10, true, Power.PowerType.PLUS_TWENTY_PERCENT_DAMAGE));
     }
 
     private void updateGameOver(float dt) {
@@ -244,8 +244,9 @@ public class GameScreen extends ScreenAdapter {
             smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
             smallFont.draw(batch, "ACTIVE POWERS: ", 300, Gdx.graphics.getHeight() - 20);
             for (int i = 0; i < player.getPowers().size(); i++) {
-                smallFont.draw(batch, player.getPowers().get(i).getName() + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i+2));
+                smallFont.draw(batch, player.getPowers().get(i).getName() + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
             }
+            smallFont.draw(batch, "DAMAGE: " + player.getDamage(), 550, 20);
         }
 
         for (Enemy enemy : enemies) {
