@@ -5,9 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Missile extends GameObject {
-    private static final float WIDTH = 20;
-    private static final float HEIGHT = 20;
-
     private static final String ATLAS_PREFIX = "missile/";
 
     private int damage;
@@ -19,9 +16,9 @@ public class Missile extends GameObject {
     private float lifeTime;
     private float lifeTimer;
 
-    public Missile(GameScreen game, float spawnX, float spawnY, float destinationX, float destinationY, String defaultSpriteUrl, int damage, int speed,
-                   int rotationSpeed, int lifeTime) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, spawnX, spawnY);
+    public Missile(GameScreen game, float width, float height, float spawnX, float spawnY, float destinationX, float destinationY, String defaultSpriteUrl, int damage, int speed,
+                   int rotationSpeed, float lifeTime) {
+        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, spawnX, spawnY);
 
         this.damage = damage;
         this.speed = speed;

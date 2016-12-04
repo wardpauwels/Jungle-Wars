@@ -11,6 +11,8 @@ import java.util.ArrayList;
 public class Player extends GameObject {
     private static final float WIDTH = 70;
     private static final float HEIGHT = 80;
+    private static final float BULLET_WIDTH = 25;
+    private static final float BULLET_HEIGHT = 25;
 
     private static final String ATLAS_PREFIX = "player/";
     private final Sprite SHOOTING_SPRITE = game.atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
@@ -121,7 +123,7 @@ public class Player extends GameObject {
         float spawnY = body.y + body.getHeight() - 10;
 
         missiles.add(
-                new Missile(game, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3)
+                new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3)
         );
     }
 
