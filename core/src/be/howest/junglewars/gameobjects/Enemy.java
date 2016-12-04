@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Enemy extends GameObject {
-    private static float width = 70;
-    private static float height = 80;
+    private static final float WIDTH = 70;
+    private static final float HEIGHT = 80;
 
     private static final String ATLAS_PREFIX = "enemy/";
 
@@ -31,9 +31,9 @@ public class Enemy extends GameObject {
     public Enemy(GameScreen game, String name, String defaultSpriteUrl,
                  int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
                  int experienceWhenKilled, int scoreWhenKilled, int rarity) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height,
-                ThreadLocalRandom.current().nextInt(0 - Math.round(width), Gdx.graphics.getWidth() + Math.round(width)),
-                ThreadLocalRandom.current().nextBoolean() ? 0 - height : Gdx.graphics.getHeight() + height); // TODO: spawns only top or bottom now
+        super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT,
+                ThreadLocalRandom.current().nextInt(0 - Math.round(WIDTH), Gdx.graphics.getWidth() + Math.round(WIDTH)),
+                ThreadLocalRandom.current().nextBoolean() ? 0 - HEIGHT : Gdx.graphics.getHeight() + HEIGHT); // TODO: spawns only top or bottom now
 
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;

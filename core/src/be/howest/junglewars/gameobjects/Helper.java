@@ -2,13 +2,12 @@ package be.howest.junglewars.gameobjects;
 
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 // TODO: should be upgradable
 public class Helper extends GameObject {
-    private static float width = 50;
-    private static float height = 50;
+    private static final float WIDTH = 50;
+    private static final float HEIGHT = 50;
 
     private static final String ATLAS_PREFIX = "helper/";
 
@@ -19,7 +18,7 @@ public class Helper extends GameObject {
     private float shootTimer;
 
     public Helper(GameScreen game, String name, Player owner, String defaultSpriteUrl) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, owner.body.x, owner.body.y);
+        super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, owner.body.x, owner.body.y);
 
         this.owner = owner;
         this.name = name;

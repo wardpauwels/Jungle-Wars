@@ -1,6 +1,5 @@
 package be.howest.junglewars.screens;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 
 public class MainMenuScreen extends ScreenAdapter {
@@ -12,7 +11,6 @@ public class MainMenuScreen extends ScreenAdapter {
      * resize(w,h) -> resizing
      * show() -> called when current screen in game (e.g. load saved filed)
      */
-
 
 
 }

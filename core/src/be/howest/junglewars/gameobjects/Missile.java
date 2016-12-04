@@ -1,14 +1,14 @@
 package be.howest.junglewars.gameobjects;
 
 import be.howest.junglewars.screens.GameScreen;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Missile extends GameObject {
-    private static final String ATLAS_PREFIX = "missile/";
+    private static final float WIDTH = 20;
+    private static final float HEIGHT = 20;
 
-    private Player owner;
+    private static final String ATLAS_PREFIX = "missile/";
 
     private int damage;
     private float rotationSpeed;
@@ -19,11 +19,10 @@ public class Missile extends GameObject {
     private float lifeTime;
     private float lifeTimer;
 
-    public Missile(GameScreen game, Player owner, float width, float height, float spawnX, float spawnY, float destinationX, float destinationY, String defaultSpriteUrl, int damage, int speed,
+    public Missile(GameScreen game, float spawnX, float spawnY, float destinationX, float destinationY, String defaultSpriteUrl, int damage, int speed,
                    int rotationSpeed, int lifeTime) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, spawnX, spawnY);
+        super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, spawnX, spawnY);
 
-        this.owner = owner;
         this.damage = damage;
         this.speed = speed;
         this.rotationSpeed = rotationSpeed;
@@ -52,10 +51,6 @@ public class Missile extends GameObject {
         activeSprite.setPosition(body.x - body.getWidth() / 2, body.y - body.getHeight() / 2);
         activeSprite.rotate(rotationSpeed);
         activeSprite.draw(batch);
-    }
-
-    public Player getOwner() {
-        return owner;
     }
 
     public int getDamage() {

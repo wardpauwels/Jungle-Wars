@@ -10,10 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class JungleWars extends Game {
-    private FPSLogger fpsLogger;
-
     public SpriteBatch batch;
     public TextureAtlas atlas;
+    private FPSLogger fpsLogger;
 
     @Override
     public void create() {

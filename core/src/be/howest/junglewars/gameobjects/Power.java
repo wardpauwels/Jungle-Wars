@@ -8,11 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Power extends GameObject {
-    private static float width = 30;
-    private static float height = 30;
+    private static final float WIDTH = 30;
+    private static final float HEIGHT = 30;
 
     private static final String ATLAS_PREFIX = "power/";
-
     private final Sprite HIDDEN_SPRITE = game.atlas.createSprite(ATLAS_PREFIX + "hidden");
 
     private String name;
@@ -35,17 +34,8 @@ public class Power extends GameObject {
     private Player owner;
     private PowerType powerType;
 
-    public enum CollectedState {
-        ON_FIELD,
-        COLLECTED
-    }
-
-    public enum PowerType {
-        EXTRA_DAMAGE
-    }
-
     public Power(GameScreen game, String name, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp, PowerType powerType, float percentage) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
+        super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
 
         this.name = name;
         this.isPowerUp = isPowerUp;
@@ -148,5 +138,19 @@ public class Power extends GameObject {
     public float getBonusPercentage() {
         return bonusPercentage;
     }
+
+    public boolean isPowerUp() {
+        return isPowerUp;
+    }
+
+    public enum CollectedState {
+        ON_FIELD,
+        COLLECTED
+    }
+
+    public enum PowerType {
+        EXTRA_DAMAGE
+    }
+
 }
 

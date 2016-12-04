@@ -3,7 +3,6 @@ package be.howest.junglewars.gameobjects;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.io.Serializable;
@@ -12,15 +11,12 @@ import java.util.List;
 
 public abstract class GameObject implements Serializable {
 
+    protected final Sprite DEFAULT_SPRITE;
     public GameScreen game;
-
+    public boolean remove = false;
     protected Rectangle body; // has: .width, .height, .overlaps(), .x, .y
     protected float speed = 0;
-
-    protected final Sprite DEFAULT_SPRITE;
     protected Sprite activeSprite;
-
-    public boolean remove = false;
 
     protected GameObject(GameScreen game, String defaultSpriteUrl, float width, float height, float x, float y) {
         this.game = game;

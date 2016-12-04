@@ -18,38 +18,24 @@ import java.util.List;
 // TODO: check and implement https://github.com/libgdx/libgdx/wiki/Collections
 public class GameScreen extends ScreenAdapter {
 
+    public TextureAtlas atlas;
     private JungleWars game;
-
     private GameState gameState;
-
     private int level;
     private Difficulty difficulty;
-
     private List<Player> players;
     private List<Helper> helpers;
     private List<Enemy> enemies;
     private List<Power> powers;
     private List<Currency> currencies;
-
     private int startingEnemies;
     private float mulitplierEnemies;
     private float amountEnemies;
     private float timeBetweenEnemySpawn;
     private float timeLastEnemySpawn;
-
     private Sprite backgroundSprite;
-    public TextureAtlas atlas;
-
     private BitmapFont smallFont;
     private BitmapFont bigFont;
-
-    enum GameState {
-        READY,
-        RUNNING,
-        PAUSED,
-        GAME_OVER, // TODO: if (all) player(s) is/are dead
-        BETWEEN_WAVE; // TODO: if all enemies are dead
-    }
 
     public GameScreen(JungleWars game, int level, Difficulty difficulty) {
         this.game = game;
@@ -186,7 +172,7 @@ public class GameScreen extends ScreenAdapter {
     private void spawnCurrencies() {
         int maxCurrenciesOnField = 2;
         if (currencies.size() < maxCurrenciesOnField)
-            currencies.add(new Currency(this,  5, "coin"));
+            currencies.add(new Currency(this, 5, "coin"));
     }
 
     private void spawnPowers() {
@@ -324,5 +310,13 @@ public class GameScreen extends ScreenAdapter {
 
     public void setCurrencies(List<Currency> currencies) {
         this.currencies = currencies;
+    }
+
+    enum GameState {
+        READY,
+        RUNNING,
+        PAUSED,
+        GAME_OVER, // TODO: if (all) player(s) is/are dead
+        BETWEEN_WAVE; // TODO: if all enemies are dead
     }
 }

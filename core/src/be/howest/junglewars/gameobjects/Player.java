@@ -9,11 +9,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 
 public class Player extends GameObject {
-    private static float width = 70;
-    private static float height = 80;
+    private static final float WIDTH = 70;
+    private static final float HEIGHT = 80;
 
     private static final String ATLAS_PREFIX = "player/";
-
     private final Sprite SHOOTING_SPRITE = game.atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
 
     private boolean isLookingLeft;
@@ -41,7 +40,7 @@ public class Player extends GameObject {
     private int damage;
 
     public Player(GameScreen game, String name, String defaultSpriteUrl) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, Gdx.graphics.getWidth() / 2 - width / 2, Gdx.graphics.getHeight() / 2 - height / 2);
+        super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2);
 
         this.name = name;
 
@@ -122,7 +121,7 @@ public class Player extends GameObject {
         float spawnY = body.y + body.getHeight() - 10;
 
         missiles.add(
-                new Missile(game, this, 30, 30, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3)
+                new Missile(game, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3)
         );
     }
 

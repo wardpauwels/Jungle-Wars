@@ -6,8 +6,11 @@
 
     <session-factory>
 
-        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://188.166.66.6:3306/junglewars?useSSL=false</property>
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver
+        </property>
+        <property name="connection.url">
+            jdbc:mysql://188.166.66.6:3306/junglewars?useSSL=false
+        </property>
         <property name="connection.username">harambe</property>
         <property name="connection.password">og2ggEkPjYRB</property>
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
