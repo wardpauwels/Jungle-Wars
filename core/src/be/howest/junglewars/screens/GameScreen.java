@@ -82,7 +82,7 @@ public class GameScreen extends ScreenAdapter {
 
         players.add(new Player(this, "John", 80, 70, "harambe"));
 
-        startingEnemies = 10;
+        startingEnemies = 1;
         mulitplierEnemies = 0.5f;
         spawnEnemies(false);
     }
@@ -131,12 +131,15 @@ public class GameScreen extends ScreenAdapter {
 
     private void updateReady(float dt) {
         // TODO: show some message like "press any key to start"
-        gameState = GameState.RUNNING;
+//        if (Gdx.input.isTouched()) {
+            gameState = GameState.RUNNING;
+//        }
     }
 
     private void updateRunning(float dt) {
         spawnEnemies(true);
         spawnCurrencies();
+        spawnPowers();
 
         for (Player player : players) {
             player.update(dt);
@@ -158,8 +161,12 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
-        for (Power power : powers) {
-            power.update(dt);
+        for (int i = 0; i < powers.size(); i++) {
+            powers.get(i).update(dt);
+            if (powers.get(i).shouldRemove()) {
+                powers.remove(i);
+                i--;
+            }
         }
 
         checkCollisions();
@@ -178,23 +185,34 @@ public class GameScreen extends ScreenAdapter {
 
     private void spawnCurrencies() {
         int maxCurrenciesOnField = 2;
-        if (currencies.size() < maxCurrenciesOnField) currencies.add(new Currency(this, 30, 30, 5, "coin"));
+        if (currencies.size() < maxCurrenciesOnField)
+            currencies.add(new Currency(this, 30, 30, 5, "coin"));
+    }
+
+    private void spawnPowers() {
+        int maxPowersOnField = 2;
+        if (powers.size() < maxPowersOnField)
+            powers.add(new Power(this, "Double Damage", 30, 30, "power-up", 5, 10, true));
     }
 
     private void updateGameOver(float dt) {
 
     }
 
+    // TODO: different render methods
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
 
         SpriteBatch batch = game.batch;
         batch.begin();
         batch.disableBlending();
         backgroundSprite.draw(batch);
         batch.enableBlending();
+
+        update(delta);
 
         // if all players have 0 hitpoints => game over
         boolean isGameOver = true;
@@ -210,12 +228,12 @@ public class GameScreen extends ScreenAdapter {
             return;
         }
 
-        update(delta);
 
         for (Player player : players) {
             player.draw(batch);
             player.getHelper().draw(batch);
 
+            // TODO: work with LibGDX Actors instead?
             bigFont.setColor(0, 0, 0, 1);
             bigFont.draw(batch, "Player 1", 20, Gdx.graphics.getHeight() - 20);
             smallFont.draw(batch, "Name: " + player.getName(), 20, Gdx.graphics.getHeight() - 40);
@@ -224,6 +242,10 @@ public class GameScreen extends ScreenAdapter {
             smallFont.draw(batch, "XP: " + player.getXp(), 20, Gdx.graphics.getHeight() - 100); // TODO: xp till next level
             smallFont.draw(batch, "Coins collected: " + player.getCollectedCoins(), 20, Gdx.graphics.getHeight() - 120);
             smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
+            smallFont.draw(batch, "ACTIVE POWERS: ", 300, Gdx.graphics.getHeight() - 20);
+            for (int i = 0; i < player.getPowers().size(); i++) {
+                smallFont.draw(batch, player.getPowers().get(i).getName() + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i+2));
+            }
         }
 
         for (Enemy enemy : enemies) {

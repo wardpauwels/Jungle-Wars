@@ -25,8 +25,7 @@ public class Player extends GameObject {
 
     private Helper helper;
     private ArrayList<Missile> missiles;
-    private ArrayList<Power> collectedPowers;
-    private ArrayList<Power> activePowers;
+    private ArrayList<Power> powers;
 
     private String name;
     private int hitpoints;
@@ -36,7 +35,7 @@ public class Player extends GameObject {
     private int level = 1;
     private int score = 0;
     private int collectedCoins = 0;
-    private int enemiesKilled = 0;
+    private int damage;
 
     public Player(GameScreen game, String name, float width, float height, String defaultSpriteUrl) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, Gdx.graphics.getWidth() / 2 - width / 2, Gdx.graphics.getHeight() / 2 - height / 2);
@@ -44,8 +43,7 @@ public class Player extends GameObject {
         this.name = name;
 
         missiles = new ArrayList<>();
-        collectedPowers = new ArrayList<>();
-        activePowers = new ArrayList<>();
+        powers = new ArrayList<>();
 
         this.shootTime = .3f;
         this.shootTimer = 0;
@@ -57,6 +55,7 @@ public class Player extends GameObject {
 
         this.speed = 6;
         this.hitpoints = 100;
+        this.damage = 10;
 
         helper = new Helper(game, 50, 50, "Little Helper", this, "red-wings-up");
     }
@@ -114,7 +113,7 @@ public class Player extends GameObject {
         float spawnY = body.y + body.getHeight() - 10;
 
         missiles.add(
-                new Missile(game, this, 30, 30, spawnX, spawnY, destinationX, destinationY, "banana", 10, 500, -10, 3)
+                new Missile(game, this, 30, 30, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3)
         );
     }
 
@@ -141,6 +140,14 @@ public class Player extends GameObject {
             missiles.get(i).update(dt);
             if (missiles.get(i).shouldRemove()) {
                 missiles.remove(i);
+                i--;
+            }
+        }
+
+        for (int i = 0; i < powers.size(); i++) {
+            powers.get(i).update(dt);
+            if (powers.get(i).isActionEnded()) {
+                powers.remove(i); // FIXME: crashes while deleting last power
                 i--;
             }
         }
@@ -177,9 +184,12 @@ public class Player extends GameObject {
         checkLevelUp();
     }
 
-    public int addCoin(int coin) {
+    public void addCoin(int coin) {
         this.collectedCoins += coin;
-        return collectedCoins;
+    }
+
+    public void addPowers(Power power) {
+        this.powers.add(power);
     }
 
     private void checkLevelUp() {
@@ -202,12 +212,8 @@ public class Player extends GameObject {
         return hitpoints;
     }
 
-    public ArrayList<Power> getCollectedPowers() {
-        return collectedPowers;
-    }
-
-    public ArrayList<Power> getActivePowers() {
-        return activePowers;
+    public ArrayList<Power> getPowers() {
+        return powers;
     }
 
     public ArrayList<Missile> getMissiles() {
@@ -225,4 +231,13 @@ public class Player extends GameObject {
     public int getLevel() {
         return level;
     }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
 }
