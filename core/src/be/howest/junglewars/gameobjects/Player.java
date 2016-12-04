@@ -190,15 +190,13 @@ public class Player extends GameObject {
         this.collectedCoins += coin;
     }
 
-    public boolean addPower(Power power) {
+    public void addPower(Power power) {
         for (Power p : powers) {
             if (p.getType() == power.getType()) {
-                p.resetActiveTimer();
-                return false;
+                p.endAction();
             }
         }
         this.powers.add(power);
-        return true;
     }
 
     private void checkLevelUp() {

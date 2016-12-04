@@ -26,6 +26,7 @@ public class Power extends GameObject {
 
     private CollectedState collectedState;
 
+    private float bonusPercentage;
     private int bonusDamage;
 
     private Player owner;
@@ -37,10 +38,10 @@ public class Power extends GameObject {
     }
 
     public enum PowerType {
-        PLUS_TWENTY_PERCENT_DAMAGE
+        EXTRA_DAMAGE
     }
 
-    public Power(GameScreen game, String name, float width, float height, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp, PowerType powerType) {
+    public Power(GameScreen game, String name, float width, float height, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp, PowerType powerType, float percentage) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
 
         this.name = name;
@@ -49,29 +50,27 @@ public class Power extends GameObject {
         this.activeTime = activeTime;
         this.isHidden = (Math.random() < 0.5);
         this.powerType = powerType;
+        this.bonusPercentage = isHidden ? percentage * 2 : percentage;
 
         this.collectedState = CollectedState.ON_FIELD;
     }
 
     private void activatePower() {
-        bonusDamage = owner.getDamage();
+        bonusDamage = Math.round(owner.getDamage() * (bonusPercentage / 100));
         owner.setDamage(owner.getDamage() + bonusDamage);
     }
 
-    private void endAction() {
+    public void endAction() {
         owner.setDamage(owner.getDamage() - bonusDamage);
         actionEnded = true;
-    }
-
-    public void resetActiveTimer() {
-        this.activeTimer = 0;
     }
 
     public void collectedBy(Player player) {
         collectedState = CollectedState.COLLECTED;
         this.owner = player;
         remove = true;
-        if (owner.addPower(this)) activatePower();
+        owner.addPower(this);
+        activatePower();
     }
 
     // TODO: work with states to know what to update
@@ -143,5 +142,8 @@ public class Power extends GameObject {
         return powerType;
     }
 
+    public float getBonusPercentage() {
+        return bonusPercentage;
+    }
 }
 
