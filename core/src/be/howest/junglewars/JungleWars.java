@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class JungleWars extends Game {
+
     public SpriteBatch batch;
     public TextureAtlas atlas;
     private FPSLogger fpsLogger;
@@ -36,12 +37,12 @@ public class JungleWars extends Game {
 
     @Override
     public void render() {
-        fpsLogger.log();
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         super.render();
 
+        fpsLogger.log();
     }
 
     @Override

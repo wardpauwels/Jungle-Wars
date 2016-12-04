@@ -43,13 +43,13 @@ public class Power extends GameObject {
         this.activeTime = activeTime;
         this.isHidden = (Math.random() < 0.5);
         this.powerType = powerType;
-        this.bonusPercentage = isHidden ? percentage * 2 : percentage;
+        this.bonusPercentage = isHidden ? percentage / 50 : percentage / 100;
 
         this.collectedState = CollectedState.ON_FIELD;
     }
 
     private void activatePower() {
-        bonusDamage = Math.round(owner.getDamage() * (bonusPercentage / 100));
+        bonusDamage = Math.round(owner.getDamage() * bonusPercentage);
         owner.setDamage(owner.getDamage() + bonusDamage);
     }
 

@@ -5,7 +5,6 @@ import be.howest.junglewars.JungleWars;
 import be.howest.junglewars.gameobjects.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,24 +17,31 @@ import java.util.List;
 // TODO: check and implement https://github.com/libgdx/libgdx/wiki/Collections
 public class GameScreen extends ScreenAdapter {
 
+    //region fields
+
     public TextureAtlas atlas;
-    private JungleWars game;
-    private GameState gameState;
-    private int wave;
-    private Difficulty difficulty;
-    private List<Player> players;
-    private List<Helper> helpers;
-    private List<Enemy> enemies;
-    private List<Power> powers;
-    private List<Currency> currencies;
-    private int startingEnemies;
-    private float mulitplierEnemies;
-    private float amountEnemies;
-    private float timeBetweenEnemySpawn;
-    private float timeLastEnemySpawn;
     private Sprite backgroundSprite;
     private BitmapFont smallFont;
     private BitmapFont bigFont;
+
+    private JungleWars game;
+    private GameState gameState;
+
+    private int wave;
+    private Difficulty difficulty;
+
+    private List<Player> players;
+    private List<Helper> helpers;
+    private List<Enemy> enemies;
+    private List<Missile> enemyMissiles;
+    private List<Power> powers;
+    private List<Currency> currencies;
+
+    private int startingEnemies;
+    private float mulitplierEnemies;
+    private float amountEnemies;
+
+    //endregion
 
     public GameScreen(JungleWars game, int level, Difficulty difficulty) {
         this.game = game;
@@ -48,6 +54,7 @@ public class GameScreen extends ScreenAdapter {
         players = new ArrayList<>();
         helpers = new ArrayList<>();
         enemies = new ArrayList<>();
+        enemyMissiles = new ArrayList<>();
         powers = new ArrayList<>();
         currencies = new ArrayList<>();
 
@@ -73,21 +80,11 @@ public class GameScreen extends ScreenAdapter {
         spawnEnemies(false);
     }
 
-    // TODO: clean up the update and render methods
-    public void update(float dt) {
-        dt = Math.min(Gdx.graphics.getDeltaTime(), 1 / 60f);
-
-        switch (gameState) {
-            case READY:
-                updateReady(dt);
-                break;
-            case RUNNING:
-                updateRunning(dt);
-                break;
-            case GAME_OVER:
-                updateGameOver(dt);
-                break;
+    private void checkGameOver() {
+        for (Player player : players) {
+            if (player.getHitpoints() > 0) return;
         }
+        gameState = GameState.GAME_OVER;
     }
 
     private void checkCollisions() {
@@ -98,10 +95,8 @@ public class GameScreen extends ScreenAdapter {
             for (Power power : player.checkCollision(powers)) {
                 power.collectedBy(player);
             }
-            for (Enemy enemy : enemies) {
-                for (Missile missile : player.checkCollision(enemy.getMissiles())) {
-                    // TODO: player hit by missile
-                }
+            for (Missile missile : player.checkCollision(enemyMissiles)) {
+                player.hitBy(missile);
             }
         }
 
@@ -114,6 +109,34 @@ public class GameScreen extends ScreenAdapter {
         }
 
     }
+
+    //region spawners TODO: create standalone classes for spawners
+
+    private void spawnEnemies(boolean nextWave) {
+        if (enemies.size() == 0) {
+            amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * wave));
+            for (int i = 0; i < amountEnemies; i++) {
+                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 1.5f, 10, 15, 5));
+            }
+            if (nextWave) wave++;
+        }
+    }
+
+    private void spawnCurrencies() {
+        int maxCurrenciesOnField = 2;
+        if (currencies.size() < maxCurrenciesOnField)
+            currencies.add(new Currency(this, 5, "coin"));
+    }
+
+    private void spawnPowers() {
+        int maxPowersOnField = 2;
+        if (powers.size() < maxPowersOnField)
+            powers.add(new Power(this, "More Damage", "power-up", 5, 10, true, Power.PowerType.EXTRA_DAMAGE, 40));
+    }
+
+    //endregion
+
+    //region updates
 
     private void updateReady(float dt) {
         // TODO: show some message like "press any key to start wave X"
@@ -139,6 +162,14 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
+        for (int i = 0; i < enemyMissiles.size(); i++) {
+            enemyMissiles.get(i).update(dt);
+            if (enemyMissiles.get(i).shouldRemove()) {
+                enemyMissiles.remove(i);
+                i--;
+            }
+        }
+
         for (int i = 0; i < currencies.size(); i++) {
             currencies.get(i).update(dt);
             if (currencies.get(i).shouldRemove()) {
@@ -157,49 +188,31 @@ public class GameScreen extends ScreenAdapter {
 
         checkCollisions();
 
+        checkGameOver();
+
     }
 
-    private void spawnEnemies(boolean nextWave) {
-        if (enemies.size() == 0) {
-            amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * wave));
-            for (int i = 0; i < amountEnemies; i++) {
-                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 2, 10, 15, 5));
-            }
-            if (nextWave) wave++;
-        }
+    private void updatePreWave(float dt) {
+
     }
 
-    private void spawnCurrencies() {
-        int maxCurrenciesOnField = 2;
-        if (currencies.size() < maxCurrenciesOnField)
-            currencies.add(new Currency(this, 5, "coin"));
-    }
+    private void updatePaused(float dt) {
 
-    private void spawnPowers() {
-        int maxPowersOnField = 2;
-        if (powers.size() < maxPowersOnField)
-            powers.add(new Power(this, "More Damage", "power-up", 5, 10, true, Power.PowerType.EXTRA_DAMAGE, 40));
     }
 
     private void updateGameOver(float dt) {
 
     }
 
-    // TODO: different render methods
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(1, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+    //endregion
 
+    //region renders
 
-        SpriteBatch batch = game.batch;
-        batch.begin();
-        batch.disableBlending();
-        backgroundSprite.draw(batch);
-        batch.enableBlending();
+    private void renderReady(SpriteBatch batch) {
 
-        update(delta);
+    }
 
+    private void renderRunning(SpriteBatch batch) {
         // if all players have 0 hitpoints => game over
         boolean isGameOver = true;
         for (Player p : players) {
@@ -213,7 +226,6 @@ public class GameScreen extends ScreenAdapter {
             gameState = GameState.GAME_OVER;
             return;
         }
-
 
         for (Player player : players) {
             player.draw(batch);
@@ -230,13 +242,17 @@ public class GameScreen extends ScreenAdapter {
             smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
             smallFont.draw(batch, "ACTIVE POWERS: ", 300, Gdx.graphics.getHeight() - 20);
             for (int i = 0; i < player.getPowers().size(); i++) {
-                smallFont.draw(batch, player.getPowers().get(i).getName() + " (+" + player.getPowers().get(i).getBonusPercentage() + "%)" + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
+                smallFont.draw(batch, player.getPowers().get(i).getName() + " (+" + Math.round(player.getPowers().get(i).getBonusPercentage() * 100) + "%)" + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
             }
             smallFont.draw(batch, "DAMAGE: " + player.getDamage(), 550, 20);
         }
 
         for (Enemy enemy : enemies) {
             enemy.draw(batch);
+        }
+
+        for (Missile missile : enemyMissiles) {
+            missile.draw(batch);
         }
 
         for (Currency currency : currencies) {
@@ -248,6 +264,59 @@ public class GameScreen extends ScreenAdapter {
         }
 
         bigFont.draw(batch, "LEVEL " + wave, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 20);
+
+    }
+
+    private void renderPreWave(SpriteBatch batch) {
+
+    }
+
+    private void renderPaused(SpriteBatch batch) {
+
+    }
+
+    private void renderGameOver(SpriteBatch batch) {
+        bigFont.draw(batch, "GAME OVER!", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        for (Player player : players) {
+            smallFont.draw(batch, player.getName() + ": " + player.getScore() + " points", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 40);
+        }
+    }
+
+    //endregion
+
+    @Override
+    public void render(float dt) {
+        SpriteBatch batch = game.batch;
+        batch.begin();
+        batch.disableBlending();
+        backgroundSprite.draw(batch);
+        batch.enableBlending();
+
+        dt = Math.min(dt, 1 / 60f);
+
+        switch (gameState) {
+            case READY:
+                updateReady(dt);
+                renderReady(batch);
+                break;
+            case RUNNING:
+                updateRunning(dt);
+                renderRunning(batch);
+                break;
+            case PRE_WAVE:
+                updatePreWave(dt);
+                renderPreWave(batch);
+                break;
+            case PAUSED:
+                updatePaused(dt);
+                renderPaused(batch);
+                break;
+            case GAME_OVER:
+                updateGameOver(dt);
+                renderGameOver(batch);
+                break;
+        }
+
         batch.end();
     }
 
@@ -255,6 +324,8 @@ public class GameScreen extends ScreenAdapter {
     public void dispose() {
 
     }
+
+    //region getters/setters
 
     public int getWave() {
         return wave;
@@ -312,11 +383,17 @@ public class GameScreen extends ScreenAdapter {
         this.currencies = currencies;
     }
 
+    public List<Missile> getEnemyMissiles() {
+        return enemyMissiles;
+    }
+
+    //endregion
+
     enum GameState {
         READY,
         RUNNING,
         PAUSED,
-        GAME_OVER, // TODO: if (all) player(s) is/are dead
-        BETWEEN_WAVE; // TODO: if all enemies are dead
+        GAME_OVER,
+        PRE_WAVE;
     }
 }

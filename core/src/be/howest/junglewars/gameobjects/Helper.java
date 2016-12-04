@@ -39,6 +39,8 @@ public class Helper extends GameObject {
 
     private void shoot() {
         Enemy target = chooseTarget();
+        if (target == null) return;
+
         float destinationX = target.body.x + (target.body.width / 2);
         float destinationY = target.body.y + (target.body.height / 2);
 

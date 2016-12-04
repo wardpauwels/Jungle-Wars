@@ -5,12 +5,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
-import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Enemy extends GameObject {
     private static final float WIDTH = 70;
     private static final float HEIGHT = 80;
+    private static final float BULLET_WIDTH = 15;
+    private static final float BULLET_HEIGHT = 15;
 
     private static final String ATLAS_PREFIX = "enemy/";
 
@@ -19,18 +20,17 @@ public class Enemy extends GameObject {
     private int damage;
     private int hitpoints;
     private int speed;
-    private float attackSpeed; // shoot per x seconds (e.g. "0.25" shoots 4 times a second)
 
-    private ArrayList<Missile> missiles;
+    private float shootTime;
+    private float shootTimer;
 
     private int rarity;
 
     private int scoreWhenKilled;
     private int experienceWhenKilled;
 
-    public Enemy(GameScreen game, String name, String defaultSpriteUrl,
-                 int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed,
-                 int experienceWhenKilled, int scoreWhenKilled, int rarity) {
+    public Enemy(GameScreen game, String name, String defaultSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
+                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int rarity) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT,
                 ThreadLocalRandom.current().nextInt(0 - Math.round(WIDTH), Gdx.graphics.getWidth() + Math.round(WIDTH)),
                 ThreadLocalRandom.current().nextBoolean() ? 0 - HEIGHT : Gdx.graphics.getHeight() + HEIGHT); // TODO: spawns only top or bottom now
@@ -40,13 +40,12 @@ public class Enemy extends GameObject {
         this.experienceWhenKilled = experienceWhenKilled;
         this.rarity = rarity;
 
-        missiles = new ArrayList<>();
-
         // TODO: calculate stats based by game level and difficulty
         this.damage = baseDamage;
         this.speed = baseSpeed;
         this.hitpoints = baseHitpoints;
-        this.attackSpeed = baseAttackSpeed;
+        this.shootTime = baseAttackSpeed;
+        this.shootTimer = 0;
     }
 
     @Override
@@ -59,6 +58,8 @@ public class Enemy extends GameObject {
 
         body.x += MathUtils.cos(radians) * speed * dt;
         body.y += MathUtils.sin(radians) * speed * dt;
+
+        doEnemyAction(dt);
     }
 
     @Override
@@ -76,10 +77,6 @@ public class Enemy extends GameObject {
         missile.remove = true;
     }
 
-    public void hitBy(Missile missile, Helper helper) {
-        hitBy(missile, helper.getOwner());
-    }
-
     public int catchDamage(int dmg) {
         this.hitpoints -= dmg;
         return hitpoints;
@@ -89,8 +86,27 @@ public class Enemy extends GameObject {
         return getNearest(game.getPlayers());
     }
 
-    public void attack() {
-        // TODO
+    private void doEnemyAction(float dt) {
+        shootTimer += dt;
+        if (shootTimer > shootTime) {
+            attack();
+            shootTimer = 0;
+        }
+    }
+
+    private void attack() {
+        Player target = chooseTarget();
+        if (target == null) return;
+
+        float destinationX = target.body.x + (target.body.width / 2);
+        float destinationY = target.body.y + (target.body.height / 2);
+
+        float spawnX = body.x + (body.width / 2);
+        float spawnY = body.y + (body.height / 2);
+
+        game.getEnemyMissiles().add(
+                new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 5, 300, 5, 4f)
+        );
     }
 
     public int getScoreWhenKilled() {
@@ -103,9 +119,5 @@ public class Enemy extends GameObject {
 
     public int getRarity() {
         return rarity;
-    }
-
-    public ArrayList<Missile> getMissiles() {
-        return missiles;
     }
 }

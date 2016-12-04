@@ -127,6 +127,16 @@ public class Player extends GameObject {
         );
     }
 
+    public void hitBy(Missile missile) {
+        catchDamage(missile.getDamage());
+        missile.remove = true;
+    }
+
+    public int catchDamage(int dmg) {
+        this.hitpoints -= dmg;
+        return hitpoints;
+    }
+
     @Override
     public void update(float dt) {
         handleInput(dt);

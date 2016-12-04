@@ -52,6 +52,8 @@ public abstract class GameObject implements Serializable {
     }
 
     public <T extends GameObject> T getNearest(List<T> objects) {
+        if (objects.size() == 0) return null;
+
         T nearest = objects.get(0);
         float dist = this.getDistanceTo(objects.get(0));
 
