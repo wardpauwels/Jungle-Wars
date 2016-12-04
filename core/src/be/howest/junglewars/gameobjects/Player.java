@@ -53,14 +53,14 @@ public class Player extends GameObject {
         this.shootingAnimationTime = .15f;
         this.shootingAnimationTimer = 0;
 
-        this.speed = 6;
+        this.speed = 300;
         this.hitpoints = 100;
         this.damage = 10;
 
         helper = new Helper(game, 50, 50, "Little Helper", this, "red-wings-up");
     }
 
-    private void handleInput() {
+    private void handleInput(float dt) {
         boolean keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         boolean keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
@@ -75,8 +75,10 @@ public class Player extends GameObject {
             shoot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
         }
 
-        float currentSpeed = speed;
-        float sqrtSpeed = ((float) Math.sqrt((speed * speed) / 2));
+
+        float normalizedSpeed = speed * dt;
+        float currentSpeed = normalizedSpeed;
+        float sqrtSpeed = (float) Math.sqrt((normalizedSpeed * normalizedSpeed) / 2);
 
         if ((keyUpPressed && (keyLeftPressed || keyRightPressed)) ||
                 (keyDownPressed && (keyLeftPressed || keyRightPressed))) {
@@ -84,21 +86,21 @@ public class Player extends GameObject {
         }
 
         if (keyUpPressed) {
-            if (leftBorderTouch || rightBorderTouch) currentSpeed = speed;
+            if (leftBorderTouch || rightBorderTouch) currentSpeed = normalizedSpeed;
             body.y = topBorderTouch ? Gdx.graphics.getHeight() - body.getHeight() : body.y + currentSpeed;
         }
         if (keyDownPressed) {
-            if (leftBorderTouch || rightBorderTouch) currentSpeed = speed;
+            if (leftBorderTouch || rightBorderTouch) currentSpeed = normalizedSpeed;
             body.y = bottomBorderTouch ? 0 : body.y - currentSpeed;
         }
         if (keyLeftPressed) {
             isLookingLeft = true;
-            if (topBorderTouch || bottomBorderTouch) currentSpeed = speed;
+            if (topBorderTouch || bottomBorderTouch) currentSpeed = normalizedSpeed;
             body.x = leftBorderTouch ? 0 : body.x - currentSpeed;
         }
         if (keyRightPressed) {
             isLookingLeft = false;
-            if (topBorderTouch || bottomBorderTouch) currentSpeed = speed;
+            if (topBorderTouch || bottomBorderTouch) currentSpeed = normalizedSpeed;
             body.x = rightBorderTouch ? Gdx.graphics.getWidth() - body.getWidth() : body.x + currentSpeed;
         }
     }
@@ -119,7 +121,7 @@ public class Player extends GameObject {
 
     @Override
     public void update(float dt) {
-        handleInput();
+        handleInput(dt);
 
         if (shootTimer > shootTime) {
             canShoot = true;

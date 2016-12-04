@@ -89,7 +89,7 @@ public class GameScreen extends ScreenAdapter {
 
     // TODO: clean up the update and render methods
     public void update(float dt) {
-        if (dt > .02f) dt = .02f;
+        dt = Math.min(Gdx.graphics.getDeltaTime(), 1 / 60f);
 
         switch (gameState) {
             case READY:
