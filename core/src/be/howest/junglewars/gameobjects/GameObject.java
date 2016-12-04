@@ -67,7 +67,7 @@ public abstract class GameObject implements Serializable {
     }
 
     protected float getDistanceTo(GameObject object) {
-        float diffX = Math.abs(this.body.x - object.body.y);
+        float diffX = Math.abs(this.body.x - object.body.x);
         float diffY = Math.abs(this.body.y - object.body.y);
 
         double dist = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
