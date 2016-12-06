@@ -4,18 +4,19 @@ import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.JungleWars;
 import be.howest.junglewars.gameobjects.*;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // TODO: check and implement https://github.com/libgdx/libgdx/wiki/Collections
-public class GameScreen extends ScreenAdapter {
+public class GameScreen extends Stage implements Screen {
 
     //region fields
 
@@ -78,6 +79,8 @@ public class GameScreen extends ScreenAdapter {
         startingEnemies = 1;
         mulitplierEnemies = 0.5f;
         spawnEnemies(false);
+
+
     }
 
     private void checkGameOver() {
@@ -285,6 +288,11 @@ public class GameScreen extends ScreenAdapter {
     //endregion
 
     @Override
+    public void show() {
+
+    }
+
+    @Override
     public void render(float dt) {
         SpriteBatch batch = game.batch;
         batch.begin();
@@ -318,6 +326,26 @@ public class GameScreen extends ScreenAdapter {
         }
 
         batch.end();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
     }
 
     @Override
