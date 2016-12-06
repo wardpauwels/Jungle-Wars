@@ -1,6 +1,7 @@
 package be.howest.junglewars.desktop;
 
 import be.howest.junglewars.JungleWars;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
@@ -19,6 +20,7 @@ public class DesktopLauncher {
         config.height = 900;
         config.resizable = false;
         config.useGL30 = false;
+        config.addIcon("images/player/harambe32.png", Files.FileType.Internal);
         new LwjglApplication(new JungleWars(), config);
     }
 }

@@ -1,6 +1,6 @@
 package be.howest.junglewars;
 
-import be.howest.junglewars.screens.GameScreen;
+import be.howest.junglewars.screens.*;
 import be.howest.junglewars.util.Assets;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -32,7 +32,8 @@ public class JungleWars extends Game {
 
         // TODO: get level and difficulty from settings/savings
 
-        setScreen(new GameScreen(this, 1, Difficulty.EASY));
+        //setScreen(new GameScreen(this, 1, Difficulty.EASY));
+        setScreen(new MainMenuScreen(this));
     }
 
     @Override
@@ -50,5 +51,4 @@ public class JungleWars extends Game {
         super.dispose();
         Assets.dispose();
     }
-
 }
