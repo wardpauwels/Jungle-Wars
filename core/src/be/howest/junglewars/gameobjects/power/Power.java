@@ -33,9 +33,9 @@ public class Power extends GameObject {
     private float bonusPercentage;
 
     private Player owner;
-    private IPowerAction powerAction;
+    private IPowerType powerType;
 
-    public Power(GameScreen game, String name, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp, IPowerAction powerAction, float percentage) {
+    public Power(GameScreen game, String name, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp, IPowerType powerType, float percentage) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
 
         this.name = name;
@@ -43,27 +43,22 @@ public class Power extends GameObject {
         this.lifeTime = lifeTime;
         this.activeTime = activeTime;
         this.isHidden = (Math.random() < 0.5);
-        this.powerAction = powerAction;
+        this.powerType = powerType;
         this.bonusPercentage = isHidden ? percentage / 50 : percentage / 100;
 
         this.collectedState = CollectedState.ON_FIELD;
     }
 
     private void activatePower() {
-        powerAction.activatePower(this);
+        powerType.activatePower(this);
     }
 
     public void endAction() {
-        powerAction.deactivatePower(this);
+        powerType.deactivatePower(this);
         actionEnded = true;
     }
 
     public void collectedBy(Player player) {
-        for (Power p : player.getPowers()) {
-            if (p.getPowerAction().getPowerType() == powerAction.getPowerType()) {
-                p.endAction();
-            }
-        }
         collectedState = CollectedState.COLLECTED;
         this.owner = player;
         remove = true;
@@ -135,8 +130,8 @@ public class Power extends GameObject {
         return actionEnded;
     }
 
-    public IPowerAction getPowerAction() {
-        return powerAction;
+    public IPowerType getPowerType() {
+        return powerType;
     }
 
     public float getBonusPercentage() {

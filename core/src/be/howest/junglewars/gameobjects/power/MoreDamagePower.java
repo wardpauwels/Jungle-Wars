@@ -1,6 +1,6 @@
 package be.howest.junglewars.gameobjects.power;
 
-public class MoreDamagePower implements IPowerAction {
+public class MoreDamagePower implements IPowerType {
     private int bonusDamage;
 
     @Override
@@ -12,10 +12,5 @@ public class MoreDamagePower implements IPowerAction {
     @Override
     public void deactivatePower(Power power) {
         power.getOwner().setDamage(power.getOwner().getDamage() - bonusDamage);
-    }
-
-    @Override
-    public PowerType getPowerType() {
-        return PowerType.MORE_DAMAGE;
     }
 }

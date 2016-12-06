@@ -213,7 +213,7 @@ public class Player extends GameObject {
 
     public void addPower(Power power) {
         for (Power p : powers) {
-            if (p.getPowerAction() == power.getPowerAction()) {
+            if (p.getPowerType().getClass().equals(power.getPowerType().getClass())) {
                 p.endAction();
             }
         }

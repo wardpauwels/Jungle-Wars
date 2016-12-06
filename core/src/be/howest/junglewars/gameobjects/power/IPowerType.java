@@ -1,11 +1,9 @@
 package be.howest.junglewars.gameobjects.power;
 
-public interface IPowerAction {
+public interface IPowerType {
 
     void activatePower(Power power);
 
     void deactivatePower(Power power);
-
-    PowerType getPowerType();
 
 }
