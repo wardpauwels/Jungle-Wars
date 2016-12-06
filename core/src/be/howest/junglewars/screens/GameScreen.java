@@ -4,6 +4,7 @@ import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.JungleWars;
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.power.MoreDamagePower;
+import be.howest.junglewars.gameobjects.power.MoreSpeedPower;
 import be.howest.junglewars.gameobjects.power.Power;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -134,9 +135,11 @@ public class GameScreen extends Stage implements Screen {
     }
 
     private void spawnPowers() {
-        int maxPowersOnField = 2;
-        if (powers.size() < maxPowersOnField)
+        int maxPowersOnField = 5;
+        if (powers.size() < maxPowersOnField) {
             powers.add(new Power(this, "More Damage", "power-up", 5, 10, true, new MoreDamagePower(), 40));
+            powers.add(new Power(this, "More Speed", "power-up", 5, 10, true, new MoreSpeedPower(), 50));
+        }
     }
 
     //endregion

@@ -268,4 +268,11 @@ public class Player extends GameObject {
         this.damage = damage;
     }
 
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
 }
