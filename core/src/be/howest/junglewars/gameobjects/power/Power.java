@@ -1,5 +1,7 @@
-package be.howest.junglewars.gameobjects;
+package be.howest.junglewars.gameobjects.power;
 
+import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.gameobjects.Player;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -29,12 +31,11 @@ public class Power extends GameObject {
     private CollectedState collectedState;
 
     private float bonusPercentage;
-    private int bonusDamage;
 
     private Player owner;
-    private PowerType powerType;
+    private IPowerAction powerAction;
 
-    public Power(GameScreen game, String name, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp, PowerType powerType, float percentage) {
+    public Power(GameScreen game, String name, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp, IPowerAction powerAction, float percentage) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
 
         this.name = name;
@@ -42,23 +43,27 @@ public class Power extends GameObject {
         this.lifeTime = lifeTime;
         this.activeTime = activeTime;
         this.isHidden = (Math.random() < 0.5);
-        this.powerType = powerType;
+        this.powerAction = powerAction;
         this.bonusPercentage = isHidden ? percentage / 50 : percentage / 100;
 
         this.collectedState = CollectedState.ON_FIELD;
     }
 
     private void activatePower() {
-        bonusDamage = Math.round(owner.getDamage() * bonusPercentage);
-        owner.setDamage(owner.getDamage() + bonusDamage);
+        powerAction.activatePower(this);
     }
 
     public void endAction() {
-        owner.setDamage(owner.getDamage() - bonusDamage);
+        powerAction.deactivatePower(this);
         actionEnded = true;
     }
 
     public void collectedBy(Player player) {
+        for (Power p : player.getPowers()) {
+            if (p.getPowerAction().getPowerType() == powerAction.getPowerType()) {
+                p.endAction();
+            }
+        }
         collectedState = CollectedState.COLLECTED;
         this.owner = player;
         remove = true;
@@ -66,7 +71,6 @@ public class Power extends GameObject {
         activatePower();
     }
 
-    // TODO: work with states to know what to update
     @Override
     public void update(float dt) {
         switch (collectedState) {
@@ -131,8 +135,8 @@ public class Power extends GameObject {
         return actionEnded;
     }
 
-    public PowerType getType() {
-        return powerType;
+    public IPowerAction getPowerAction() {
+        return powerAction;
     }
 
     public float getBonusPercentage() {
@@ -143,13 +147,13 @@ public class Power extends GameObject {
         return isPowerUp;
     }
 
+    public Player getOwner() {
+        return owner;
+    }
+
     public enum CollectedState {
         ON_FIELD,
         COLLECTED
-    }
-
-    public enum PowerType {
-        EXTRA_DAMAGE
     }
 
 }

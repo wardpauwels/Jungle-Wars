@@ -1,5 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.gameobjects.power.Power;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -167,7 +168,7 @@ public class Player extends GameObject {
 
         for (int i = 0; i < powers.size(); i++) {
             if (powers.get(i).isActionEnded()) {
-                powers.remove(i); // FIXME: crashes while deleting last power
+                powers.remove(i);
                 i--;
                 continue;
             }
@@ -212,7 +213,7 @@ public class Player extends GameObject {
 
     public void addPower(Power power) {
         for (Power p : powers) {
-            if (p.getType() == power.getType()) {
+            if (p.getPowerAction() == power.getPowerAction()) {
                 p.endAction();
             }
         }
