@@ -3,9 +3,8 @@ package be.howest.junglewars.screens;
 import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.JungleWars;
 import be.howest.junglewars.gameobjects.*;
-import be.howest.junglewars.gameobjects.power.MoreDamagePower;
-import be.howest.junglewars.gameobjects.power.MoreSpeedPower;
 import be.howest.junglewars.gameobjects.power.Power;
+import be.howest.junglewars.gameobjects.power.impl.AttackSpeedPower;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -117,7 +116,7 @@ public class GameScreen extends Stage implements Screen {
 
     }
 
-    //region spawners TODO: create standalone classes for spawners
+    //region spawners TODO: create spawners
 
     private void spawnEnemies(boolean nextWave) {
         if (enemies.size() == 0) {
@@ -131,15 +130,17 @@ public class GameScreen extends Stage implements Screen {
 
     private void spawnCurrencies() {
         int maxCurrenciesOnField = 2;
-        if (currencies.size() < maxCurrenciesOnField)
+        if (currencies.size() < maxCurrenciesOnField) {
             currencies.add(new Currency(this, 5, "coin"));
+        }
     }
 
     private void spawnPowers() {
         int maxPowersOnField = 5;
         if (powers.size() < maxPowersOnField) {
-            powers.add(new Power(this, "More Damage", "power-up", 5, 10, true, new MoreDamagePower(), 40));
-            powers.add(new Power(this, "More Speed", "power-up", 5, 10, true, new MoreSpeedPower(), 50));
+//            powers.add(new Power(this, "More Damage", "power-up", 5, 10, true, new MoreDamagePower(), 40));
+//            powers.add(new Power(this, "More Speed", "power-up", 5, 10, true, new MoreSpeedPower(), 50));
+            powers.add(new Power(this, "Shoot Slower", "power-up", 5, 10, false, new AttackSpeedPower(), 40));
         }
     }
 
@@ -251,9 +252,9 @@ public class GameScreen extends Stage implements Screen {
             smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
             smallFont.draw(batch, "ACTIVE POWERS: ", 300, Gdx.graphics.getHeight() - 20);
             for (int i = 0; i < player.getPowers().size(); i++) {
-                smallFont.draw(batch, player.getPowers().get(i).getName() + " (+" + Math.round(player.getPowers().get(i).getBonusPercentage() * 100) + "%)" + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
+                smallFont.draw(batch, player.getPowers().get(i).getName() + " (+" + Math.round(player.getPowers().get(i).getBonus() * 100) + "%)" + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
             }
-            smallFont.draw(batch, "DAMAGE: " + player.getDamage(), 550, 20);
+            smallFont.draw(batch, "ATTACK SPEED: " + player.getAttackSpeed(), 550, 20);
         }
 
         for (Enemy enemy : enemies) {

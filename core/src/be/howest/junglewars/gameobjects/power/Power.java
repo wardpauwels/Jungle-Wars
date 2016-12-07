@@ -30,7 +30,7 @@ public class Power extends GameObject {
 
     private CollectedState collectedState;
 
-    private float bonusPercentage;
+    private float bonus;
 
     private Player owner;
     private IPowerType powerType;
@@ -44,7 +44,7 @@ public class Power extends GameObject {
         this.activeTime = activeTime;
         this.isHidden = (Math.random() < 0.5);
         this.powerType = powerType;
-        this.bonusPercentage = isHidden ? percentage / 50 : percentage / 100;
+        this.bonus = isHidden ? percentage / 50 : percentage / 100;
 
         this.collectedState = CollectedState.ON_FIELD;
     }
@@ -134,8 +134,8 @@ public class Power extends GameObject {
         return powerType;
     }
 
-    public float getBonusPercentage() {
-        return bonusPercentage;
+    public float getBonus() {
+        return bonus;
     }
 
     public boolean isPowerUp() {
@@ -145,6 +145,7 @@ public class Power extends GameObject {
     public Player getOwner() {
         return owner;
     }
+
 
     public enum CollectedState {
         ON_FIELD,
