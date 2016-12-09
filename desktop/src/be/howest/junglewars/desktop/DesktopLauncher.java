@@ -1,7 +1,7 @@
 package be.howest.junglewars.desktop;
 
 import be.howest.junglewars.JungleWars;
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
@@ -12,6 +12,8 @@ public class DesktopLauncher {
         Settings settings = new Settings();
         settings.combineSubdirectories = true;
         settings.debug = true;
+        settings.maxHeight = 2048;
+        settings.maxWidth = 2048;
         TexturePacker.process(settings, "images", "atlas", "images");
 
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
