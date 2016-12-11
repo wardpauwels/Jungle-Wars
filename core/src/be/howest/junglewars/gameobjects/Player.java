@@ -1,13 +1,11 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.gameobjects.power.Power;
-import be.howest.junglewars.screens.GameScreen;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import be.howest.junglewars.gameobjects.power.*;
+import be.howest.junglewars.screens.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.g2d.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class Player extends GameObject {
     private static final float WIDTH = 70;

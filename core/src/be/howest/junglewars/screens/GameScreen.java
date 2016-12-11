@@ -1,25 +1,17 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.JungleWars;
+import be.howest.junglewars.*;
+import be.howest.junglewars.gameobjects.Currency;
 import be.howest.junglewars.gameobjects.*;
-import be.howest.junglewars.gameobjects.power.MoreDamagePower;
-import be.howest.junglewars.gameobjects.power.MoreSpeedPower;
-import be.howest.junglewars.gameobjects.power.Power;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import be.howest.junglewars.gameobjects.power.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.*;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.viewport.*;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 // TODO: check and implement https://github.com/libgdx/libgdx/wiki/Collections
@@ -27,9 +19,9 @@ public class GameScreen extends Stage implements Screen {
 
     //region fields
 
+    public TextureAtlas atlas;
     private Skin skin;
     private Stage stage;
-    public TextureAtlas atlas;
     private Sprite backgroundSprite;
     private BitmapFont smallFont;
     private BitmapFont bigFont;
@@ -221,26 +213,26 @@ public class GameScreen extends Stage implements Screen {
         if (!isGameOver) {
             isGameOver = true;
 
-            new Dialog("Confirm Exit", skin) {
+            new Dialog("Game over", skin) {
                 {
                     text("Do you really want to leave?");
-                    button("Yes", "leave");
-                    button("No", "stay");
+                    button("Home", "leave");
+                    button("Retry", "retry");
                 }
 
                 @Override
                 protected void result(Object object) {
                     switch (String.valueOf(object)) {
                         case "leave":
-                            Gdx.app.exit();
+                            game.setScreen(new MainMenuScreen(game));
                             break;
-                        case "stay":
-                            this.hide();
+                        case "retry":
+                            game.setScreen(new GameScreen(game, 1, Difficulty.EASY));
                             break;
                     }
                 }
             }.show(stage);
-
+            Gdx.input.setInputProcessor(stage);
         }
     }
 
@@ -394,7 +386,6 @@ public class GameScreen extends Stage implements Screen {
 
     @Override
     public void dispose() {
-        this.dispose();
     }
 
     //region getters/setters
@@ -461,11 +452,11 @@ public class GameScreen extends Stage implements Screen {
 
 //endregion
 
-    enum GameState {
+    private enum GameState {
         READY,
         RUNNING,
         PAUSED,
         GAME_OVER,
-        PRE_WAVE;
+        PRE_WAVE
     }
 }
