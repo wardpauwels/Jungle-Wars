@@ -35,15 +35,15 @@ public class Power extends GameObject {
     private Player owner;
     private IPowerType powerType;
 
-    public Power(GameScreen game, String name, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp, IPowerType powerType, float percentage) {
+    public Power(GameScreen game, String upName, String downName, String defaultSpriteUrl, float lifeTime, float activeTime, PowerType powerType, float percentage) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
 
-        this.name = name;
-        this.isPowerUp = isPowerUp;
         this.lifeTime = lifeTime;
         this.activeTime = activeTime;
         this.isHidden = (Math.random() < 0.5);
-        this.powerType = powerType;
+        this.isPowerUp = (Math.random() < 0.5);
+        this.name = this.isPowerUp ? upName : downName;
+        this.powerType = powerType.getPower();
         this.bonus = isHidden ? percentage / 50 : percentage / 100;
 
         this.collectedState = CollectedState.ON_FIELD;

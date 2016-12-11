@@ -4,7 +4,7 @@ import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.JungleWars;
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.power.Power;
-import be.howest.junglewars.gameobjects.power.impl.AttackSpeedPower;
+import be.howest.junglewars.gameobjects.power.PowerType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -138,9 +138,9 @@ public class GameScreen extends Stage implements Screen {
     private void spawnPowers() {
         int maxPowersOnField = 5;
         if (powers.size() < maxPowersOnField) {
-//            powers.add(new Power(this, "More Damage", "power-up", 5, 10, true, new MoreDamagePower(), 40));
-//            powers.add(new Power(this, "More Speed", "power-up", 5, 10, true, new MoreSpeedPower(), 50));
-            powers.add(new Power(this, "Shoot Slower", "power-up", 5, 10, false, new AttackSpeedPower(), 40));
+            powers.add(new Power(this, "More Damage", "Less Damage", "power-up", 5, 10, PowerType.DAMAGE_POWER, 40));
+            powers.add(new Power(this, "More Speed", "Less Speed", "power-up", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));
+            powers.add(new Power(this, "Shoot Faster", "Shoot Slower", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40));
         }
     }
 
@@ -255,6 +255,8 @@ public class GameScreen extends Stage implements Screen {
                 smallFont.draw(batch, player.getPowers().get(i).getName() + " (+" + Math.round(player.getPowers().get(i).getBonus() * 100) + "%)" + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
             }
             smallFont.draw(batch, "ATTACK SPEED: " + player.getAttackSpeed(), 550, 20);
+            smallFont.draw(batch, "DAMAGE: " + player.getDamage(), 550, 60);
+            smallFont.draw(batch, "MOVEMENT SPEED: " + player.getSpeed(), 550, 100);
         }
 
         for (Enemy enemy : enemies) {
