@@ -11,6 +11,8 @@ public class DesktopLauncher {
         Settings settings = new Settings();
         settings.combineSubdirectories = true;
         settings.debug = true;
+        settings.maxWidth = 2048;
+        settings.maxHeight = 2048;
         TexturePacker.process(settings, "images", "atlas", "images");
 
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
