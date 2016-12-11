@@ -18,9 +18,10 @@ public class MainMenuScreen extends Stage implements Screen {
     private Stage stage;
 
     //background
-    public TextureAtlas atlas;
+    private TextureAtlas atlas;
     private SpriteBatch batch;
     private Sprite backgroundSprite;
+    private Sprite menuBanner;
 
     //music
     private Music music;
@@ -53,11 +54,16 @@ public class MainMenuScreen extends Stage implements Screen {
 
         music = Gdx.audio.newMusic(Gdx.files.internal(Assets.MENU_SONG));
         music.setLooping(true);
-        music.play();
+        //music.play();
 
         // create full screen background
         backgroundSprite = atlas.createSprite("background/menu");
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        //create Harambe menu banner
+        menuBanner = atlas.createSprite("background/jw-menu-banner");
+        menuBanner.setSize(menuBanner.getWidth() * 0.7f, menuBanner.getHeight() * 0.7f);
+        menuBanner.setPosition((Gdx.graphics.getWidth() / 2) - (menuBanner.getWidth() / 2), (Gdx.graphics.getHeight() - menuBanner.getHeight() - 50));
 
         table = new Table();
         table.setWidth(stage.getWidth());
@@ -72,7 +78,7 @@ public class MainMenuScreen extends Stage implements Screen {
         creditsButton = new TextButton("Credits", skin);
         quitButton = new TextButton("Quit Game", skin);
 
-        table.padTop(150);
+        table.padTop(250);
         table.add(startSingleplayerButton).padBottom(padBottom).width(buttonWidth);
         table.row();
         table.add(startMultiplayerButton).padBottom(padBottom).width(buttonWidth);
@@ -132,6 +138,7 @@ public class MainMenuScreen extends Stage implements Screen {
                         button("No", "stay");
                     }
 
+
                     @Override
                     protected void result(Object object) {
                         switch (String.valueOf(object)) {
@@ -143,7 +150,7 @@ public class MainMenuScreen extends Stage implements Screen {
                                 break;
                         }
                     }
-                }.show(stage);
+                }.show(stage).setWidth(500);
             }
         });
         Gdx.input.setInputProcessor(stage);
@@ -161,6 +168,7 @@ public class MainMenuScreen extends Stage implements Screen {
         batch.disableBlending();
         backgroundSprite.draw(batch);
         batch.enableBlending();
+        menuBanner.draw(batch);
         batch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
