@@ -61,7 +61,7 @@ public class Player extends GameObject {
 
         this.speed = 300;
         this.attackSpeed = 300;
-        this.hitpoints = /*100*/1000000;
+        this.hitpoints = 100;
         this.damage = 10;
 
         helper = new Helper(game, "Little Helper", this, "red-wings-up");
