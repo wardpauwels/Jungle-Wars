@@ -4,21 +4,27 @@ import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.JungleWars;
 import be.howest.junglewars.gameobjects.*;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // TODO: check and implement https://github.com/libgdx/libgdx/wiki/Collections
-public class GameScreen extends ScreenAdapter {
+public class GameScreen extends Stage implements Screen {
 
     //region fields
 
+    private Skin skin;
+    private Stage stage;
     public TextureAtlas atlas;
     private Sprite backgroundSprite;
     private BitmapFont smallFont;
@@ -40,14 +46,19 @@ public class GameScreen extends ScreenAdapter {
     private int startingEnemies;
     private float mulitplierEnemies;
     private float amountEnemies;
+    private boolean isGameOver;
 
     //endregion
 
     public GameScreen(JungleWars game, int level, Difficulty difficulty) {
+        super(new ScreenViewport(), game.batch);
+        this.stage = this;
         this.game = game;
         this.wave = level;
         this.difficulty = difficulty;
         this.atlas = game.atlas;
+        this.skin = game.skin;
+        this.isGameOver = false;
 
         gameState = GameState.READY;
 
@@ -201,7 +212,30 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void updateGameOver(float dt) {
+        if (!isGameOver) {
+            isGameOver = true;
 
+            new Dialog("Confirm Exit", skin) {
+                {
+                    text("Do you really want to leave?");
+                    button("Yes", "leave");
+                    button("No", "stay");
+                }
+
+                @Override
+                protected void result(Object object) {
+                    switch (String.valueOf(object)) {
+                        case "leave":
+                            Gdx.app.exit();
+                            break;
+                        case "stay":
+                            this.hide();
+                            break;
+                    }
+                }
+            }.show(stage);
+
+        }
     }
 
     //endregion
@@ -276,13 +310,20 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void renderGameOver(SpriteBatch batch) {
-        bigFont.draw(batch, "GAME OVER!", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-        for (Player player : players) {
-            smallFont.draw(batch, player.getName() + ": " + player.getScore() + " points", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 40);
-        }
+//        bigFont.draw(batch, "GAME OVER!", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+//        for (Player player : players) {
+//            smallFont.draw(batch, player.getName() + ": " + player.getScore() + " points", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 40);
+//        }
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
     }
 
     //endregion
+
+    @Override
+    public void show() {
+
+    }
 
     @Override
     public void render(float dt) {
@@ -298,26 +339,51 @@ public class GameScreen extends ScreenAdapter {
             case READY:
                 updateReady(dt);
                 renderReady(batch);
+                batch.end();
                 break;
             case RUNNING:
                 updateRunning(dt);
                 renderRunning(batch);
+                batch.end();
                 break;
             case PRE_WAVE:
                 updatePreWave(dt);
                 renderPreWave(batch);
+                batch.end();
                 break;
             case PAUSED:
                 updatePaused(dt);
                 renderPaused(batch);
+                batch.end();
                 break;
             case GAME_OVER:
+                batch.end();
                 updateGameOver(dt);
                 renderGameOver(batch);
                 break;
         }
 
-        batch.end();
+//        batch.end();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
     }
 
     @Override
@@ -387,7 +453,7 @@ public class GameScreen extends ScreenAdapter {
         return enemyMissiles;
     }
 
-    //endregion
+//endregion
 
     enum GameState {
         READY,
