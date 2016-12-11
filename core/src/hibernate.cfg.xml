@@ -12,7 +12,7 @@
             jdbc:mysql://188.166.66.6:3306/junglewars?useSSL=false
         </property>
         <property name="connection.username">harambe</property>
-        <property name="connection.password">og2ggEkPjYRB</property>
+        <property name="connection.password">zB7MuMoaozD60A74Hm</property>
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 
         <property name="hibernate.c3p0.min_size">1</property>
@@ -22,9 +22,6 @@
         <property name="hibernate.c3p0.idle_test_period">3000</property>
 
         <mapping class="be.howest.junglewars.data.entities.EnemyEntity"/>
-
-        <!-- DB schema will be updated if needed -->
-        <!-- <property name="hbm2ddl.auto">update</property> -->
 
     </session-factory>
 

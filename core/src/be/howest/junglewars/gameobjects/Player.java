@@ -33,6 +33,7 @@ public class Player extends GameObject {
     private String name;
     private int hitpoints;
     private float speed;
+    private float attackSpeed;
     private float scoreMultiplier = 1; // TODO: when multiplier? over time? when x score is reached, ...?
     private int xp = 0;
     private int level = 1;
@@ -48,7 +49,7 @@ public class Player extends GameObject {
         missiles = new ArrayList<>();
         powers = new ArrayList<>();
 
-        this.shootTime = .3f;
+        this.shootTime = calcShootTime();
         this.shootTimer = 0;
         this.canShoot = true;
 
@@ -57,6 +58,7 @@ public class Player extends GameObject {
         this.shootingAnimationTimer = 0;
 
         this.speed = 300;
+        this.attackSpeed = 300;
         this.hitpoints = 100;
         this.damage = 10;
 
@@ -136,9 +138,15 @@ public class Player extends GameObject {
         return hitpoints;
     }
 
+    private float calcShootTime() {
+        return 1 / (attackSpeed / 100);
+    }
+
     @Override
     public void update(float dt) {
         handleInput(dt);
+
+        shootTime = calcShootTime();
 
         if (shootTimer > shootTime) {
             canShoot = true;
@@ -273,4 +281,14 @@ public class Player extends GameObject {
     public void setSpeed(float speed) {
         this.speed = speed;
     }
+
+    public float getAttackSpeed() {
+        return attackSpeed;
+    }
+
+    public void setAttackSpeed(float attackSpeed) {
+        this.attackSpeed = attackSpeed;
+    }
+
+
 }

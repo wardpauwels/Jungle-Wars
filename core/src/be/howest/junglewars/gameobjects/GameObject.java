@@ -81,4 +81,19 @@ public abstract class GameObject implements Serializable {
         return remove;
     }
 
+    public Rectangle getBody() {
+        return body;
+    }
+
+    public void setBody(Rectangle body) {
+        this.body = body;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
 }
