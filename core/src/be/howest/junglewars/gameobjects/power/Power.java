@@ -1,5 +1,7 @@
-package be.howest.junglewars.gameobjects;
+package be.howest.junglewars.gameobjects.power;
 
+import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.gameobjects.Player;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -29,12 +31,11 @@ public class Power extends GameObject {
     private CollectedState collectedState;
 
     private float bonusPercentage;
-    private int bonusDamage;
 
     private Player owner;
-    private PowerType powerType;
+    private IPowerType powerType;
 
-    public Power(GameScreen game, String name, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp, PowerType powerType, float percentage) {
+    public Power(GameScreen game, String name, String defaultSpriteUrl, float lifeTime, float activeTime, boolean isPowerUp, IPowerType powerType, float percentage) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
 
         this.name = name;
@@ -49,12 +50,11 @@ public class Power extends GameObject {
     }
 
     private void activatePower() {
-        bonusDamage = Math.round(owner.getDamage() * bonusPercentage);
-        owner.setDamage(owner.getDamage() + bonusDamage);
+        powerType.activatePower(this);
     }
 
     public void endAction() {
-        owner.setDamage(owner.getDamage() - bonusDamage);
+        powerType.deactivatePower(this);
         actionEnded = true;
     }
 
@@ -66,7 +66,6 @@ public class Power extends GameObject {
         activatePower();
     }
 
-    // TODO: work with states to know what to update
     @Override
     public void update(float dt) {
         switch (collectedState) {
@@ -131,7 +130,7 @@ public class Power extends GameObject {
         return actionEnded;
     }
 
-    public PowerType getType() {
+    public IPowerType getPowerType() {
         return powerType;
     }
 
@@ -143,13 +142,13 @@ public class Power extends GameObject {
         return isPowerUp;
     }
 
+    public Player getOwner() {
+        return owner;
+    }
+
     public enum CollectedState {
         ON_FIELD,
         COLLECTED
-    }
-
-    public enum PowerType {
-        EXTRA_DAMAGE
     }
 
 }
