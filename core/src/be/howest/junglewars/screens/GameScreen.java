@@ -3,6 +3,7 @@ package be.howest.junglewars.screens;
 import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.JungleWars;
 import be.howest.junglewars.gameobjects.*;
+import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.gameobjects.power.Power;
 import be.howest.junglewars.gameobjects.power.impl.AttackSpeedPower;
 import com.badlogic.gdx.Gdx;

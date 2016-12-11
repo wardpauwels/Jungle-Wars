@@ -1,5 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
