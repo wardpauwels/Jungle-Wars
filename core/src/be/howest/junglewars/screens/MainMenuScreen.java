@@ -28,8 +28,7 @@ public class MainMenuScreen extends Stage implements Screen {
 
     //main buttons
     private Table table;
-    private TextButton startSingleplayerButton;
-    private TextButton startMultiplayerButton;
+    private TextButton playButton;
     private TextButton leaderBoardButton;
     private TextButton settingsButton;
     private TextButton creditsButton;
@@ -46,7 +45,7 @@ public class MainMenuScreen extends Stage implements Screen {
         create();
     }
 
-    public void create(){
+    private void create() {
         this.batch = game.batch;
         this.stage = this;
         this.skin = game.skin;
@@ -54,7 +53,7 @@ public class MainMenuScreen extends Stage implements Screen {
 
         music = Gdx.audio.newMusic(Gdx.files.internal(Assets.MENU_SONG));
         music.setLooping(true);
-        //music.play();
+        music.play();
 
         // create full screen background
         backgroundSprite = atlas.createSprite("background/menu");
@@ -71,17 +70,14 @@ public class MainMenuScreen extends Stage implements Screen {
 
         table.setPosition(0, Gdx.graphics.getHeight());
 
-        startSingleplayerButton = new TextButton("Singleplayer", skin);
-        startMultiplayerButton = new TextButton("Multiplayer", skin);
+        playButton = new TextButton("Play", skin);
         leaderBoardButton = new TextButton("Leaderboards", skin);
         settingsButton = new TextButton("Settings", skin);
         creditsButton = new TextButton("Credits", skin);
         quitButton = new TextButton("Quit Game", skin);
 
-        table.padTop(250);
-        table.add(startSingleplayerButton).padBottom(padBottom).width(buttonWidth);
-        table.row();
-        table.add(startMultiplayerButton).padBottom(padBottom).width(buttonWidth);
+        table.padTop(menuBanner.getHeight() + 100);
+        table.add(playButton).padBottom(padBottom).width(buttonWidth);
         table.row();
         table.add(leaderBoardButton).padBottom(padBottom).width(buttonWidth);
         table.row();
@@ -93,17 +89,28 @@ public class MainMenuScreen extends Stage implements Screen {
 
         stage.addActor(table);
 
-        startSingleplayerButton.addListener(new ClickListener() {
+        playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game, 1, Difficulty.EASY));
-            }
-        });
+                new Dialog("Gametype", skin) {
+                    {
+                        text("Choose your gametype");
+                        button("Singleplayer", "single");
+                        button("Multiplayer", "multi");
+                    }
 
-        startMultiplayerButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-
+                    @Override
+                    protected void result(Object object) {
+                        switch (String.valueOf(object)) {
+                            case "single":
+                                game.setScreen(new GameScreen(game, 1, Difficulty.EASY));
+                                break;
+                            case "multi":
+                                this.hide();
+                                break;
+                        }
+                    }
+                }.show(stage).setWidth(500);
             }
         });
 
