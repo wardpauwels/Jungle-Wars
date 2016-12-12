@@ -1,16 +1,24 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.*;
-import be.howest.junglewars.util.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.audio.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.*;
-import com.badlogic.gdx.utils.*;
-import com.badlogic.gdx.utils.viewport.*;
+import be.howest.junglewars.Difficulty;
+import be.howest.junglewars.JungleWars;
+import be.howest.junglewars.util.Assets;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenuScreen extends Stage implements Screen {
     private final JungleWars game;
@@ -38,7 +46,7 @@ public class MainMenuScreen extends Stage implements Screen {
     private float padBottom = 30;
 
 
-    public MainMenuScreen(JungleWars game){
+    public MainMenuScreen(JungleWars game) {
         super(new ScreenViewport(), game.batch);
         this.game = game;
 
@@ -92,7 +100,7 @@ public class MainMenuScreen extends Stage implements Screen {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                new Dialog("Gametype", skin) {
+                Dialog d = new Dialog("Gametype", skin) {
                     {
                         text("Choose your gametype");
                         button("Singleplayer", "single");
@@ -110,7 +118,9 @@ public class MainMenuScreen extends Stage implements Screen {
                                 break;
                         }
                     }
-                }.show(stage).setWidth(500);
+                };
+                d.show(stage).setWidth(500);
+                d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
             }
         });
 
@@ -138,7 +148,7 @@ public class MainMenuScreen extends Stage implements Screen {
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                new Dialog("Confirm Exit", skin) {
+                Dialog d = new Dialog("Confirm Exit", skin) {
                     {
                         text("Do you really want to leave?");
                         button("Yes", "leave");
@@ -157,7 +167,9 @@ public class MainMenuScreen extends Stage implements Screen {
                                 break;
                         }
                     }
-                }.show(stage).setWidth(500);
+                };
+                d.show(stage).setWidth(500);
+                d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
             }
         });
         Gdx.input.setInputProcessor(stage);
@@ -168,7 +180,7 @@ public class MainMenuScreen extends Stage implements Screen {
 
     }
 
-    public void render(float dt){
+    public void render(float dt) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
@@ -199,18 +211,9 @@ public class MainMenuScreen extends Stage implements Screen {
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
     }
-    /* ScreenAdapter
-     * dispose() -> release all resources
-     * hide() -> called when no longer current screen in game (e.g. save game state or sth like that (in game screen))
-     * pause() -> android
-     * render(dt) -> gameloop
-     * resize(w,h) -> resizing
-     * show() -> called when current screen in game (e.g. load saved filed)
-     */
 }

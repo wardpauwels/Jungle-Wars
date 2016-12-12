@@ -1,15 +1,11 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.*;
+import be.howest.junglewars.Difficulty;
+import be.howest.junglewars.JungleWars;
 import be.howest.junglewars.gameobjects.Currency;
-import be.howest.junglewars.gameobjects.*;
-import be.howest.junglewars.gameobjects.power.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.*;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.viewport.*;
+import be.howest.junglewars.gameobjects.Helper;
+import be.howest.junglewars.gameobjects.Missile;
+import be.howest.junglewars.gameobjects.Player;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.gameobjects.power.Power;
 import be.howest.junglewars.gameobjects.power.PowerType;
@@ -21,8 +17,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 // TODO: check and implement https://github.com/libgdx/libgdx/wiki/Collections
@@ -226,7 +225,7 @@ public class GameScreen extends Stage implements Screen {
         if (!isGameOver) {
             isGameOver = true;
 
-            new Dialog("Game over", skin) {
+            Dialog d = new Dialog("Game over", skin) {
                 {
                     text("Do you really want to leave?");
                     button("Home", "leave");
@@ -244,7 +243,9 @@ public class GameScreen extends Stage implements Screen {
                             break;
                     }
                 }
-            }.show(stage);
+            };
+            d.show(stage).setWidth(500);
+            d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
             Gdx.input.setInputProcessor(stage);
         }
     }
