@@ -1,13 +1,11 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.screens.GameScreen;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
+import be.howest.junglewars.screens.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 public abstract class GameObject implements Serializable {
 
