@@ -4,17 +4,24 @@ import be.howest.junglewars.gameobjects.power.IPowerType;
 import be.howest.junglewars.gameobjects.power.Power;
 
 public class MovementSpeedPower implements IPowerType {
-    private int bonusSpeed;
 
     @Override
     public void activatePower(Power power) {
-        bonusSpeed = Math.round(power.getOwner().getSpeed() * power.getBonus());
-        if (power.isPowerUp()) bonusSpeed *= -.5f;
-        power.getOwner().setSpeed(power.getOwner().getSpeed() - bonusSpeed);
+        power.getOwner().setSpeed(power.getOwner().getSpeed() - power.getBonusValue());
     }
 
     @Override
     public void deactivatePower(Power power) {
-        power.getOwner().setSpeed(power.getOwner().getSpeed() + bonusSpeed);
+        power.getOwner().setSpeed(power.getOwner().getSpeed() + power.getBonusValue());
     }
+
+    @Override
+    public int initBonusValue(Power power) {
+        if (power.isPowerUp()) {
+            return Math.round(power.getOwner().getSpeed() * power.getBonusPercentage() * -1);
+        } else {
+            return Math.round(power.getOwner().getSpeed() * power.getBonusPercentage()) / 2;
+        }
+    }
+
 }

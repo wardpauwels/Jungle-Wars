@@ -149,9 +149,9 @@ public class GameScreen extends Stage implements Screen {
     private void spawnPowers() {
         int maxPowersOnField = 5;
         if (powers.size() < maxPowersOnField) {
-            powers.add(new Power(this, "More Damage", "Less Damage", "power-up", 5, 10, PowerType.DAMAGE_POWER, 40));
-            powers.add(new Power(this, "More Speed", "Less Speed", "power-up", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));
-            powers.add(new Power(this, "Shoot Faster", "Shoot Slower", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40));
+            powers.add(new Power(this, "Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40));
+            powers.add(new Power(this, "Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));
+            powers.add(new Power(this, "Attack Speed", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40));
         }
     }
 
@@ -227,7 +227,7 @@ public class GameScreen extends Stage implements Screen {
 
             Dialog d = new Dialog("Game over", skin) {
                 {
-                    text("Do you really want to leave?");
+                    text("Woops, " + players.get(0).getName() + " died... You reached " + players.get(0).getScore() + " points!");
                     button("Home", "leave");
                     button("Retry", "retry");
                 }
@@ -288,7 +288,7 @@ public class GameScreen extends Stage implements Screen {
             smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
             smallFont.draw(batch, "ACTIVE POWERS: ", 300, Gdx.graphics.getHeight() - 20);
             for (int i = 0; i < player.getPowers().size(); i++) {
-                smallFont.draw(batch, player.getPowers().get(i).getName() + " (+" + Math.round(player.getPowers().get(i).getBonus() * 100) + "%)" + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
+                smallFont.draw(batch, player.getPowers().get(i).toString() + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
             }
             smallFont.draw(batch, "ATTACK SPEED: " + player.getAttackSpeed(), 550, 20);
             smallFont.draw(batch, "DAMAGE: " + player.getDamage(), 550, 60);
