@@ -4,17 +4,21 @@ import be.howest.junglewars.gameobjects.power.IPowerType;
 import be.howest.junglewars.gameobjects.power.Power;
 
 public class DamagePower implements IPowerType {
-    private int bonusDamage;
 
     @Override
     public void activatePower(Power power) {
-        bonusDamage = Math.round(power.getOwner().getDamage() * power.getBonus());
-        if (power.isPowerUp()) bonusDamage *= -1;
-        power.getOwner().setDamage(power.getOwner().getDamage() - bonusDamage);
+        power.getOwner().setDamage(power.getOwner().getDamage() - power.getBonusValue());
     }
 
     @Override
     public void deactivatePower(Power power) {
-        power.getOwner().setDamage(power.getOwner().getDamage() + bonusDamage);
+        power.getOwner().setDamage(power.getOwner().getDamage() + power.getBonusValue());
+    }
+
+    @Override
+    public int initBonusValue(Power power) {
+        int bonus = Math.round(power.getOwner().getDamage() * power.getBonusPercentage());
+        if (power.isPowerUp()) bonus *= -1;
+        return bonus;
     }
 }

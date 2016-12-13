@@ -6,4 +6,6 @@ public interface IPowerType {
 
     void deactivatePower(Power power);
 
+    int initBonusValue(Power power);
+
 }
