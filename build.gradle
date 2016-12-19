@@ -57,6 +57,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.5'
         compile "org.hibernate:hibernate-core:5.2.4.Final"
+        compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
     }
 }
 

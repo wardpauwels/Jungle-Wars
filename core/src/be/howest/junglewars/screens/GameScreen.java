@@ -395,4 +395,8 @@ public class GameScreen extends Stage implements Screen {
     public void dispose() {
     }
 
+    public GameData getData(){
+        return data;
+    }
+
 }

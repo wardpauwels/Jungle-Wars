@@ -1,98 +1,54 @@
 package be.howest.junglewars.spawners;
 
-import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.data.dao.EnemyDao;
 import be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
+import org.apache.commons.math3.distribution.EnumeratedDistribution;
+import org.apache.commons.math3.util.Pair;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-// TODO
-public class EnemySpawner {
+public class EnemySpawner implements ISpawner {
 
-    private Set<EnemyEntity> availableEnemies;
+    private int totalEnemiesToSpawn;
+    private boolean doneWithSpawning;
 
-    private int level;
-    private Difficulty difficulty;
+    private List<Pair<EnemyEntity, Double>> cachedEnemies;
+    private List<Pair<EnemyEntity, Double>> enemies;
+    private EnumeratedDistribution<EnemyEntity> generator;
 
-    private float multiplier;
-
-    public EnemySpawner(int level, Difficulty difficulty) {
-        this.level = level;
-        this.difficulty = difficulty;
-
-        calcMultiplier();
-
-        availableEnemies = new HashSet<>();
+    public EnemySpawner(SpawnerManager manager) {
+        cachedEnemies = new ArrayList<>();
         for (EnemyEntity entity : EnemyDao.getAllEnemies()) {
-            availableEnemies.add(entity);
+            cachedEnemies.add(new Pair<>(entity, (double) entity.getSpawnProbability()));
         }
 
-
+        reset();
     }
 
-    private void calcMultiplier() {
-        multiplier = 1;
-
-        switch (difficulty) {
-            case EASY:
-                multiplier *= 1;
-                break;
-            case MEDIUM:
-                multiplier *= 1.2;
-                break;
-            case HARD:
-                multiplier *= 1.5;
-                break;
-            case EXTREME:
-                multiplier *= 2;
-                break;
-            case UNSURVIVABLE:
-                multiplier *= 5;
-                break;
-        }
-
-        multiplier *= (level * .1f);
-
+    @Override
+    public void reset() {
+//        secondsBetweenSpawn = 0; // TODO: calculate with game level and difficulty (- level/100
+//        doneWithSpawning = false; // TODO: set on false if all enemies are spawned
+//        totalEnemiesToSpawn = 0; // TODO: calculate with game level and difficulty
+//        enemies = new ArrayList<>();
+//        enemies.addAll(cachedEnemies);
+//        generator = new EnumeratedDistribution<>(enemies);
     }
 
-//    private Enemy generateEnemy(EnemyEntity entity) {
-//        return new Enemy(
-//                entity.getName(),
-//                entity.getTextureFileName(),
-//                Math.round(entity.getBaseDamage() * multiplier),
-//                Math.round(entity.getBaseSpeed() * multiplier),
-//                Math.round(entity.getBaseHitpoints() * multiplier),
-//                Math.round(entity.getBaseAttackSpeed() * multiplier),
-//                entity.getExperienceWhenKilled(),
-//                entity.getScoreWhenKilled(),
-//                entity.getSpawnChance(),
-//                entity.getMovementTypeEnums(),
-//                entity.getTargetSelectionTypeEnums(),
-//                entity.getAttackTypeEnums()
+    public void updateStats(Enemy enemy) {
+        // TODO: update stats with game difficulty and game level
+    }
+
+    @Override
+    public void spawnNext() {
+//        manager.getData().getEnemies().add(
+//                new Enemy();
 //        );
-//    }
-
-    public Map<Enemy, Integer> generateEnemies() {
-        HashMap<Enemy, Integer> enemies = new HashMap<>();
-        for (EnemyEntity entity : availableEnemies) {
-//            enemies.put(generateEnemy(entity), 1);
-        }
-
-        return enemies;
     }
 
+    public boolean isDoneWithSpawning() {
+        return doneWithSpawning;
+    }
 }
-
-
-//        amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * level));
-//                if (enemies.size() == 0) {
-//                for (int i = 0; i < amountEnemies; i++) {
-//        enemies.add(new EnemyOld(players));
-//        enemies.get(i).update(dt);
-//        }
-//        level++;
-//        }
