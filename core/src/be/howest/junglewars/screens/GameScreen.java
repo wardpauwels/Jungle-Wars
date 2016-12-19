@@ -106,6 +106,7 @@ public class GameScreen extends Stage implements Screen {
             for (Player player : data.getPlayers()) {
                 for (Missile missile : enemy.checkCollision(player.getMissiles())) {
                     enemy.hitBy(missile, player);
+                    return;
                 }
             }
         }

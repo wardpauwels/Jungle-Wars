@@ -136,10 +136,8 @@ public class Player extends GameObject {
     }
 
     public int catchDamage(int dmg) {
-        System.out.println(armor);
         armor /= 10;
         dmg -= (dmg*armor);
-        System.out.println(dmg);
         this.hitpoints -= dmg;
         return hitpoints;
     }
