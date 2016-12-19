@@ -12,6 +12,7 @@ public class JungleWars extends Game {
     public SpriteBatch batch;
     public TextureAtlas atlas;
     public Skin skin;
+    GameScreen mainGameScreen;
     private FPSLogger fpsLogger;
 
     @Override
@@ -41,9 +42,15 @@ public class JungleWars extends Game {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
         super.render();
 
         fpsLogger.log();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
     }
 
     @Override

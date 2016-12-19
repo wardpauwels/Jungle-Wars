@@ -1,27 +1,18 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.JungleWars;
+import be.howest.junglewars.*;
 import be.howest.junglewars.gameobjects.Currency;
-import be.howest.junglewars.gameobjects.Helper;
-import be.howest.junglewars.gameobjects.Missile;
-import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
-import be.howest.junglewars.gameobjects.power.Power;
-import be.howest.junglewars.gameobjects.power.PowerType;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import be.howest.junglewars.gameobjects.*;
+import be.howest.junglewars.gameobjects.enemy.*;
+import be.howest.junglewars.gameobjects.power.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.*;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.viewport.*;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 // TODO: check and implement https://github.com/libgdx/libgdx/wiki/Collections
@@ -50,13 +41,14 @@ public class GameScreen extends Stage implements Screen {
     private List<Currency> currencies;
 
     private int startingEnemies;
-    private float mulitplierEnemies;
+    private float multiplierEnemies;
     private float amountEnemies;
     private boolean isGameOver;
+    private String playerName;
 
     //endregion
 
-    public GameScreen(JungleWars game, int level, Difficulty difficulty) {
+    public GameScreen(JungleWars game, int level, Difficulty difficulty, String name) {
         super(new ScreenViewport(), game.batch);
         this.stage = this;
         this.game = game;
@@ -65,6 +57,7 @@ public class GameScreen extends Stage implements Screen {
         this.atlas = game.atlas;
         this.skin = game.skin;
         this.isGameOver = false;
+        this.playerName = name;
 
         gameState = GameState.READY;
 
@@ -90,10 +83,10 @@ public class GameScreen extends Stage implements Screen {
         bigFont = generator.generateFont(parameter);
         generator.dispose();
 
-        players.add(new Player(this, "John", "harambe"));
+        players.add(new Player(this, name, "harambe"));
 
         startingEnemies = 1;
-        mulitplierEnemies = 0.5f;
+        multiplierEnemies = 0.5f;
         spawnEnemies(false);
     }
 
@@ -131,7 +124,7 @@ public class GameScreen extends Stage implements Screen {
 
     private void spawnEnemies(boolean nextWave) {
         if (enemies.size() == 0) {
-            amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * wave));
+            amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * wave));
             for (int i = 0; i < amountEnemies; i++) {
                 enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 1.5f, 10, 15, 5));
             }
@@ -239,7 +232,7 @@ public class GameScreen extends Stage implements Screen {
                             game.setScreen(new MainMenuScreen(game));
                             break;
                         case "retry":
-                            game.setScreen(new GameScreen(game, 1, Difficulty.EASY));
+                            game.setScreen(new GameScreen(game, 1, Difficulty.EASY, playerName));
                             break;
                     }
                 }
@@ -382,7 +375,7 @@ public class GameScreen extends Stage implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        System.out.println("Resized");
     }
 
     @Override
