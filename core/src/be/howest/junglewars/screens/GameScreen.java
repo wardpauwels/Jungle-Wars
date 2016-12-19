@@ -117,6 +117,7 @@ public class GameScreen extends Stage implements Screen {
             }
             for (Missile missile : player.checkCollision(enemyMissiles)) {
                 player.hitBy(missile);
+                missile.doEffect(player);
             }
         }
 
@@ -136,7 +137,7 @@ public class GameScreen extends Stage implements Screen {
         if (enemies.size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * wave));
             for (int i = 0; i < amountEnemies; i++) {
-                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.STABBING));
+                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
             }
             if (nextWave) wave++;
         }
