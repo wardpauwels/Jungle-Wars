@@ -7,14 +7,16 @@ import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Enemy extends GameObject {
     private static final float WIDTH = 70;
     private static final float HEIGHT = 80;
-    private static final float BULLET_WIDTH = 15;
-    private static final float BULLET_HEIGHT = 15;
+    public static final float BULLET_WIDTH = 15;
+    public static final float BULLET_HEIGHT = 15;
 
     private static final String ATLAS_PREFIX = "enemy/";
 
@@ -32,8 +34,14 @@ public class Enemy extends GameObject {
     private int scoreWhenKilled;
     private int experienceWhenKilled;
 
+    private List<Vector2> targets;
+
+    private IChooseTargetType chooseTargetType;
+    private IChooseTargetType chooseMovementType;
+    private IEnemyActionType enemyActionType;
+
     public Enemy(GameScreen game, String name, String defaultSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
-                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance) {
+                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT,
                 ThreadLocalRandom.current().nextInt(0 - Math.round(WIDTH), Gdx.graphics.getWidth() + Math.round(WIDTH)),
                 ThreadLocalRandom.current().nextBoolean() ? 0 - HEIGHT : Gdx.graphics.getHeight() + HEIGHT); // TODO: spawns only top or bottom now
@@ -49,20 +57,26 @@ public class Enemy extends GameObject {
         this.hitpoints = baseHitpoints;
         this.actionTime = baseAttackSpeed;
         this.actionTimer = 0;
+
+        this.chooseTargetType = chooseTargetType.getType();
+        this.chooseMovementType = chooseMovementType.getType();
+        this.enemyActionType = actionType.getAction();
     }
 
     @Override
     public void update(float dt) {
         if (this.hitpoints <= 0) this.remove = true;
 
-        Player target = chooseTarget();
+        targets = chooseMovementType.chooseTargets(this);
+        for(Vector2 v: targets) {
 
-        float radians = MathUtils.atan2(target.getBody().y - body.y, target.getBody().x - body.x);
+            float radians = MathUtils.atan2(v.y - body.y, v.x - body.x);
 
-        body.x += MathUtils.cos(radians) * speed * dt;
-        body.y += MathUtils.sin(radians) * speed * dt;
+            body.x += MathUtils.cos(radians) * speed * dt;
+            body.y += MathUtils.sin(radians) * speed * dt;
 
-        doEnemyAction(dt);
+            doEnemyAction(dt);
+        }
     }
 
     @Override
@@ -85,9 +99,6 @@ public class Enemy extends GameObject {
         return hitpoints;
     }
 
-    private Player chooseTarget() {
-        return getNearest(game.getPlayers());
-    }
 
     private void doEnemyAction(float dt) {
         actionTimer += dt;
@@ -98,18 +109,18 @@ public class Enemy extends GameObject {
     }
 
     private void attack() {
-        Player target = chooseTarget();
-        if (target == null) return;
+        targets = chooseTargetType.chooseTargets(this);
+        if (targets == null) return;
+        for(Vector2 v: targets) {
+            float destinationX = v.x;
+            float destinationY = v.y;
 
-        float destinationX = target.getBody().x + (target.getBody().width / 2);
-        float destinationY = target.getBody().y + (target.getBody().height / 2);
+            float spawnX = body.x + (body.width / 2);
+            float spawnY = body.y + (body.height / 2);
 
-        float spawnX = body.x + (body.width / 2);
-        float spawnY = body.y + (body.height / 2);
+            enemyActionType.attack(this,v,spawnX,spawnY);
 
-        game.getEnemyMissiles().add(
-                new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 5, 300, 5, 4f)
-        );
+        }
     }
 
     public int getScoreWhenKilled() {
