@@ -36,8 +36,7 @@ public enum PowerType {
     ARMOR_POWER{
         @Override
         IPowerType getPower(){return new ArmorPower();}
-    }
-    ;
+    };
 
     abstract IPowerType getPower();
 
