@@ -123,4 +123,12 @@ public class Enemy extends GameObject {
     public int getSpawnChance() {
         return spawnChance;
     }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
 }

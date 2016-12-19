@@ -149,9 +149,12 @@ public class GameScreen extends Stage implements Screen {
     private void spawnPowers() {
         int maxPowersOnField = 5;
         if (powers.size() < maxPowersOnField) {
-            powers.add(new Power(this, "Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40));
-            powers.add(new Power(this, "Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));
-            powers.add(new Power(this, "Attack Speed", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40));
+            //powers.add(new Power(this, "Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40));
+            //powers.add(new Power(this, "Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));
+            //powers.add(new Power(this, "Attack Speed", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40));
+            //powers.add(new Power(this, "Missle Speed", "misslespeed", 5, 10, PowerType.MISSLE_SPEED_POWER, 40));
+            //powers.add(new Power(this, "HP bonus", "HP", 5, 1, PowerType.HITPOINTS_POWER, 100));
+            powers.add(new Power(this, "Armor Bonus", "armor", 5,10, PowerType.ARMOR_POWER, 20));
         }
     }
 
@@ -293,6 +296,8 @@ public class GameScreen extends Stage implements Screen {
             smallFont.draw(batch, "ATTACK SPEED: " + player.getAttackSpeed(), 550, 20);
             smallFont.draw(batch, "DAMAGE: " + player.getDamage(), 550, 60);
             smallFont.draw(batch, "MOVEMENT SPEED: " + player.getSpeed(), 550, 100);
+            smallFont.draw(batch, "MISSLE SPEED: "  + player.getMissleSpeed(), 550, 140);
+
         }
 
         for (Enemy enemy : enemies) {
