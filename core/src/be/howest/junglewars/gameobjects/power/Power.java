@@ -57,7 +57,11 @@ public class Power extends GameObject {
         this.powerType = powerType.getPower();
     }
 
-    private void activatePower() {
+    public void setPowerUp(boolean up){
+        isPowerUp = up;
+    }
+
+    public void activatePower() {
         powerType.activatePower(this);
     }
 

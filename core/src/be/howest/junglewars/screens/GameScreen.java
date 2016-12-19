@@ -8,7 +8,10 @@ import be.howest.junglewars.gameobjects.Currency;
 import be.howest.junglewars.gameobjects.Helper;
 import be.howest.junglewars.gameobjects.Missile;
 import be.howest.junglewars.gameobjects.Player;
+import be.howest.junglewars.gameobjects.enemy.ChooseTargetType;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
+import be.howest.junglewars.gameobjects.enemy.EnemyActionType;
+import be.howest.junglewars.gameobjects.enemy.chooseTarget.impl.NearestPlayer;
 import be.howest.junglewars.gameobjects.power.Power;
 import be.howest.junglewars.gameobjects.power.PowerType;
 import com.badlogic.gdx.Gdx;
@@ -99,6 +102,7 @@ public class GameScreen extends Stage implements Screen {
             }
             for (Missile missile : player.checkCollision(data.getEnemyMissiles())) {
                 player.hitBy(missile);
+                missile.doEffect(player);
             }
         }
 
@@ -119,7 +123,7 @@ public class GameScreen extends Stage implements Screen {
         if (data.getEnemies().size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * data.getWave()));
             for (int i = 0; i < amountEnemies; i++) {
-                data.getEnemies().add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 1.5f, 10, 15, 5));
+                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.STABBING));
             }
             if (nextWave) data.setWave(data.getWave() + 1);
         }
