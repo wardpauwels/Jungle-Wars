@@ -54,7 +54,7 @@ public class Helper extends GameObject {
     }
 
     private Enemy chooseTarget() {
-        return getNearest(game.getEnemies());
+        return getNearest(game.getData().getEnemies());
     }
 
     private Vector2 leftTopOfOwnerPosition(float dt) {

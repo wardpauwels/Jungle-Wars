@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 public class CryingAction implements IEnemyActionType {
     @Override
     public void attack(Enemy enemy, Vector2 v, float spawnX, float spawnY) {
-        enemy.game.getEnemyMissiles().add(
+        enemy.game.getData().getEnemyMissiles().add(
                 new Missile(enemy.game, enemy.BULLET_WIDTH, enemy.BULLET_HEIGHT, spawnX, spawnY, v.x, v.y, "helper-bullet", 5, 300, 5, 4f, MissileType.TEAR));
     }
     }

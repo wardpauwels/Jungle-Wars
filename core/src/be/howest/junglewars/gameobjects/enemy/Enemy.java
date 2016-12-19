@@ -87,7 +87,6 @@ public class Enemy extends GameObject {
     }
 
     public void hitBy(Missile missile, Player player) {
-        System.out.println("hit");
 
         if (catchDamage(missile.getDamage()) <= 0) {
             player.addScore(scoreWhenKilled);
