@@ -14,6 +14,7 @@ public class JungleWars extends Game {
     public Skin skin;
     GameScreen mainGameScreen;
     private FPSLogger fpsLogger;
+    private Preferences savePrefs;
 
     @Override
     public void create() {
@@ -22,6 +23,7 @@ public class JungleWars extends Game {
             //TODO: still loading/updating all files
             System.out.printf("Loading assets: %f%n", Assets.manager.getProgress() * 100); // percentage for progress bar
         }
+        //saveFile = Gdx.files.internal("data/myfile.txt");
 
         fpsLogger = new FPSLogger();
 
