@@ -121,6 +121,7 @@ public class GameScreen extends Stage implements Screen {
             for (Player player : players) {
                 for (Missile missile : enemy.checkCollision(player.getMissiles())) {
                     enemy.hitBy(missile, player);
+                    return;
                 }
             }
         }
@@ -149,11 +150,11 @@ public class GameScreen extends Stage implements Screen {
     private void spawnPowers() {
         int maxPowersOnField = 5;
         if (powers.size() < maxPowersOnField) {
-            //powers.add(new Power(this, "Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40));
-            //powers.add(new Power(this, "Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));
-            //powers.add(new Power(this, "Attack Speed", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40));
-            //powers.add(new Power(this, "Missle Speed", "misslespeed", 5, 10, PowerType.MISSLE_SPEED_POWER, 40));
-            //powers.add(new Power(this, "HP bonus", "HP", 5, 1, PowerType.HITPOINTS_POWER, 100));
+            powers.add(new Power(this, "Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40));
+            powers.add(new Power(this, "Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));
+            powers.add(new Power(this, "Attack Speed", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40));
+            powers.add(new Power(this, "Missle Speed", "misslespeed", 5, 10, PowerType.MISSLE_SPEED_POWER, 40));
+            powers.add(new Power(this, "HP bonus", "HP", 5, 1, PowerType.HITPOINTS_POWER, 100));
             powers.add(new Power(this, "Armor Bonus", "armor", 5,10, PowerType.ARMOR_POWER, 20));
         }
     }
