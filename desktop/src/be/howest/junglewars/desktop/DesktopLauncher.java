@@ -10,7 +10,7 @@ public class DesktopLauncher {
     public static void main(String[] arg) {
         Settings settings = new Settings();
         settings.combineSubdirectories = true;
-        settings.debug = false;
+        settings.debug = true;
         settings.maxHeight = 2048;
         settings.maxWidth = 2048;
         TexturePacker.process(settings, "images", "atlas", "images");

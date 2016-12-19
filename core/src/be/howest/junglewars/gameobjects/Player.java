@@ -40,8 +40,13 @@ public class Player extends GameObject {
     private int score = 0;
     private int collectedCoins = 0;
     private int damage;
+
+    private int missleSpeed = 500;
+    private float armor = 0f;
+
     private float baseSpeed;
     public float timer;
+
 
     public Player(GameScreen game, String name, String defaultSpriteUrl) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2);
@@ -146,6 +151,8 @@ public class Player extends GameObject {
     }
 
     public int catchDamage(int dmg) {
+        armor /= 10;
+        dmg -= (dmg*armor);
         this.hitpoints -= dmg;
         return hitpoints;
     }
@@ -309,5 +316,19 @@ public class Player extends GameObject {
         this.attackSpeed = attackSpeed;
     }
 
+    public int getMissleSpeed(){return missleSpeed;}
 
+    public void setMissleSpeed(int missleSpeed){ this.missleSpeed = missleSpeed;}
+
+    public void setHitpoints(int hitpoints) {
+        this.hitpoints = hitpoints;
+    }
+
+    public float getArmor() {
+        return armor;
+    }
+
+    public void setArmor(float armor) {
+        this.armor = armor;
+    }
 }

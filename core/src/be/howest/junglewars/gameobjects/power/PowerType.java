@@ -1,8 +1,6 @@
 package be.howest.junglewars.gameobjects.power;
 
-import be.howest.junglewars.gameobjects.power.impl.AttackSpeedPower;
-import be.howest.junglewars.gameobjects.power.impl.DamagePower;
-import be.howest.junglewars.gameobjects.power.impl.MovementSpeedPower;
+import be.howest.junglewars.gameobjects.power.impl.*;
 
 public enum PowerType {
     ATTACK_SPEED_POWER {
@@ -22,6 +20,22 @@ public enum PowerType {
         IPowerType getPower() {
             return new MovementSpeedPower();
         }
+    },
+    MISSLE_SPEED_POWER{
+        @Override
+        IPowerType getPower(){
+            return new MissleSpeedPower();
+        }
+    },
+    HITPOINTS_POWER{
+        @Override
+        IPowerType getPower(){
+            return new HitpointPower();
+        }
+    },
+    ARMOR_POWER{
+        @Override
+        IPowerType getPower(){return new ArmorPower();}
     };
 
     abstract IPowerType getPower();

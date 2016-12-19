@@ -8,5 +8,4 @@ public interface IPowerType {
 
     int initBonusValue(Power power);
 
-
 }

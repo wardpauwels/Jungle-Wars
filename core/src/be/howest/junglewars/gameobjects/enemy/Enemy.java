@@ -65,6 +65,7 @@ public class Enemy extends GameObject {
 
     @Override
     public void update(float dt) {
+
         if (this.hitpoints <= 0) this.remove = true;
 
         targets = chooseMovementType.chooseTargets(this);
@@ -86,12 +87,14 @@ public class Enemy extends GameObject {
     }
 
     public void hitBy(Missile missile, Player player) {
+        System.out.println("hit");
+
         if (catchDamage(missile.getDamage()) <= 0) {
             player.addScore(scoreWhenKilled);
             player.addXp(experienceWhenKilled);
         }
-
         missile.remove = true;
+
     }
 
     public int catchDamage(int dmg) {
@@ -133,5 +136,13 @@ public class Enemy extends GameObject {
 
     public int getSpawnChance() {
         return spawnChance;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 }
