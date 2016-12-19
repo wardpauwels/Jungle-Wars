@@ -54,6 +54,7 @@ public class MainMenuScreen extends Stage implements Screen {
 
         music = Gdx.audio.newMusic(Gdx.files.internal(Assets.MENU_SONG));
         music.setLooping(true);
+        music.setVolume(0);
         music.play();
 
         // create full screen background
@@ -133,16 +134,72 @@ public class MainMenuScreen extends Stage implements Screen {
         });
 
         settingsButton.addListener(new ClickListener() {
+
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Table settingsTable = new Table(skin);
+                settingsTable.align(Align.center | Align.top);
+                Slider sliderMusic = new Slider(0, 100, 1, false, skin);
+                TextButton buttonClose = new TextButton("Close", skin);
+                sliderMusic.setValue(music.getVolume() * 100);
 
+                Dialog d = new Dialog("Settings", skin);
+                d.add(settingsTable);
+                settingsTable.add("Music volume: ");
+                settingsTable.add(sliderMusic);
+                settingsTable.row();
+                settingsTable.add("Up: ");
+                settingsTable.add(new TextField("", skin));
+                settingsTable.row();
+                settingsTable.add("Down: ");
+                settingsTable.add(new TextField("", skin));
+                settingsTable.row();
+                settingsTable.add("Left: ");
+                settingsTable.add(new TextField("", skin));
+                settingsTable.row();
+                settingsTable.add("Right: ");
+                settingsTable.add(new TextField("", skin));
+                settingsTable.row();
+                settingsTable.add(buttonClose);
+                d.show(stage);
+                d.setWidth(500);
+                d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+                d.show(stage);
+
+                buttonClose.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        d.hide();
+                    }
+                });
+                sliderMusic.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        music.setVolume(sliderMusic.getValue() / 100);
+                    }
+                });
             }
         });
 
         creditsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                TextButton closeButton = new TextButton("Close", skin);
+                Dialog d = new Dialog("Credits", skin);
 
+                d.add("stront \n stront stront\n");
+                d.add(closeButton);
+
+                d.setWidth(500);
+                d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+                d.show(stage);
+
+                closeButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        d.hide();
+                    }
+                });
             }
         });
 
@@ -169,9 +226,9 @@ public class MainMenuScreen extends Stage implements Screen {
                         }
                     }
                 };
-                d.show(stage);
                 d.setWidth(500);
                 d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+
                 d.show(stage);
             }
         });
@@ -224,27 +281,26 @@ public class MainMenuScreen extends Stage implements Screen {
 
     public void makeNameInputDialog() {
         nameInputfield = new TextField("", skin);
-        Dialog d = new Dialog("Enter your name", skin) {
+        TextButton enterButton = new TextButton("Enter", skin);
+        Table nameTable = new Table(skin);
+        nameTable.align(Align.center | Align.top);
 
-            {
-                text("Please enter your player's name.");
-                this.addActor(nameInputfield);
-                row();
-                button("Enter", "enter");
-            }
-
-
-            @Override
-            protected void result(Object object) {
-                switch (String.valueOf(object)) {
-                    case "enter":
-                        dispose();
-                        game.setScreen(new GameScreen(game, 1, Difficulty.EASY, nameInputfield.getText()));
-                        break;
-                }
-            }
-        };
+        Dialog d = new Dialog("Enter your name", skin);
+        d.add(nameTable);
+        nameTable.add("Please enter your player's name");
+        nameTable.row();
+        nameTable.add(nameInputfield);
+        nameTable.row();
+        nameTable.add(enterButton);
         d.show(stage).setWidth(500);
         d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+
+        enterButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                dispose();
+                game.setScreen(new GameScreen(game, 1, Difficulty.EASY, nameInputfield.getText()));
+            }
+        });
     }
 }
