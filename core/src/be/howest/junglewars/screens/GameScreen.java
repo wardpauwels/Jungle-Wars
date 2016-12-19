@@ -137,7 +137,7 @@ public class GameScreen extends Stage implements Screen {
         if (enemies.size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (mulitplierEnemies * wave));
             for (int i = 0; i < amountEnemies; i++) {
-                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
+                enemies.add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.STABBING));
             }
             if (nextWave) wave++;
         }
@@ -151,7 +151,7 @@ public class GameScreen extends Stage implements Screen {
     }
 
     private void spawnPowers() {
-        int maxPowersOnField = 5;
+        int maxPowersOnField = 2;
         if (powers.size() < maxPowersOnField) {
             powers.add(new Power(this, "Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40));
             powers.add(new Power(this, "Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));

@@ -16,7 +16,7 @@ public class StabbingAction implements IEnemyActionType {
 
         if(enemy.checkCollision(enemy.game.getPlayers()).size()!=0){
             for(Player p: enemy.game.getPlayers()){
-                p.catchDamage(10);
+                p.catchDamage(20);
             }
         }
 

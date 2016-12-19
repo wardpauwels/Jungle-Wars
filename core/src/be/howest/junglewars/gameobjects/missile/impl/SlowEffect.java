@@ -23,7 +23,9 @@ public class SlowEffect implements IMissileType {
         //p.collectedBy(player);
         if (!player.isSlowed()) {
             player.setSpeed(player.getSpeed() - 200);
-            player.timer = 3;
         }
+        player.timer = 1;
+
+
     }
 }
