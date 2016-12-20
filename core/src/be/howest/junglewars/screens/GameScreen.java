@@ -1,11 +1,7 @@
 package be.howest.junglewars.screens;
 
 import be.howest.junglewars.*;
-import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.GameState;
-import be.howest.junglewars.JungleWars;
-import be.howest.junglewars.gameobjects.Currency;
+import be.howest.junglewars.data.da.*;
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.enemy.*;
 import be.howest.junglewars.gameobjects.enemy.utils.Brick;
@@ -17,29 +13,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.*;
-import be.howest.junglewars.gameobjects.Helper;
-import be.howest.junglewars.gameobjects.Missile;
-import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.gameobjects.enemy.ChooseTargetType;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
-import be.howest.junglewars.gameobjects.enemy.EnemyActionType;
-import be.howest.junglewars.gameobjects.enemy.chooseTarget.impl.NearestPlayer;
-import be.howest.junglewars.gameobjects.power.Power;
-import be.howest.junglewars.gameobjects.power.PowerType;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import java.util.*;
-import java.util.List;
 
 public class GameScreen extends Stage implements Screen {
 
@@ -63,7 +36,7 @@ public class GameScreen extends Stage implements Screen {
 
     //endregion
 
-    public GameScreen(JungleWars game, int wave, Difficulty difficulty, String name) {
+    public GameScreen(JungleWars game, int wave, Difficulty difficulty) {
         super(new ScreenViewport(), game.batch);
         data = new GameData();
         this.stage = this;
@@ -71,7 +44,7 @@ public class GameScreen extends Stage implements Screen {
         this.atlas = game.atlas;
         this.skin = game.skin;
         this.isGameOver = false;
-        this.playerName = name;
+        this.playerName = game.getPlayer().getName();
 
         data.setWave(wave);
         data.setDifficulty(difficulty);
@@ -92,7 +65,7 @@ public class GameScreen extends Stage implements Screen {
         bigFont = generator.generateFont(parameter);
         generator.dispose();
 
-        data.getPlayers().add(new Player(this, name, "harambe"));
+        data.getPlayers().add( new Player( this, "harambe", game.getPlayer() ) );
 
         startingEnemies = 1;
         multiplierEnemies = 0.5f;
@@ -256,6 +229,7 @@ public class GameScreen extends Stage implements Screen {
     private void updateGameOver(float dt) {
         if (!isGameOver) {
             isGameOver = true;
+            HighscoreDA.getInstance().addHighscore( data.getPlayers().get( 0 ) );
 
             Dialog d = new Dialog("Game over", skin) {
                 {
@@ -271,7 +245,7 @@ public class GameScreen extends Stage implements Screen {
                             game.setScreen(new MainMenuScreen(game));
                             break;
                         case "retry":
-                            game.setScreen(new GameScreen(game, 1, Difficulty.EASY, playerName));
+                            game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
                             break;
                     }
                 }
