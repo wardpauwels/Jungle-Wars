@@ -116,6 +116,9 @@ public class GameScreen extends Stage implements Screen {
                 player.hitBy(missile);
                 missile.doEffect(player);
             }
+            for (Missile missile : player.getHelper().checkCollision(data.getEnemyMissiles())) {
+                player.getHelper().hitBy(missile);
+            }
         }
 
         for (Enemy enemy : data.getEnemies()) {
@@ -126,15 +129,6 @@ public class GameScreen extends Stage implements Screen {
                 }
             }
         }
-
-        for(Helper helper : data.getHelpers()){
-            for(Missile missile : helper.checkCollision(data.getEnemyMissiles())) {
-                //TODO: werkt niet -- ROBERT
-                System.out.println("HELPER HIT?");
-                helper.hitBy(missile);
-            }
-        }
-
     }
 
     //region spawners TODO: create spawners
