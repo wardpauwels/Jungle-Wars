@@ -41,7 +41,7 @@ public class Player extends GameObject {
     private int collectedCoins = 0;
     private int damage;
 
-    private int missleSpeed = 500;
+    private int missileSpeed = 500;
     private float armor = 0f;
 
     private float baseSpeed;
@@ -316,9 +316,9 @@ public class Player extends GameObject {
         this.attackSpeed = attackSpeed;
     }
 
-    public int getMissleSpeed(){return missleSpeed;}
+    public int getMissileSpeed(){return missileSpeed;}
 
-    public void setMissleSpeed(int missleSpeed){ this.missleSpeed = missleSpeed;}
+    public void setMissileSpeed(int missileSpeed){ this.missileSpeed = missileSpeed;}
 
     public void setHitpoints(int hitpoints) {
         this.hitpoints = hitpoints;

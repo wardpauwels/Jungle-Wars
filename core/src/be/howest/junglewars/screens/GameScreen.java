@@ -127,6 +127,14 @@ public class GameScreen extends Stage implements Screen {
             }
         }
 
+        for(Helper helper : data.getHelpers()){
+            for(Missile missile : helper.checkCollision(data.getEnemyMissiles())) {
+                //TODO: werkt niet -- ROBERT
+                System.out.println("HELPER HIT?");
+                helper.hitBy(missile);
+            }
+        }
+
     }
 
     //region spawners TODO: create spawners
@@ -135,7 +143,7 @@ public class GameScreen extends Stage implements Screen {
         if (data.getEnemies().size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
             for (int i = 0; i < amountEnemies; i++) {
-                data.getEnemies().add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.STABBING));
+                data.getEnemies().add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
             }
             if (nextWave) data.setWave(data.getWave() + 1);
         }
@@ -154,7 +162,7 @@ public class GameScreen extends Stage implements Screen {
             data.getPowers().add(new Power(this, "Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40));
             data.getPowers().add(new Power(this, "Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));
             data.getPowers().add(new Power(this, "Attack Speed", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40));
-            data.getPowers().add(new Power(this, "Missle Speed", "misslespeed", 5, 10, PowerType.MISSLE_SPEED_POWER, 40));
+            data.getPowers().add(new Power(this, "Missle Speed", "misslespeed", 5, 10, PowerType.MISSILE_SPEED_POWER, 40));
             data.getPowers().add(new Power(this, "HP bonus", "HP", 5, 1, PowerType.HITPOINTS_POWER, 100));
             data.getPowers().add(new Power(this, "Armor Bonus", "armor", 5, 10, PowerType.ARMOR_POWER, 20));
         }
@@ -298,7 +306,7 @@ public class GameScreen extends Stage implements Screen {
             smallFont.draw(batch, "ATTACK SPEED: " + player.getAttackSpeed(), 20, 40);
             smallFont.draw(batch, "DAMAGE: " + player.getDamage(), 20, 60);
             smallFont.draw(batch, "MOVEMENT SPEED: " + player.getSpeed(), 20, 80);
-            smallFont.draw(batch, "MISSLE SPEED: " + player.getMissleSpeed(), 20, 100);
+            smallFont.draw(batch, "MISSiLE SPEED: " + player.getMissileSpeed(), 20, 100);
 
         }
 

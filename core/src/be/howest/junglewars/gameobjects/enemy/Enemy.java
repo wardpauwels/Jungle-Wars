@@ -114,8 +114,8 @@ public class Enemy extends GameObject {
         targets = chooseTargetType.chooseTargets(this);
         if (targets == null) return;
         for(Vector2 v: targets) {
-            float destinationX = v.x;
-            float destinationY = v.y;
+//            float destinationX = v.x;
+//            float destinationY = v.y;
 
             float spawnX = body.x + (body.width / 2);
             float spawnY = body.y + (body.height / 2);

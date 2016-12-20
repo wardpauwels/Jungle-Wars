@@ -21,10 +21,10 @@ public enum PowerType {
             return new MovementSpeedPower();
         }
     },
-    MISSLE_SPEED_POWER{
+    MISSILE_SPEED_POWER{
         @Override
         IPowerType getPower(){
-            return new MissleSpeedPower();
+            return new MissileSpeedPower();
         }
     },
     HITPOINTS_POWER{
