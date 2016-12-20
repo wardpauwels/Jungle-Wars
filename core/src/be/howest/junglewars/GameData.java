@@ -5,6 +5,7 @@ import be.howest.junglewars.gameobjects.Helper;
 import be.howest.junglewars.gameobjects.Missile;
 import be.howest.junglewars.gameobjects.Player;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
+import be.howest.junglewars.gameobjects.enemy.utils.Wall;
 import be.howest.junglewars.gameobjects.power.Power;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class GameData {
     private List<Missile> enemyMissiles;
     private List<Power> powers;
     private List<Currency> currencies;
+    private List<Wall> walls;
 
     public GameData() {
         players = new ArrayList<>();
@@ -31,6 +33,7 @@ public class GameData {
         enemyMissiles = new ArrayList<>();
         powers = new ArrayList<>();
         currencies = new ArrayList<>();
+        walls = new ArrayList<>();
     }
 
     public GameState getState() {
@@ -104,4 +107,7 @@ public class GameData {
     public void setCurrencies(List<Currency> currencies) {
         this.currencies = currencies;
     }
+
+    public List<Wall> getWalls(){return walls;}
+    public void setWalls(List<Wall> walls){this.walls = walls;}
 }

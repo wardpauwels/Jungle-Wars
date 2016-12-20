@@ -120,6 +120,7 @@ public class Player extends GameObject {
             if (topBorderTouch || bottomBorderTouch)
                 currentSpeed = normalizedSpeed;
             body.x = rightBorderTouch ? Gdx.graphics.getWidth() - body.getWidth() : body.x + currentSpeed;
+
         }
     }
     public boolean isSlowed(){

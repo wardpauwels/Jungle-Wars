@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Enemy extends GameObject {
-    private static final float WIDTH = 70;
-    private static final float HEIGHT = 80;
+    private float WIDTH;
+    private float HEIGHT;
     public static final float BULLET_WIDTH = 15;
     public static final float BULLET_HEIGHT = 15;
 
@@ -40,12 +40,21 @@ public class Enemy extends GameObject {
     private IChooseTargetType chooseMovementType;
     private IEnemyActionType enemyActionType;
 
-    public Enemy(GameScreen game, String name, String defaultSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
-                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT,
-                ThreadLocalRandom.current().nextInt(0 - Math.round(WIDTH), Gdx.graphics.getWidth() + Math.round(WIDTH)),
-                ThreadLocalRandom.current().nextBoolean() ? 0 - HEIGHT : Gdx.graphics.getHeight() + HEIGHT); // TODO: spawns only top or bottom now
+    private String defaultSprite;
+    public String altSprite;
 
+    private boolean spriteChanged;
+    private float timer;
+    private float time;
+    private float dabTimer;
+
+    public Enemy(GameScreen game, String name,float width,float height, String defaultSpriteUrl,String altSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
+                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType) {
+        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height,
+                ThreadLocalRandom.current().nextInt(0 - Math.round(width), Gdx.graphics.getWidth() + Math.round(width)),
+                ThreadLocalRandom.current().nextBoolean() ? 0 - height : Gdx.graphics.getHeight() + height); // TODO: spawns only top or bottom now
+        this.WIDTH=width;
+        this.HEIGHT=height;
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
@@ -57,10 +66,17 @@ public class Enemy extends GameObject {
         this.hitpoints = baseHitpoints;
         this.actionTime = baseAttackSpeed;
         this.actionTimer = 0;
+        this.spriteChanged = false;
+        this.time = 3f;
+        this.dabTimer = 2.5f;
+        this.timer = 0;
 
         this.chooseTargetType = chooseTargetType.getType();
         this.chooseMovementType = chooseMovementType.getType();
         this.enemyActionType = actionType.getAction();
+
+        this.defaultSprite = ATLAS_PREFIX + defaultSpriteUrl;
+        this.altSprite = ATLAS_PREFIX + altSpriteUrl;
     }
 
     @Override
@@ -78,12 +94,36 @@ public class Enemy extends GameObject {
 
             doEnemyAction(dt);
         }
+
+        if(timer<time && !spriteChanged){
+        timer += dt;
+        }
+        else {
+            spriteChanged = true;
+            timer = 0;
+        }
+        if (dabTimer < time && spriteChanged){
+            dabTimer += dt;
+        } else{
+            spriteChanged = false;
+            dabTimer = 2.5f;
+        }
+
+
+
     }
 
     @Override
     public void draw(SpriteBatch batch) {
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
+        if(!spriteChanged){
+            changeSprite(defaultSprite);
+        }
+        else{
+            changeSprite(altSprite);
+
+        }
     }
 
     public void hitBy(Missile missile, Player player) {
@@ -122,7 +162,12 @@ public class Enemy extends GameObject {
 
             enemyActionType.attack(this,v,spawnX,spawnY);
 
+
         }
+    }
+
+    public void changeSprite(String sprite){
+        changeSprite(game.atlas.createSprite(sprite));
     }
 
     public int getScoreWhenKilled() {
