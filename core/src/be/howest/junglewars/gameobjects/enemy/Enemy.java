@@ -1,9 +1,9 @@
 package be.howest.junglewars.gameobjects.enemy;
 
+import be.howest.junglewars.GameData;
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.Missile;
 import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Enemy extends GameObject {
+public class Enemy extends GameObject implements Cloneable{
     private static final float WIDTH = 70;
     private static final float HEIGHT = 80;
     public static final float BULLET_WIDTH = 15;
@@ -40,9 +40,9 @@ public class Enemy extends GameObject {
     private IChooseTargetType chooseMovementType;
     private IEnemyActionType enemyActionType;
 
-    public Enemy(GameScreen game, String name, String defaultSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
+    public Enemy(GameData data, String name, String defaultSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
                  float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT,
+        super(data, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT,
                 ThreadLocalRandom.current().nextInt(0 - Math.round(WIDTH), Gdx.graphics.getWidth() + Math.round(WIDTH)),
                 ThreadLocalRandom.current().nextBoolean() ? 0 - HEIGHT : Gdx.graphics.getHeight() + HEIGHT); // TODO: spawns only top or bottom now
 
@@ -69,7 +69,7 @@ public class Enemy extends GameObject {
         if (this.hitpoints <= 0) this.remove = true;
 
         targets = chooseMovementType.chooseTargets(this);
-        for(Vector2 v: targets) {
+        for (Vector2 v : targets) {
 
             float radians = MathUtils.atan2(v.y - body.y, v.x - body.x);
 
@@ -113,14 +113,14 @@ public class Enemy extends GameObject {
     private void attack() {
         targets = chooseTargetType.chooseTargets(this);
         if (targets == null) return;
-        for(Vector2 v: targets) {
+        for (Vector2 v : targets) {
             float destinationX = v.x;
             float destinationY = v.y;
 
             float spawnX = body.x + (body.width / 2);
             float spawnY = body.y + (body.height / 2);
 
-            enemyActionType.attack(this,v,spawnX,spawnY);
+            enemyActionType.attack(this, v, spawnX, spawnY);
 
         }
     }

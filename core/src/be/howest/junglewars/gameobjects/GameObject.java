@@ -1,6 +1,8 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.GameData;
 import be.howest.junglewars.screens.*;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 
@@ -9,17 +11,19 @@ import java.util.*;
 
 public abstract class GameObject implements Serializable {
 
+    public String defaultSpriteUrl;
     protected final Sprite DEFAULT_SPRITE;
-    public GameScreen game;
+    public GameData data;
     public boolean remove = false;
     protected Rectangle body; // has: .width, .height, .overlaps(), .x, .y
     protected float speed = 0;
     protected Sprite activeSprite;
 
-    protected GameObject(GameScreen game, String defaultSpriteUrl, float width, float height, float x, float y) {
-        this.game = game;
+    protected GameObject(GameData data, String defaultSpriteUrl, float width, float height, float x, float y) {
+        this.defaultSpriteUrl = defaultSpriteUrl;
+        this.data = data;
         body = initBody(width, height, x, y);
-        DEFAULT_SPRITE = game.atlas.createSprite(defaultSpriteUrl);
+        DEFAULT_SPRITE = data.getGame().atlas.createSprite(defaultSpriteUrl);
         changeSprite(DEFAULT_SPRITE);
     }
 

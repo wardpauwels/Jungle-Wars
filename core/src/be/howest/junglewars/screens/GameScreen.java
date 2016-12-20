@@ -1,29 +1,18 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.*;
 import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.GameData;
 import be.howest.junglewars.GameState;
 import be.howest.junglewars.JungleWars;
 import be.howest.junglewars.gameobjects.Currency;
-import be.howest.junglewars.gameobjects.*;
-import be.howest.junglewars.gameobjects.enemy.*;
-import be.howest.junglewars.gameobjects.power.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.*;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.viewport.*;
-import be.howest.junglewars.gameobjects.Helper;
 import be.howest.junglewars.gameobjects.Missile;
 import be.howest.junglewars.gameobjects.Player;
 import be.howest.junglewars.gameobjects.enemy.ChooseTargetType;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.gameobjects.enemy.EnemyActionType;
-import be.howest.junglewars.gameobjects.enemy.chooseTarget.impl.NearestPlayer;
 import be.howest.junglewars.gameobjects.power.Power;
 import be.howest.junglewars.gameobjects.power.PowerType;
+import be.howest.junglewars.spawners.SpawnerManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -35,9 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import java.util.*;
-import java.util.List;
 
 public class GameScreen extends Stage implements Screen {
 
@@ -59,17 +45,21 @@ public class GameScreen extends Stage implements Screen {
     private boolean isGameOver;
     private String playerName;
 
+    private SpawnerManager spawnerManager;
+
     //endregion
 
     public GameScreen(JungleWars game, int wave, Difficulty difficulty, String name) {
         super(new ScreenViewport(), game.batch);
-        data = new GameData();
+        data = new GameData(game);
         this.stage = this;
         this.game = game;
         this.atlas = game.atlas;
         this.skin = game.skin;
         this.isGameOver = false;
         this.playerName = name;
+
+        spawnerManager = new SpawnerManager(data);
 
         data.setWave(wave);
         data.setDifficulty(difficulty);
@@ -90,11 +80,11 @@ public class GameScreen extends Stage implements Screen {
         bigFont = generator.generateFont(parameter);
         generator.dispose();
 
-        data.getPlayers().add(new Player(this, name, "harambe"));
+        data.getPlayers().add(new Player(data, name, "harambe"));
 
         startingEnemies = 1;
         multiplierEnemies = 0.5f;
-        spawnEnemies(false);
+//        spawnEnemies(false);
     }
 
     private void checkGameOver() {
@@ -135,7 +125,7 @@ public class GameScreen extends Stage implements Screen {
         if (data.getEnemies().size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
             for (int i = 0; i < amountEnemies; i++) {
-                data.getEnemies().add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.STABBING));
+                data.getEnemies().add(new Enemy(data, "Zookeeper", "zookeeper", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.STABBING));
             }
             if (nextWave) data.setWave(data.getWave() + 1);
         }
@@ -144,19 +134,19 @@ public class GameScreen extends Stage implements Screen {
     private void spawnCurrencies() {
         int maxCurrenciesOnField = 2;
         if (data.getCurrencies().size() < maxCurrenciesOnField) {
-            data.getCurrencies().add(new Currency(this, 5, "coin"));
+            data.getCurrencies().add(new Currency(data, 5, "coin"));
         }
     }
 
     private void spawnPowers() {
         int maxPowersOnField = 5;
         if (data.getPowers().size() < maxPowersOnField) {
-            data.getPowers().add(new Power(this, "Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40));
-            data.getPowers().add(new Power(this, "Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));
-            data.getPowers().add(new Power(this, "Attack Speed", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40));
-            data.getPowers().add(new Power(this, "Missle Speed", "misslespeed", 5, 10, PowerType.MISSLE_SPEED_POWER, 40));
-            data.getPowers().add(new Power(this, "HP bonus", "HP", 5, 1, PowerType.HITPOINTS_POWER, 100));
-            data.getPowers().add(new Power(this, "Armor Bonus", "armor", 5, 10, PowerType.ARMOR_POWER, 20));
+            data.getPowers().add(new Power(data, "Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40));
+            data.getPowers().add(new Power(data, "Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));
+            data.getPowers().add(new Power(data, "Attack Speed", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40));
+            data.getPowers().add(new Power(data, "Missle Speed", "misslespeed", 5, 10, PowerType.MISSLE_SPEED_POWER, 40));
+            data.getPowers().add(new Power(data, "HP bonus", "HP", 5, 1, PowerType.HITPOINTS_POWER, 100));
+            data.getPowers().add(new Power(data, "Armor Bonus", "armor", 5, 10, PowerType.ARMOR_POWER, 20));
         }
     }
 
@@ -172,7 +162,9 @@ public class GameScreen extends Stage implements Screen {
     }
 
     private void updateRunning(float dt) {
-        spawnEnemies(true);
+//        spawnEnemies(true);
+
+        spawnerManager.manageAllSpawners();
         spawnCurrencies();
         spawnPowers();
 
@@ -411,7 +403,7 @@ public class GameScreen extends Stage implements Screen {
     public void dispose() {
     }
 
-    public GameData getData(){
+    public GameData getData() {
         return data;
     }
 

@@ -1,5 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.GameData;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -18,7 +19,7 @@ public class Missile extends GameObject {
 
     private IMissileType effect;
 
-    public Missile(GameScreen game, float width, float height, float spawnX, float spawnY, float destinationX, float destinationY, String defaultSpriteUrl, int damage, int speed,
+    public Missile(GameData game, float width, float height, float spawnX, float spawnY, float destinationX, float destinationY, String defaultSpriteUrl, int damage, int speed,
                    int rotationSpeed, float lifeTime, MissileType effect) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, spawnX, spawnY);
 
@@ -60,6 +61,6 @@ public class Missile extends GameObject {
     }
 
     public void doEffect(Player p){
-        effect.doEffect(game,p);
+        effect.doEffect(data,p);
     }
 }

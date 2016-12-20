@@ -46,4 +46,16 @@ public class SpawnerManager {
     public GameData getData() {
         return data;
     }
+
+    public EnemySpawner getEnemySpawner() {
+        return enemySpawner;
+    }
+
+    public PowerSpawner getPowerSpawner() {
+        return powerSpawner;
+    }
+
+    public CurrencySpawner getCurrencySpawner() {
+        return currencySpawner;
+    }
 }

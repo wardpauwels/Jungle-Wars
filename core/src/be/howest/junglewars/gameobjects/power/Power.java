@@ -1,5 +1,6 @@
 package be.howest.junglewars.gameobjects.power;
 
+import be.howest.junglewars.GameData;
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.Player;
 import be.howest.junglewars.screens.GameScreen;
@@ -14,7 +15,7 @@ public class Power extends GameObject {
     private static final float HEIGHT = 30;
 
     private static final String ATLAS_PREFIX = "power/";
-    private final Sprite HIDDEN_SPRITE = game.atlas.createSprite(ATLAS_PREFIX + "hidden");
+    private final Sprite HIDDEN_SPRITE = data.getGame().atlas.createSprite(ATLAS_PREFIX + "hidden");
 
     private String name;
 
@@ -36,8 +37,8 @@ public class Power extends GameObject {
     private Player owner;
     private IPowerType powerType;
 
-    public Power(GameScreen game, String name, String defaultSpriteUrl, float lifeTime, float activeTime, PowerType powerType, float percentage) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl + "_down", WIDTH, HEIGHT, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
+    public Power(GameData data, String name, String defaultSpriteUrl, float lifeTime, float activeTime, PowerType powerType, float percentage) {
+        super(data, ATLAS_PREFIX + defaultSpriteUrl + "_down", WIDTH, HEIGHT, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
 
         this.lifeTime = lifeTime;
         this.activeTime = activeTime;
@@ -47,7 +48,7 @@ public class Power extends GameObject {
 
         } else if (isPowerUp()) {
             defaultSpriteUrl = defaultSpriteUrl + "_up";
-            changeSprite(game.atlas.createSprite(ATLAS_PREFIX + defaultSpriteUrl));
+            changeSprite(data.getGame().atlas.createSprite(ATLAS_PREFIX + defaultSpriteUrl));
         }
         this.name = name;
         this.bonusPercentage = isHidden ? percentage / 50 : percentage / 100;

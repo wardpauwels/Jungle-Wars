@@ -14,5 +14,7 @@ public class CurrencySpawner implements ISpawner {
     @Override
     public void spawnNext() {
 
+
+
     }
 }

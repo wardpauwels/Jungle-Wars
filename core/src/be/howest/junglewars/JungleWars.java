@@ -12,7 +12,6 @@ public class JungleWars extends Game {
     public SpriteBatch batch;
     public TextureAtlas atlas;
     public Skin skin;
-    GameScreen mainGameScreen;
     private FPSLogger fpsLogger;
     private Preferences savePrefs;
 

@@ -1,5 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.GameData;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,7 +21,7 @@ public class Helper extends GameObject {
     private float shootTime;
     private float shootTimer;
 
-    public Helper(GameScreen game, String name, Player owner, String defaultSpriteUrl) {
+    public Helper(GameData game, String name, Player owner, String defaultSpriteUrl) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, owner.body.x - 1.5f * WIDTH, owner.body.y + 1.5f * HEIGHT);
 
         this.owner = owner;
@@ -49,12 +50,12 @@ public class Helper extends GameObject {
         float spawnY = body.y + (body.height / 2);
 
         owner.getMissiles().add(
-                new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 15, 800, 30, 1.5f,MissileType.TEAR)
+                new Missile(data, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 15, 800, 30, 1.5f,MissileType.TEAR)
         );
     }
 
     private Enemy chooseTarget() {
-        return getNearest(game.getData().getEnemies());
+        return getNearest(data.getEnemies());
     }
 
     private Vector2 leftTopOfOwnerPosition(float dt) {

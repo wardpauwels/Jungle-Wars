@@ -1,5 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.GameData;
 import be.howest.junglewars.gameobjects.power.*;
 import be.howest.junglewars.screens.*;
 import com.badlogic.gdx.*;
@@ -14,7 +15,7 @@ public class Player extends GameObject {
     private static final float BULLET_HEIGHT = 25;
 
     private static final String ATLAS_PREFIX = "player/";
-    private final Sprite SHOOTING_SPRITE = game.atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
+    private final Sprite SHOOTING_SPRITE = data.getGame().atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
 
     private boolean isLookingLeft;
 
@@ -48,7 +49,7 @@ public class Player extends GameObject {
     public float timer;
 
 
-    public Player(GameScreen game, String name, String defaultSpriteUrl) {
+    public Player(GameData game, String name, String defaultSpriteUrl) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2);
 
         this.name = name;
@@ -141,7 +142,7 @@ public class Player extends GameObject {
         float spawnY = body.y + body.getHeight() - 10;
 
         missiles.add(
-                new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3,MissileType.STANDARD)
+                new Missile(data, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3,MissileType.STANDARD)
         );
     }
 
