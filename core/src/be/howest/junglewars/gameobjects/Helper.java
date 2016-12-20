@@ -1,8 +1,10 @@
 package be.howest.junglewars.gameobjects;
 
 import be.howest.junglewars.gameobjects.enemy.Enemy;
+import be.howest.junglewars.gameobjects.enemy.chooseTarget.impl.NearestPlayer;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 // TODO: should be upgradable
@@ -16,6 +18,8 @@ public class Helper extends GameObject {
 
     private Player owner;
     private String name;
+
+    private int speed;
 
     private float shootTime;
     private float shootTimer;
@@ -57,13 +61,23 @@ public class Helper extends GameObject {
         return getNearest(game.getData().getEnemies());
     }
 
-    private Vector2 leftTopOfOwnerPosition(float dt) {
-        return new Vector2(owner.body.x - 1.5f * body.width, owner.body.y + 1.5f * body.height);
+
+    private Vector2 followOwner(float dt){
+
+        this.speed = Math.round(owner.getSpeed() *0.85f);
+
+        float radians = MathUtils.atan2((owner.getBody().getY() +50) - body.y, (owner.getBody().getX()-25) - body.x);
+
+        return new Vector2(body.x += MathUtils.cos(radians) * speed * dt, body.y += MathUtils.sin(radians) * speed * dt);
     }
+
+
 
     @Override
     public void update(float dt) {
-        body.setPosition(leftTopOfOwnerPosition(dt));
+
+
+        body.setPosition(followOwner(dt));
         doHelperAction(dt);
     }
 
