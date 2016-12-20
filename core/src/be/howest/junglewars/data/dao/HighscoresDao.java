@@ -6,16 +6,16 @@ import org.hibernate.*;
 
 import java.util.*;
 
-public class EnemyDao {
+public class HighscoresDao {
 
-    public static List<EnemyEntity> getAllEnemies() {
+    public static List<HighscoreEntity> getAllHighscores() {
         Session session = HibernateUtil.createSession();
-        List<EnemyEntity> entities = new LinkedList<>();
+        List<HighscoreEntity> entities = new LinkedList<>();
 
         try {
             session.beginTransaction();
             //entities = session.createQuery("from EnemyEntity").list(); //fixme: do this after implementing all enemies from database
-            entities = session.createQuery("from EnemyEntity where id=1").list();
+            entities = session.createQuery( "from EnemyEntity where id=1" ).list();
             session.getTransaction().commit();
         } catch (HibernateException e) {
             if (session.getTransaction() != null) {

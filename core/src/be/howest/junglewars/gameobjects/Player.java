@@ -1,5 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.data.entities.*;
 import be.howest.junglewars.gameobjects.power.*;
 import be.howest.junglewars.screens.*;
 import com.badlogic.gdx.*;
@@ -15,22 +16,19 @@ public class Player extends GameObject {
 
     private static final String ATLAS_PREFIX = "player/";
     private final Sprite SHOOTING_SPRITE = game.atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
-
+    public float timer;
     private boolean isLookingLeft;
-
     private boolean isShooting;
     private float shootingAnimationTime;
     private float shootingAnimationTimer;
-
     private float shootTime;
     private float shootTimer;
     private boolean canShoot;
-
     private Helper helper;
     private ArrayList<Missile> missiles;
     private ArrayList<Power> powers;
-
     private String name;
+    private long id;
     private int hitpoints;
     private float speed;
     private float attackSpeed;
@@ -40,18 +38,19 @@ public class Player extends GameObject {
     private int score = 0;
     private int collectedCoins = 0;
     private int damage;
-
     private int missleSpeed = 500;
     private float armor = 0f;
-
     private float baseSpeed;
-    public float timer;
 
+    public Player(GameScreen game, String defaultSpriteUrl, PlayerEntity entity) {
+        this( game, entity.getName(), entity.getId(), defaultSpriteUrl );
+    }
 
-    public Player(GameScreen game, String name, String defaultSpriteUrl) {
+    public Player(GameScreen game, String name, long id, String defaultSpriteUrl) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2);
 
         this.name = name;
+        this.id = id;
 
         missiles = new ArrayList<>();
         powers = new ArrayList<>();
@@ -272,6 +271,10 @@ public class Player extends GameObject {
         return hitpoints;
     }
 
+    public void setHitpoints(int hitpoints) {
+        this.hitpoints = hitpoints;
+    }
+
     public ArrayList<Power> getPowers() {
         return powers;
     }
@@ -320,15 +323,15 @@ public class Player extends GameObject {
 
     public void setMissleSpeed(int missleSpeed){ this.missleSpeed = missleSpeed;}
 
-    public void setHitpoints(int hitpoints) {
-        this.hitpoints = hitpoints;
-    }
-
     public float getArmor() {
         return armor;
     }
 
     public void setArmor(float armor) {
         this.armor = armor;
+    }
+
+    public long getId() {
+        return id;
     }
 }
