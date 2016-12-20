@@ -1,23 +1,16 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.JungleWars;
-import be.howest.junglewars.util.Assets;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import be.howest.junglewars.*;
+import be.howest.junglewars.util.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.*;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.viewport.*;
 
 public class MainMenuScreen extends Stage implements Screen {
     private final JungleWars game;
@@ -40,6 +33,7 @@ public class MainMenuScreen extends Stage implements Screen {
     private TextButton settingsButton;
     private TextButton creditsButton;
     private TextButton quitButton;
+    private TextField nameInputfield;
 
     private float buttonWidth = 200;
     private float padBottom = 30;
@@ -60,6 +54,7 @@ public class MainMenuScreen extends Stage implements Screen {
 
         music = Gdx.audio.newMusic(Gdx.files.internal(Assets.MENU_SONG));
         music.setLooping(true);
+        music.setVolume(0.3f);
         music.play();
 
         // create full screen background
@@ -110,7 +105,7 @@ public class MainMenuScreen extends Stage implements Screen {
                     protected void result(Object object) {
                         switch (String.valueOf(object)) {
                             case "single":
-                                game.setScreen(new GameScreen(game, 1, Difficulty.EASY));
+                                makeNameInputDialog();
                                 break;
                             case "multi":
                                 this.hide();
@@ -139,16 +134,72 @@ public class MainMenuScreen extends Stage implements Screen {
         });
 
         settingsButton.addListener(new ClickListener() {
+
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Table settingsTable = new Table(skin);
+                settingsTable.align(Align.center | Align.top);
+                Slider sliderMusic = new Slider(0, 100, 1, false, skin);
+                TextButton buttonClose = new TextButton("Close", skin);
+                sliderMusic.setValue(music.getVolume() * 100);
 
+                Dialog d = new Dialog("Settings", skin);
+                d.add(settingsTable);
+                settingsTable.add("Music volume: ");
+                settingsTable.add(sliderMusic);
+                settingsTable.row();
+                settingsTable.add("Up: ");
+                settingsTable.add(new TextField("", skin));
+                settingsTable.row();
+                settingsTable.add("Down: ");
+                settingsTable.add(new TextField("", skin));
+                settingsTable.row();
+                settingsTable.add("Left: ");
+                settingsTable.add(new TextField("", skin));
+                settingsTable.row();
+                settingsTable.add("Right: ");
+                settingsTable.add(new TextField("", skin));
+                settingsTable.row();
+                settingsTable.add(buttonClose);
+                d.show(stage);
+                d.setWidth(500);
+                d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+                d.show(stage);
+
+                buttonClose.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        d.hide();
+                    }
+                });
+                sliderMusic.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        music.setVolume(sliderMusic.getValue() / 100);
+                    }
+                });
             }
         });
 
         creditsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                TextButton closeButton = new TextButton("Close", skin);
+                Dialog d = new Dialog("Credits", skin);
 
+                d.add("stront \n stront stront\n");
+                d.add(closeButton);
+
+                d.setWidth(500);
+                d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+                d.show(stage);
+
+                closeButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        d.hide();
+                    }
+                });
             }
         });
 
@@ -175,8 +226,10 @@ public class MainMenuScreen extends Stage implements Screen {
                         }
                     }
                 };
-                d.show(stage).setWidth(500);
+                d.setWidth(500);
                 d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+
+                d.show(stage);
             }
         });
         Gdx.input.setInputProcessor(stage);
@@ -203,7 +256,7 @@ public class MainMenuScreen extends Stage implements Screen {
 
     @Override
     public void resize(int i, int i1) {
-
+        System.out.println("Resized");
     }
 
     @Override
@@ -222,5 +275,32 @@ public class MainMenuScreen extends Stage implements Screen {
 
     @Override
     public void dispose() {
+        super.dispose();
+        music.dispose();
+    }
+
+    public void makeNameInputDialog() {
+        nameInputfield = new TextField("", skin);
+        TextButton enterButton = new TextButton("Enter", skin);
+        Table nameTable = new Table(skin);
+        nameTable.align(Align.center | Align.top);
+
+        Dialog d = new Dialog("Enter your name", skin);
+        d.add(nameTable);
+        nameTable.add("Please enter your player's name");
+        nameTable.row();
+        nameTable.add(nameInputfield);
+        nameTable.row();
+        nameTable.add(enterButton);
+        d.show(stage).setWidth(500);
+        d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+
+        enterButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                dispose();
+                game.setScreen(new GameScreen(game, 1, Difficulty.EASY, nameInputfield.getText()));
+            }
+        });
     }
 }

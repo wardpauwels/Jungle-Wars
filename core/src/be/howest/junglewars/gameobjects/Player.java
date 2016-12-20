@@ -40,8 +40,13 @@ public class Player extends GameObject {
     private int score = 0;
     private int collectedCoins = 0;
     private int damage;
+
     private int missleSpeed = 500;
     private float armor = 0f;
+
+    private float baseSpeed;
+    public float timer;
+
 
     public Player(GameScreen game, String name, String defaultSpriteUrl) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2);
@@ -60,6 +65,8 @@ public class Player extends GameObject {
         this.shootingAnimationTimer = 0;
 
         this.speed = 300;
+        this.baseSpeed = speed;
+
         this.attackSpeed = 300;
         this.hitpoints = 100;
         this.damage = 10;
@@ -115,6 +122,14 @@ public class Player extends GameObject {
             body.x = rightBorderTouch ? Gdx.graphics.getWidth() - body.getWidth() : body.x + currentSpeed;
         }
     }
+    public boolean isSlowed(){
+        if(speed<baseSpeed){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
     private void shoot(float destinationX, float destinationY) {
         canShoot = false;
@@ -126,7 +141,7 @@ public class Player extends GameObject {
         float spawnY = body.y + body.getHeight() - 10;
 
         missiles.add(
-                new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, missleSpeed, -10, 3)
+                new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3,MissileType.STANDARD)
         );
     }
 
@@ -151,6 +166,13 @@ public class Player extends GameObject {
         handleInput(dt);
 
         shootTime = calcShootTime();
+        if(timer>0){
+            timer -= dt;
+            if (timer<=0){
+                speed = baseSpeed;
+            }
+        }
+
 
         if (shootTimer > shootTime) {
             canShoot = true;

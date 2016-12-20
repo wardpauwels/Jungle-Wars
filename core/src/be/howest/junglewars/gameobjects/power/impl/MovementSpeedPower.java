@@ -1,7 +1,6 @@
 package be.howest.junglewars.gameobjects.power.impl;
 
-import be.howest.junglewars.gameobjects.power.IPowerType;
-import be.howest.junglewars.gameobjects.power.Power;
+import be.howest.junglewars.gameobjects.power.*;
 
 public class MovementSpeedPower implements IPowerType {
 
