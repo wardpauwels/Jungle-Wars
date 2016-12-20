@@ -1,6 +1,7 @@
 package be.howest.junglewars.gameobjects.enemy;
 
 import be.howest.junglewars.GameData;
+import be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.Missile;
 import be.howest.junglewars.gameobjects.Player;
@@ -12,7 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Enemy extends GameObject implements Cloneable{
+public class Enemy extends GameObject {
     private static final float WIDTH = 70;
     private static final float HEIGHT = 80;
     public static final float BULLET_WIDTH = 15;
@@ -20,16 +21,20 @@ public class Enemy extends GameObject implements Cloneable{
 
     private static final String ATLAS_PREFIX = "enemy/";
 
+    private EnemyActionType enemyAction;
+    private ChooseTargetType chooseMovement;
+    private ChooseTargetType chooseTarget;
+
     private String name;
 
-    private int damage;
-    private int hitpoints;
-    private int speed;
+    private int baseDamage;
+    private int baseHitpoints;
+    private int baseSpeed;
 
     private float actionTime;
     private float actionTimer;
 
-    private int spawnChance;
+    private int spawnProbability;
 
     private int scoreWhenKilled;
     private int experienceWhenKilled;
@@ -40,8 +45,26 @@ public class Enemy extends GameObject implements Cloneable{
     private IChooseTargetType chooseMovementType;
     private IEnemyActionType enemyActionType;
 
+    public Enemy(GameData data, EnemyEntity e) {
+        this(
+                data,
+                e.getName(),
+                e.getDefaultSpriteUrl(),
+                e.getBaseDamage(),
+                e.getBaseSpeed(),
+                e.getBaseHitpoints(),
+                e.getBaseAttackSpeed(),
+                e.getExperienceWhenKilled(),
+                e.getScoreWhenKilled(),
+                e.getSpawnProbability(),
+                ChooseTargetType.valueOf(e.getTargetSelectionType()),
+                ChooseTargetType.valueOf(e.getMovementType()),
+                EnemyActionType.valueOf(e.getAttackType())
+        );
+    }
+
     public Enemy(GameData data, String name, String defaultSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
-                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType) {
+                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnProbability, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType) {
         super(data, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT,
                 ThreadLocalRandom.current().nextInt(0 - Math.round(WIDTH), Gdx.graphics.getWidth() + Math.round(WIDTH)),
                 ThreadLocalRandom.current().nextBoolean() ? 0 - HEIGHT : Gdx.graphics.getHeight() + HEIGHT); // TODO: spawns only top or bottom now
@@ -49,32 +72,35 @@ public class Enemy extends GameObject implements Cloneable{
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
-        this.spawnChance = spawnChance;
+        this.spawnProbability = spawnProbability;
 
         // TODO: calculate stats based by game level and difficulty
-        this.damage = baseDamage;
-        this.speed = baseSpeed;
-        this.hitpoints = baseHitpoints;
+        this.baseDamage = baseDamage;
+        this.baseSpeed = baseSpeed;
+        this.baseHitpoints = baseHitpoints;
         this.actionTime = baseAttackSpeed;
         this.actionTimer = 0;
 
+        this.chooseTarget = chooseTargetType;
         this.chooseTargetType = chooseTargetType.getType();
+        this.chooseMovement = chooseMovementType;
         this.chooseMovementType = chooseMovementType.getType();
+        this.enemyAction = actionType;
         this.enemyActionType = actionType.getAction();
     }
 
     @Override
     public void update(float dt) {
 
-        if (this.hitpoints <= 0) this.remove = true;
+        if (this.baseHitpoints <= 0) this.remove = true;
 
         targets = chooseMovementType.chooseTargets(this);
         for (Vector2 v : targets) {
 
             float radians = MathUtils.atan2(v.y - body.y, v.x - body.x);
 
-            body.x += MathUtils.cos(radians) * speed * dt;
-            body.y += MathUtils.sin(radians) * speed * dt;
+            body.x += MathUtils.cos(radians) * baseSpeed * dt;
+            body.y += MathUtils.sin(radians) * baseSpeed * dt;
 
             doEnemyAction(dt);
         }
@@ -97,8 +123,8 @@ public class Enemy extends GameObject implements Cloneable{
     }
 
     public int catchDamage(int dmg) {
-        this.hitpoints -= dmg;
-        return hitpoints;
+        this.baseHitpoints -= dmg;
+        return baseHitpoints;
     }
 
 
@@ -133,15 +159,15 @@ public class Enemy extends GameObject implements Cloneable{
         return experienceWhenKilled;
     }
 
-    public int getSpawnChance() {
-        return spawnChance;
+    public int getSpawnProbability() {
+        return spawnProbability;
     }
 
-    public int getDamage() {
-        return damage;
+    public int getBaseDamage() {
+        return baseDamage;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
+    public void setBaseDamage(int baseDamage) {
+        this.baseDamage = baseDamage;
     }
 }

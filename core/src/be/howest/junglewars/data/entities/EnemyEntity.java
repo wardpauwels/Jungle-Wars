@@ -53,6 +53,9 @@ public class EnemyEntity {
 
     @Column(name = "attack_type")
     private String attackType;
+
+    @Column(name = "default_sprite_url")
+    private String defaultSpriteUrl;
     //endregion
 
     //region Getters/Setters
@@ -175,6 +178,15 @@ public class EnemyEntity {
     public void setAttackType(String attackType) {
         this.attackType = attackType;
     }
+
+    public String getDefaultSpriteUrl() {
+        return defaultSpriteUrl;
+    }
+
+    public void setDefaultSpriteUrl(String defaultSpriteUrl) {
+        this.defaultSpriteUrl = defaultSpriteUrl;
+    }
+
     //endregion
 
 }
