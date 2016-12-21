@@ -14,7 +14,7 @@ public class CoincollectingMovement implements IHelperMovementType {
         for(Currency coin : helper.checkCollision(helper.game.getData().getCurrencies())){
             coin.collectedBy(helper.getOwner());
         }
-        float speed = Math.round(helper.getOwner().getSpeed() *0.55f);
+        float speed = 160;
         float radians = MathUtils.atan2(helper.getNearest(helper.game.getData().getCurrencies()).getPosition().y - helper.getBody().y, helper.getNearest(helper.game.getData().getCurrencies()).getPosition().x - helper.getBody().x);
         return new Vector2(helper.getBody().x += MathUtils.cos(radians) * speed * dt, helper.getBody().y += MathUtils.sin(radians) * speed * dt);
     }
