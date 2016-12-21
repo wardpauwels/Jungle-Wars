@@ -1,9 +1,6 @@
 package be.howest.junglewars.gameobjects.enemy;
 
-import be.howest.junglewars.gameobjects.enemy.chooseTarget.impl.AllPlayers;
-import be.howest.junglewars.gameobjects.enemy.chooseTarget.impl.NearestPlayer;
-import be.howest.junglewars.gameobjects.enemy.chooseTarget.impl.RandomPlayer;
-import be.howest.junglewars.gameobjects.enemy.chooseTarget.impl.RandomSpot;
+import be.howest.junglewars.gameobjects.enemy.chooseTarget.impl.*;
 
 /**
  * Created by jensthiel on 19/12/16.
@@ -33,7 +30,6 @@ public enum ChooseTargetType {
         IChooseTargetType getType() {
             return new RandomSpot();
         }
-    };
     },
     STARTING_ON_ENEMY{
         @Override
