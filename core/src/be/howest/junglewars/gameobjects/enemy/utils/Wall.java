@@ -36,7 +36,7 @@ public class Wall {
 
     public void DrawWall(){
         for(int i = 0; i < length; i = i+1){
-            Brick b = new Brick (g,20,10,start.x+curveX*i,start.y+curveY*i);
+            Brick b = new Brick (g,25,25,start.x+curveX*i,start.y+curveY*i);
             wall.add(b);
 
 
