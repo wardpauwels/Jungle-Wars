@@ -92,12 +92,15 @@ public class JungleWars extends Game {
             public void onError(GDXFacebookError error) {
                 // Error handling
                 System.out.println( "Login Error: no user login() error" );
+                System.out.println( error );
             }
 
             @Override
             public void onCancel() {
                 // When the user cancels the login process
                 System.out.println( "login() cancel" );
+                player = new PlayerEntity( "Guest", 1 );
+
             }
 
             @Override
