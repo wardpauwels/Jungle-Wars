@@ -7,11 +7,7 @@ import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.sun.deploy.config.VerboseDefaultConfig;
-import sun.util.resources.cldr.ebu.CurrencyNames_ebu;
 
-import java.util.ArrayList;
-import java.util.List;
 
 // TODO: should be upgradable
 public class Helper extends GameObject {
@@ -30,6 +26,8 @@ public class Helper extends GameObject {
     private float shootTime;
     private float shootTimer;
 
+    private double angle;
+
     public Helper(GameScreen game, String name, Player owner, String defaultSpriteUrl) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, owner.body.x - 1.5f * WIDTH, owner.body.y + 1.5f * HEIGHT);
 
@@ -38,6 +36,8 @@ public class Helper extends GameObject {
 
         shootTime = 2;
         shootTimer = 0;
+
+        angle = 0;
     }
 
     private void doHelperAction(float dt) {
@@ -68,7 +68,7 @@ public class Helper extends GameObject {
 
 
     private Vector2 followOwner(float dt){
-        this.speed = Math.round(owner.getSpeed() *1f); // TODO Terug naar 0.85f --  ROBERT
+        this.speed = Math.round(owner.getSpeed() *0.85f);
         float radians = MathUtils.atan2((owner.getBody().getY() +50) - body.y, (owner.getBody().getX()-25) - body.x);
         return new Vector2(body.x += MathUtils.cos(radians) * speed * dt, body.y += MathUtils.sin(radians) * speed * dt);
     }
@@ -83,7 +83,7 @@ public class Helper extends GameObject {
         }
 
 
-        this.speed = Math.round(owner.getSpeed() *0.55f); // 0.55 van de player speed
+        this.speed = Math.round(owner.getSpeed() *0.55f);
         float radians = MathUtils.atan2(game.getData().getCurrencies().get(0).getPosition().y - body.y, game.getData().getCurrencies().get(0).getPosition().x - body.x);
         return new Vector2(body.x += MathUtils.cos(radians) * speed * dt, body.y += MathUtils.sin(radians) * speed * dt);
     }
@@ -94,26 +94,21 @@ public class Helper extends GameObject {
         }
 
 
-        this.speed = Math.round(owner.getSpeed() *0.55f); // 0.55 van de player speed
+        this.speed = Math.round(owner.getSpeed() *0.55f);
         float radians = MathUtils.atan2(game.getData().getPowers().get(0).getPosition().y - body.y, game.getData().getPowers().get(0).getPosition().x - body.x);
         return new Vector2(body.x += MathUtils.cos(radians) * speed * dt, body.y += MathUtils.sin(radians) * speed * dt);
     }
 
+
+
     private Vector2 rotateAroundOwner(float dt){
-        float ownerx = owner.getBody().getX();
-        float ownery = owner.getBody().getY();
-        float helperx = ownerx + 20;
-        float helpery = ownery + 20;
-        float r = 2;
-        float theta = Math.round(Math.atan(helperx/helpery));
-        helperx = Math.round(r * Math.cos(theta)+owner.getBody().getX());
-        helpery = Math.round(r * Math.sin(theta )+owner.getBody().getY());
+        angle += dt;
+        angle = (Math.PI/180) + angle;
 
-        System.out.println(helperx*10);
-        System.out.println(ownerx);
+        float rotatedX = (float) (getOwner().getBody().getX()+ (owner.getBody().getWidth()/5)  + Math.cos(angle) * 100f);
+        float rotatedY = (float) (getOwner().getBody().getY() + (owner.getBody().getHeight() /5)+ Math.sin(angle) * 100f);
 
-
-        return new Vector2(helperx,helpery);
+        return new Vector2(rotatedX, rotatedY);
     }
 
 
