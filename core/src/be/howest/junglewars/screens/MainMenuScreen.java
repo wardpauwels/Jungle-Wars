@@ -1,6 +1,8 @@
 package be.howest.junglewars.screens;
 
 import be.howest.junglewars.*;
+import be.howest.junglewars.data.da.*;
+import be.howest.junglewars.data.entities.*;
 import be.howest.junglewars.util.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.*;
@@ -34,6 +36,9 @@ public class MainMenuScreen extends Stage implements Screen {
     private TextButton creditsButton;
     private TextButton quitButton;
     private TextField nameInputfield;
+
+    private TextButton facebookLoginButton;
+    private TextButton guestLoginButton;
 
     private float buttonWidth = 200;
     private float padBottom = 30;
@@ -105,7 +110,7 @@ public class MainMenuScreen extends Stage implements Screen {
                     protected void result(Object object) {
                         switch (String.valueOf(object)) {
                             case "single":
-                                makeNameInputDialog();
+                                makeLoginDialog();
                                 break;
                             case "multi":
                                 this.hide();
@@ -113,14 +118,7 @@ public class MainMenuScreen extends Stage implements Screen {
                         }
                     }
                 };
-                Button closeButton = new Button(skin, "close");
-                closeButton.addListener(new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent event, Actor actor) {
-                        d.hide();
-                    }
-                });
-                d.getTitleTable().add(closeButton);
+                makeSmallCloseDialogButton( d );
                 d.show(stage).setWidth(500);
                 d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
             }
@@ -129,7 +127,36 @@ public class MainMenuScreen extends Stage implements Screen {
         leaderBoardButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Table highscoresTable = new Table( skin );
+                highscoresTable.align( Align.center | Align.top );
+                TextButton buttonClose = new TextButton( "Close", skin );
 
+                Dialog d = new Dialog( "Leaderboard", skin );
+
+                highscoresTable.add( "Name" ).pad( 10 );
+                highscoresTable.add( "Score" ).pad( 10 );
+                highscoresTable.add( "Date" ).pad( 10 );
+                highscoresTable.row();
+
+                java.util.List<HighscoreEntity> highscores = HighscoreDA.getInstance().getHighscores( 10 );
+                for (HighscoreEntity highscore : highscores) {
+                    highscoresTable.add( "" + highscore.getPlayer().getName() ).pad( 10 );
+                    highscoresTable.add( "" + highscore.getScore() ).pad( 10 );
+                    highscoresTable.add( "" + highscore.getDate() ).pad( 10 );
+                    highscoresTable.row();
+                }
+
+                highscoresTable.add( buttonClose );
+                d.add( highscoresTable );
+                makeSmallCloseDialogButton( d );
+                d.show( stage );
+
+                buttonClose.addListener( new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        d.hide();
+                    }
+                } );
             }
         });
 
@@ -162,8 +189,8 @@ public class MainMenuScreen extends Stage implements Screen {
                 settingsTable.row();
                 settingsTable.add(buttonClose);
                 d.show(stage);
-                d.setWidth(500);
                 d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+                makeSmallCloseDialogButton( d );
                 d.show(stage);
 
                 buttonClose.addListener(new ClickListener() {
@@ -187,11 +214,11 @@ public class MainMenuScreen extends Stage implements Screen {
                 TextButton closeButton = new TextButton("Close", skin);
                 Dialog d = new Dialog("Credits", skin);
 
-                d.add("stront \n stront stront\n");
+                d.add( "credits \n" );
                 d.add(closeButton);
 
-                d.setWidth(500);
                 d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+                makeSmallCloseDialogButton( d );
                 d.show(stage);
 
                 closeButton.addListener(new ClickListener() {
@@ -226,9 +253,8 @@ public class MainMenuScreen extends Stage implements Screen {
                         }
                     }
                 };
-                d.setWidth(500);
                 d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
-
+                makeSmallCloseDialogButton( d );
                 d.show(stage);
             }
         });
@@ -271,6 +297,7 @@ public class MainMenuScreen extends Stage implements Screen {
 
     @Override
     public void hide() {
+
     }
 
     @Override
@@ -279,28 +306,57 @@ public class MainMenuScreen extends Stage implements Screen {
         music.dispose();
     }
 
-    public void makeNameInputDialog() {
-        nameInputfield = new TextField("", skin);
-        TextButton enterButton = new TextButton("Enter", skin);
+    public void makeLoginDialog() {
+        facebookLoginButton = new TextButton( "Facebook", skin );
+        guestLoginButton = new TextButton( "Login as Guest", skin );
         Table nameTable = new Table(skin);
         nameTable.align(Align.center | Align.top);
 
-        Dialog d = new Dialog("Enter your name", skin);
+        Dialog d = new Dialog( "Login", skin );
         d.add(nameTable);
-        nameTable.add("Please enter your player's name");
+        nameTable.add( facebookLoginButton );
+        nameTable.add( guestLoginButton );
         nameTable.row();
-        nameTable.add(nameInputfield);
-        nameTable.row();
-        nameTable.add(enterButton);
-        d.show(stage).setWidth(500);
+        nameTable.add( "By logging in as guest, we won't save any highscores." );
+        makeSmallCloseDialogButton( d );
+        d.show( stage );
         d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
 
-        enterButton.addListener(new ClickListener() {
+        facebookLoginButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                game.login();
+                facebookLoginButton.setDisabled( true );
+                guestLoginButton.setDisabled( false );
+                Timer.schedule( new Timer.Task() {
+                    @Override
+                    public void run() {
+                        dispose();
+                        game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
+                    }
+                }, 2 );
+            }
+        } );
+
+        guestLoginButton.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setPlayer( new PlayerEntity( "Guest", 1 ) );
+                PlayerDA.getInstance().addPlayer( new PlayerEntity( "Guest", 1 ) );
                 dispose();
-                game.setScreen(new GameScreen(game, 1, Difficulty.EASY, nameInputfield.getText()));
+                game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
             }
         });
+    }
+
+    public void makeSmallCloseDialogButton(Dialog d) {
+        Button closeButton = new Button( skin, "close" );
+        closeButton.addListener( new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                d.hide();
+            }
+        } );
+        d.getTitleTable().add( closeButton );
     }
 }

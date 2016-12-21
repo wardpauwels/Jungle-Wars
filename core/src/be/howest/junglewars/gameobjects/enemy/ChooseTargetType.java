@@ -34,6 +34,11 @@ public enum ChooseTargetType {
             return new RandomSpot();
         }
     };
+    },
+    STARTING_ON_ENEMY{
+        @Override
+        IChooseTargetType getType(){return new StartingOnEnemy();}
+    };
 
     abstract IChooseTargetType getType();
 
