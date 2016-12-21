@@ -28,6 +28,7 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "http://clojars.org/repo/" }
     }
 }
 
@@ -59,6 +60,8 @@ project(":core") {
         compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.5'
         compile "org.hibernate:hibernate-core:5.2.4.Final"
         compile "de.tomgrill.gdxfacebook:gdx-facebook-core:1.2.4"
+        compile group: 'com.esotericsoftware', name: 'kryo', version: '4.0.0'
+        compile "kryonet:kryonet:2.21"
     }
 }
 

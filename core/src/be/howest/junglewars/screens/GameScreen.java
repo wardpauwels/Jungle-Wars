@@ -1,18 +1,33 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.*;
-import be.howest.junglewars.data.da.*;
-import be.howest.junglewars.gameobjects.*;
-import be.howest.junglewars.gameobjects.enemy.*;
+import be.howest.junglewars.Difficulty;
+import be.howest.junglewars.GameData;
+import be.howest.junglewars.GameState;
+import be.howest.junglewars.JungleWars;
+import be.howest.junglewars.data.da.HighscoreDA;
+import be.howest.junglewars.gameobjects.Currency;
+import be.howest.junglewars.gameobjects.Missile;
+import be.howest.junglewars.gameobjects.Player;
+import be.howest.junglewars.gameobjects.enemy.ChooseTargetType;
+import be.howest.junglewars.gameobjects.enemy.Enemy;
+import be.howest.junglewars.gameobjects.enemy.EnemyActionType;
 import be.howest.junglewars.gameobjects.enemy.utils.Brick;
 import be.howest.junglewars.gameobjects.enemy.utils.Wall;
-import be.howest.junglewars.gameobjects.power.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.*;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.viewport.*;
+import be.howest.junglewars.gameobjects.power.Power;
+import be.howest.junglewars.gameobjects.power.PowerType;
+import be.howest.junglewars.net.JWClient;
+import be.howest.junglewars.net.JWServer;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GameScreen extends Stage implements Screen {
 
@@ -34,10 +49,23 @@ public class GameScreen extends Stage implements Screen {
     private boolean isGameOver;
     private String playerName;
 
+    public boolean isHost;
+    public JWClient client;
+    public JWServer server;
+    public String ip;
+
     //endregion
 
-    public GameScreen(JungleWars game, int wave, Difficulty difficulty) {
+    public GameScreen(JungleWars game, int wave, Difficulty difficulty, boolean isHost, String ip) {
         super(new ScreenViewport(), game.batch);
+
+        this.isHost = isHost;
+        if (!ip.isEmpty()) {
+            this.ip = ip;
+        } else {
+            this.ip = "localhost";
+        }
+
         data = new GameData();
         this.stage = this;
         this.game = game;
@@ -70,6 +98,18 @@ public class GameScreen extends Stage implements Screen {
         startingEnemies = 1;
         multiplierEnemies = 0.5f;
         spawnEnemies(false);
+    }
+
+    @Override
+    public void show() {
+        client = new JWClient(playerName);
+
+        if (isHost) {
+            try {
+                server = new JWServer();
+                client.
+            }
+        }
     }
 
     private void checkGameOver() {
@@ -347,11 +387,6 @@ public class GameScreen extends Stage implements Screen {
     }
 
     //endregion
-
-    @Override
-    public void show() {
-
-    }
 
     @Override
     public void render(float dt) {
