@@ -1,27 +1,15 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.*;
 import be.howest.junglewars.Difficulty;
 import be.howest.junglewars.GameData;
 import be.howest.junglewars.GameState;
 import be.howest.junglewars.JungleWars;
 import be.howest.junglewars.gameobjects.Currency;
-import be.howest.junglewars.gameobjects.*;
-import be.howest.junglewars.gameobjects.enemy.*;
-import be.howest.junglewars.gameobjects.power.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.*;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.viewport.*;
-import be.howest.junglewars.gameobjects.Helper;
 import be.howest.junglewars.gameobjects.Missile;
 import be.howest.junglewars.gameobjects.Player;
 import be.howest.junglewars.gameobjects.enemy.ChooseTargetType;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.gameobjects.enemy.EnemyActionType;
-import be.howest.junglewars.gameobjects.enemy.chooseTarget.impl.NearestPlayer;
 import be.howest.junglewars.gameobjects.power.Power;
 import be.howest.junglewars.gameobjects.power.PowerType;
 import com.badlogic.gdx.Gdx;
@@ -35,9 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import java.util.*;
-import java.util.List;
 
 public class GameScreen extends Stage implements Screen {
 

@@ -33,7 +33,7 @@ public enum ChooseTargetType {
         IChooseTargetType getType() {
             return new RandomSpot();
         }
-    };;
+    };
 
     abstract IChooseTargetType getType();
 

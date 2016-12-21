@@ -1,5 +1,8 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.gameobjects.helper.Helper;
+import be.howest.junglewars.gameobjects.helper.HelperActionType;
+import be.howest.junglewars.gameobjects.helper.HelperMovementType;
 import be.howest.junglewars.gameobjects.power.*;
 import be.howest.junglewars.screens.*;
 import com.badlogic.gdx.*;
@@ -71,7 +74,7 @@ public class Player extends GameObject {
         this.hitpoints = 100;
         this.damage = 10;
 
-        helper = new Helper(game, "Little Helper", this, "red-wings-up");
+        helper = new Helper(game, "Little Helper", this, "red-wings-up", HelperMovementType.POWERCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER);
     }
 
     private void handleInput(float dt) {
