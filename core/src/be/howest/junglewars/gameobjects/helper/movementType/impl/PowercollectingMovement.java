@@ -10,7 +10,7 @@ public class PowercollectingMovement implements IHelperMovementType {
 
 
     @Override
-    public Vector2 movementType(Helper helper, float dt){ // TODO: GET NEAREST -- ROBERT
+    public Vector2 movementType(Helper helper, float dt){
         for(Power power : helper.checkCollision(helper.game.getData().getPowers())){
             power.collectedBy(helper.getOwner());
         }
