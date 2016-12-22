@@ -61,7 +61,7 @@ public class MainMenuScreen extends Stage implements Screen {
 
         music = Gdx.audio.newMusic(Gdx.files.internal(Assets.MENU_SONG));
         music.setLooping(true);
-        music.setVolume(0.3f);
+        music.setVolume(0f);
         music.play();
 
         // create full screen background

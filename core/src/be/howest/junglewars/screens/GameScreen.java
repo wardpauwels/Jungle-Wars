@@ -1,12 +1,10 @@
 package be.howest.junglewars.screens;
 
 import be.howest.junglewars.*;
-import be.howest.junglewars.gameobjects.Currency;
 import be.howest.junglewars.gameobjects.*;
-import be.howest.junglewars.gameobjects.enemy.*;
-import be.howest.junglewars.gameobjects.power.*;
 import be.howest.junglewars.net.*;
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -76,12 +74,11 @@ public class GameScreen extends Stage implements Screen {
 
         startingEnemies = 1;
         multiplierEnemies = 0.5f;
-        spawnEnemies(false);
     }
 
     @Override
     public void show() {
-
+        data = client.getData();
     }
 
     private void checkGameOver() {
@@ -130,36 +127,7 @@ public class GameScreen extends Stage implements Screen {
 
     //region spawners TODO: create spawners
 
-    private void spawnEnemies(boolean nextWave) {
-        if (data.getEnemies().size() == 0) {
-            amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-            data.getEnemies().add(new Enemy("Trump", 140, 160, "trump", "trumpAnimation", 5, 150, 100, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.TRUMPING, getData()));
 
-            for (int i = 0; i < amountEnemies; i++) {
-                data.getEnemies().add(new Enemy("Zookeeper", 70, 80, "zookeeper3", "zookeeper3Animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.CRYING, getData()));
-            }
-            if (nextWave) data.setWave(data.getWave() + 1);
-        }
-    }
-
-    private void spawnCurrencies() {
-        int maxCurrenciesOnField = 2;
-        if (data.getCurrencies().size() < maxCurrenciesOnField) {
-            data.getCurrencies().add(new Currency(5, "coin", getData()));
-        }
-    }
-
-    private void spawnPowers() {
-        int maxPowersOnField = 5;
-        if (data.getPowers().size() < maxPowersOnField) {
-            data.getPowers().add(new Power("Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40, getData()));
-            data.getPowers().add(new Power("Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50, getData()));
-            data.getPowers().add(new Power("Attack Speed", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40, getData()));
-            data.getPowers().add(new Power("Missle Speed", "misslespeed", 5, 10, PowerType.MISSLE_SPEED_POWER, 40, getData()));
-            data.getPowers().add(new Power("HP bonus", "HP", 5, 1, PowerType.HITPOINTS_POWER, 100, getData()));
-            data.getPowers().add(new Power("Armor Bonus", "armor", 5, 10, PowerType.ARMOR_POWER, 20, getData()));
-        }
-    }
 
     //endregion
 
@@ -173,9 +141,6 @@ public class GameScreen extends Stage implements Screen {
     }
 
     private void updateRunning(float dt) {
-        spawnEnemies(true);
-        spawnCurrencies();
-        spawnPowers();
 
 //        for (Player player : data.getPlayers()) {
 //            player.update(dt);
@@ -363,43 +328,14 @@ public class GameScreen extends Stage implements Screen {
 
     @Override
     public void render(float dt) {
-        SpriteBatch batch = game.batch;
-        batch.begin();
-        batch.disableBlending();
-        backgroundSprite.draw(batch);
-        batch.enableBlending();
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        data.update(dt);
+        data.render();
 
-        dt = Math.min(dt, 1 / 60f);
-
-        switch (data.getState()) {
-            case READY:
-                updateReady(dt);
-                renderReady(batch);
-                batch.end();
-                break;
-            case RUNNING:
-                updateRunning(dt);
-                renderRunning(batch);
-                batch.end();
-                break;
-            case PRE_WAVE:
-                updatePreWave(dt);
-                renderPreWave(batch);
-                batch.end();
-                break;
-            case PAUSED:
-                updatePaused(dt);
-                renderPaused(batch);
-                batch.end();
-                break;
-            case GAME_OVER:
-                batch.end();
-                updateGameOver(dt);
-                renderGameOver(batch);
-                break;
+        if (isHost) {
+            server.update(dt);
         }
-
-//        batch.end();
     }
 
     @Override

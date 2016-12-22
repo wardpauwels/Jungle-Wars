@@ -1,6 +1,7 @@
 package be.howest.junglewars.gameobjects.enemy;
 
 import be.howest.junglewars.*;
+import be.howest.junglewars.data.entities.*;
 import be.howest.junglewars.gameobjects.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -64,6 +65,27 @@ public class Enemy extends GameObject {
 
         this.defaultSprite = ATLAS_PREFIX + defaultSpriteUrl;
         this.altSprite = ATLAS_PREFIX + altSpriteUrl;
+    }
+
+    public Enemy(GameData data, EnemyEntity e) {
+        this(
+                e.getName(),
+                e.getWidth(),
+                e.getHeight(),
+                e.getDefaultSpriteUrl(),
+                e.getDefaultSpriteUrl(),
+                e.getBaseDamage(),
+                e.getBaseSpeed(),
+                e.getBaseHitpoints(),
+                e.getBaseAttackSpeed(),
+                e.getExperienceWhenKilled(),
+                e.getScoreWhenKilled(),
+                e.getSpawnProbability(),
+                ChooseTargetType.valueOf(e.getTargetSelectionType()),
+                ChooseTargetType.valueOf(e.getMovementType()),
+                EnemyActionType.valueOf(e.getAttackType()),
+                data
+        );
     }
 
     @Override

@@ -5,6 +5,7 @@ import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.enemy.*;
 import be.howest.junglewars.gameobjects.power.*;
 import be.howest.junglewars.net.*;
+import be.howest.junglewars.spawners.*;
 import be.howest.junglewars.util.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -32,11 +33,14 @@ public class GameData {
     private List<Power> powers = new ArrayList<>();
     private List<Currency> currencies = new ArrayList<>();
 
+    private SpawnerManager spawnManager;
+
 
     //constructor server
     public GameData(JWServer server) {
         this.server = server;
         atlas = new TextureAtlas(Assets.IMAGES_ATLAS);
+        spawnManager = new SpawnerManager(this);
     }
 
     //constructor client
@@ -96,7 +100,7 @@ public class GameData {
 
 
         if (!isClient) {
-            //TODO handle spawners & wave management
+            spawnManager.manageAllSpawners();
         }
     }
 

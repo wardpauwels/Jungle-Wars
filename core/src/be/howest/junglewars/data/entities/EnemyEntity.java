@@ -42,8 +42,8 @@ public class EnemyEntity {
     @Column(name = "score_when_killed")
     private int scoreWhenKilled;
 
-    @Column(name = "rarity")
-    private int rarity;
+    @Column(name = "spawnProbability")
+    private int spawnProbability;
 
     @Column(name = "movement_type")
     private String movementType;
@@ -53,6 +53,9 @@ public class EnemyEntity {
 
     @Column(name = "attack_type")
     private String attackType;
+
+    @Column(name = "default_sprite_url")
+    private String defaultSpriteUrl;
     //endregion
 
     //region Getters/Setters
@@ -144,12 +147,12 @@ public class EnemyEntity {
         this.scoreWhenKilled = scoreWhenKilled;
     }
 
-    public int getRarity() {
-        return rarity;
+    public int getSpawnProbability() {
+        return spawnProbability;
     }
 
-    public void setRarity(int rarity) {
-        this.rarity = rarity;
+    public void setSpawnProbability(int spawnProbability) {
+        this.spawnProbability = spawnProbability;
     }
 
     public String getMovementType() {
@@ -175,6 +178,15 @@ public class EnemyEntity {
     public void setAttackType(String attackType) {
         this.attackType = attackType;
     }
+
+    public String getDefaultSpriteUrl() {
+        return defaultSpriteUrl;
+    }
+
+    public void setDefaultSpriteUrl(String defaultSpriteUrl) {
+        this.defaultSpriteUrl = defaultSpriteUrl;
+    }
+
     //endregion
 
 }
