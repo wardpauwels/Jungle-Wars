@@ -1,29 +1,5 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.GameState;
-import be.howest.junglewars.JungleWars;
-import be.howest.junglewars.gameobjects.Currency;
-import be.howest.junglewars.gameobjects.Missile;
-import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.gameobjects.enemy.ChooseTargetType;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
-import be.howest.junglewars.gameobjects.enemy.EnemyActionType;
-import be.howest.junglewars.gameobjects.power.Power;
-import be.howest.junglewars.gameobjects.power.PowerType;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
 import be.howest.junglewars.*;
 import be.howest.junglewars.data.da.*;
 import be.howest.junglewars.gameobjects.*;
@@ -149,6 +125,7 @@ public class GameScreen extends Stage implements Screen {
             for (int i = 0; i < amountEnemies; i++) {
                 data.getEnemies().add(new Enemy(this, "Zookeeper",50,70, "zookeeper","zookeeper", 5, 150, 10, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
             }
+            data.getEnemies().add( new Enemy( this, "Trump", 150, 80, "trump", "trump", 0, 120, 0, 5f, 20, 20, 20, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.TRUMPING ) );
             if (nextWave) data.setWave(data.getWave() + 1);
         }
     }
