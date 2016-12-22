@@ -1,9 +1,11 @@
 package be.howest.junglewars.net;
 
-import be.howest.junglewars.*;
-import com.esotericsoftware.kryonet.*;
+import be.howest.junglewars.GameData;
+import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
 
-import java.io.*;
+import java.io.IOException;
 
 public class JWClient {
 
@@ -54,8 +56,8 @@ public class JWClient {
                 System.out.println("Player has left: " + data.getPlayerById(msg.playerId).getName());
                 data.removePlayer(msg);
             }
-            for (long i = 1; i <= data.getPlayers().size(); i++) {
-                System.out.println(data.getPlayerById(i).getName() + " is online now.");
+            for (long id : data.getPlayers().keySet()) {
+                System.out.println(data.getPlayerById(id).getName() + " is online now.");
             }
         } else if (message instanceof Network.MovementState) {
             Network.MovementState msg = (Network.MovementState) message;
