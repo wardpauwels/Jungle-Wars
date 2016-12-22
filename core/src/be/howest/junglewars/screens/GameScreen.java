@@ -17,7 +17,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.*;
-import be.howest.junglewars.gameobjects.Helper;
 import be.howest.junglewars.gameobjects.Missile;
 import be.howest.junglewars.gameobjects.Player;
 import be.howest.junglewars.gameobjects.enemy.ChooseTargetType;
