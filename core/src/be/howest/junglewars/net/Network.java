@@ -27,7 +27,6 @@ public class Network {
 
         public Login() {
         }
-
         public Login(String name) {
             this.name = name;
         }
