@@ -1,10 +1,11 @@
 package be.howest.junglewars.desktop;
 
-import be.howest.junglewars.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.backends.lwjgl.*;
-import com.badlogic.gdx.tools.texturepacker.*;
-import com.badlogic.gdx.tools.texturepacker.TexturePacker.*;
+import be.howest.junglewars.JungleWars;
+import com.badlogic.gdx.Files;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {
@@ -17,7 +18,7 @@ public class DesktopLauncher {
 
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Jungle Wars: The Revenge of Harambe";
-        config.width = 1200;
+        config.width = 1400;
         config.height = 900;
         config.resizable = true;
         config.useGL30 = false;

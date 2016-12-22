@@ -1,5 +1,29 @@
 package be.howest.junglewars.screens;
 
+import be.howest.junglewars.Difficulty;
+import be.howest.junglewars.GameData;
+import be.howest.junglewars.GameState;
+import be.howest.junglewars.JungleWars;
+import be.howest.junglewars.gameobjects.Currency;
+import be.howest.junglewars.gameobjects.Missile;
+import be.howest.junglewars.gameobjects.Player;
+import be.howest.junglewars.gameobjects.enemy.ChooseTargetType;
+import be.howest.junglewars.gameobjects.enemy.Enemy;
+import be.howest.junglewars.gameobjects.enemy.EnemyActionType;
+import be.howest.junglewars.gameobjects.power.Power;
+import be.howest.junglewars.gameobjects.power.PowerType;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
 import be.howest.junglewars.*;
 import be.howest.junglewars.data.da.*;
 import be.howest.junglewars.gameobjects.*;
@@ -90,7 +114,9 @@ public class GameScreen extends Stage implements Screen {
                 player.hitBy(missile);
                 missile.doEffect(player);
             }
-
+            for (Missile missile : player.getHelper().checkCollision(data.getEnemyMissiles())) {
+                player.getHelper().hitBy(missile);
+            }
         }
 
         for (Enemy enemy : data.getEnemies()) {
@@ -111,8 +137,6 @@ public class GameScreen extends Stage implements Screen {
                 }
             }
         }
-
-
     }
 
     //region spawners TODO: create spawners
@@ -120,10 +144,10 @@ public class GameScreen extends Stage implements Screen {
     private void spawnEnemies(boolean nextWave) {
         if (data.getEnemies().size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-            data.getEnemies().add(new Enemy(this, "Trump",140,160, "trump","trumpAnimation", 5, 150, 100, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.TRUMPING));
+//            data.getEnemies().add(new Enemy(this, "Zookeeper",50,70, "zookeeper","zookeeper", 5, 150, 100, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
 
             for (int i = 0; i < amountEnemies; i++) {
-                data.getEnemies().add(new Enemy(this, "Zookeeper",70,80, "zookeeper3","zookeeper3Animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.CRYING));
+                data.getEnemies().add(new Enemy(this, "Zookeeper",50,70, "zookeeper","zookeeper", 5, 150, 10, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
             }
             if (nextWave) data.setWave(data.getWave() + 1);
         }
@@ -142,7 +166,7 @@ public class GameScreen extends Stage implements Screen {
             data.getPowers().add(new Power(this, "Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40));
             data.getPowers().add(new Power(this, "Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));
             data.getPowers().add(new Power(this, "Attack Speed", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40));
-            data.getPowers().add(new Power(this, "Missle Speed", "misslespeed", 5, 10, PowerType.MISSLE_SPEED_POWER, 40));
+            data.getPowers().add(new Power(this, "Missle Speed", "misslespeed", 5, 10, PowerType.MISSILE_SPEED_POWER, 40));
             data.getPowers().add(new Power(this, "HP bonus", "HP", 5, 1, PowerType.HITPOINTS_POWER, 100));
             data.getPowers().add(new Power(this, "Armor Bonus", "armor", 5, 10, PowerType.ARMOR_POWER, 20));
         }
@@ -180,6 +204,7 @@ public class GameScreen extends Stage implements Screen {
             data.getEnemyMissiles().get(i).update(dt);
             if (data.getEnemyMissiles().get(i).shouldRemove()) {
                 data.getEnemyMissiles().remove(i);
+
                 i--;
             }
         }
@@ -283,6 +308,8 @@ public class GameScreen extends Stage implements Screen {
             player.draw(batch);
             player.getHelper().draw(batch);
 
+
+
             // TODO: work with LibGDX Actors instead?
             bigFont.setColor(0, 0, 0, 1);
             bigFont.draw(batch, "Player 1", 20, Gdx.graphics.getHeight() - 20);
@@ -292,6 +319,7 @@ public class GameScreen extends Stage implements Screen {
             smallFont.draw(batch, "XP: " + player.getXp(), 20, Gdx.graphics.getHeight() - 100); // TODO: xp till next wave
             smallFont.draw(batch, "Coins collected: " + player.getCollectedCoins(), 20, Gdx.graphics.getHeight() - 120);
             smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
+            smallFont.draw(batch, "Multiplier: " + (float)Math.round(player.getScoreMultiplier()*100)/100, 20, Gdx.graphics.getHeight() -160);
             smallFont.draw(batch, "ACTIVE POWERS: ", 300, Gdx.graphics.getHeight() - 20);
             for (int i = 0; i < player.getPowers().size(); i++) {
                 smallFont.draw(batch, player.getPowers().get(i).toString() + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
@@ -299,7 +327,7 @@ public class GameScreen extends Stage implements Screen {
             smallFont.draw(batch, "ATTACK SPEED: " + player.getAttackSpeed(), 20, 40);
             smallFont.draw(batch, "DAMAGE: " + player.getDamage(), 20, 60);
             smallFont.draw(batch, "MOVEMENT SPEED: " + player.getSpeed(), 20, 80);
-            smallFont.draw(batch, "MISSLE SPEED: " + player.getMissleSpeed(), 20, 100);
+            smallFont.draw(batch, "MISSILE SPEED: " + player.getMissileSpeed(), 20, 100);
 
         }
 
