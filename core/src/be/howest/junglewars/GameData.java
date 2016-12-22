@@ -1,7 +1,7 @@
 package be.howest.junglewars;
 
 import be.howest.junglewars.gameobjects.Currency;
-import be.howest.junglewars.gameobjects.Helper;
+import be.howest.junglewars.gameobjects.helper.Helper;
 import be.howest.junglewars.gameobjects.Missile;
 import be.howest.junglewars.gameobjects.Player;
 import be.howest.junglewars.gameobjects.enemy.Enemy;

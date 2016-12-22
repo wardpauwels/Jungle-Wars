@@ -3,6 +3,7 @@ package be.howest.junglewars.gameobjects;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -26,6 +27,10 @@ public class Currency extends GameObject {
     public void collectedBy(Player player) {
         player.addCoin(1);
         remove = true;
+    }
+
+    public Vector2 getPosition(){
+        return new Vector2(body.x, body.y);
     }
 
     @Override

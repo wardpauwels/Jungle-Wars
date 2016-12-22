@@ -45,7 +45,6 @@ public abstract class GameObject implements Serializable {
                 collision.add(go);
             }
         }
-
         return collision;
     }
 

@@ -1,5 +1,8 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.gameobjects.helper.Helper;
+import be.howest.junglewars.gameobjects.helper.HelperActionType;
+import be.howest.junglewars.gameobjects.helper.HelperMovementType;
 import be.howest.junglewars.data.entities.*;
 import be.howest.junglewars.gameobjects.power.*;
 import be.howest.junglewars.screens.*;
@@ -38,7 +41,7 @@ public class Player extends GameObject {
     private int score = 0;
     private int collectedCoins = 0;
     private int damage;
-    private int missleSpeed = 500;
+    private int missileSpeed = 500;
     private float armor = 0f;
     private float baseSpeed;
 
@@ -70,7 +73,7 @@ public class Player extends GameObject {
         this.hitpoints = 100;
         this.damage = 10;
 
-        helper = new Helper(game, "Little Helper", this, "red-wings-up");
+        helper = new Helper(game, "Little Helper", this, "red-wings-up", HelperMovementType.POWERCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER);
     }
 
     private void handleInput(float dt) {
@@ -320,9 +323,9 @@ public class Player extends GameObject {
         this.attackSpeed = attackSpeed;
     }
 
-    public int getMissleSpeed(){return missleSpeed;}
+    public int getMissileSpeed(){return missileSpeed;}
 
-    public void setMissleSpeed(int missleSpeed){ this.missleSpeed = missleSpeed;}
+    public void setMissileSpeed(int missileSpeed){ this.missileSpeed = missileSpeed;}
 
     public float getArmor() {
         return armor;
@@ -334,5 +337,13 @@ public class Player extends GameObject {
 
     public long getId() {
         return id;
+    }
+
+    public float getScoreMultiplier() {
+        return scoreMultiplier;
+    }
+
+    public void setScoreMultiplier(float scoreMultiplier) {
+        this.scoreMultiplier = scoreMultiplier;
     }
 }
