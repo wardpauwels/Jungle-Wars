@@ -338,4 +338,12 @@ public class Player extends GameObject {
     public long getId() {
         return id;
     }
+
+    public float getScoreMultiplier() {
+        return scoreMultiplier;
+    }
+
+    public void setScoreMultiplier(float scoreMultiplier) {
+        this.scoreMultiplier = scoreMultiplier;
+    }
 }

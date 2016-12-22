@@ -131,6 +131,9 @@ public class Enemy extends GameObject {
         if (catchDamage(missile.getDamage()) <= 0) {
             player.addScore(scoreWhenKilled);
             player.addXp(experienceWhenKilled);
+            float multiplier = player.getScoreMultiplier();
+            player.setScoreMultiplier(multiplier + 0.01f);
+
         }
         missile.remove = true;
 

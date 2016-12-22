@@ -138,8 +138,6 @@ public class GameScreen extends Stage implements Screen {
                 }
             }
         }
-
-
     }
 
     //region spawners TODO: create spawners
@@ -147,10 +145,10 @@ public class GameScreen extends Stage implements Screen {
     private void spawnEnemies(boolean nextWave) {
         if (data.getEnemies().size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-            data.getEnemies().add(new Enemy(this, "Trump",140,160, "trump","trumpAnimation", 5, 150, 100, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.TRUMPING));
+//            data.getEnemies().add(new Enemy(this, "Zookeeper",50,70, "zookeeper","zookeeper", 5, 150, 100, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
 
             for (int i = 0; i < amountEnemies; i++) {
-                data.getEnemies().add(new Enemy(this, "Trump",140,160, "trump","trumpAnimation", 5, 150, 100, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.TRUMPING));
+                data.getEnemies().add(new Enemy(this, "Zookeeper",50,70, "zookeeper","zookeeper", 5, 150, 10, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
             }
             if (nextWave) data.setWave(data.getWave() + 1);
         }
@@ -207,6 +205,7 @@ public class GameScreen extends Stage implements Screen {
             data.getEnemyMissiles().get(i).update(dt);
             if (data.getEnemyMissiles().get(i).shouldRemove()) {
                 data.getEnemyMissiles().remove(i);
+
                 i--;
             }
         }
