@@ -48,6 +48,8 @@ public class Enemy extends GameObject {
     private float time;
     private float dabTimer;
 
+//    private float enemyMultiplier;
+
     public Enemy(GameScreen game, String name,float width,float height, String defaultSpriteUrl,String altSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
                  float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height,
@@ -61,10 +63,14 @@ public class Enemy extends GameObject {
         this.spawnChance = spawnChance;
 
         // TODO: calculate stats based by game level and difficulty
-        this.damage = baseDamage;
-        this.speed = baseSpeed;
-        this.hitpoints = baseHitpoints;
-        this.actionTime = baseAttackSpeed;
+        // Huidig is gebaseerd op wave
+
+//        enemyMultiplier = game.getData().getWave();
+
+        this.damage = baseDamage + Math.round(baseDamage * calculateMultiplier());
+        this.speed = baseSpeed + (Math.round(baseSpeed * calculateMultiplier()));
+        this.hitpoints = baseHitpoints + (Math.round(baseHitpoints *calculateMultiplier()));
+        this.actionTime = baseAttackSpeed + (Math.round(baseAttackSpeed *calculateMultiplier()));
         this.actionTimer = 0;
         this.spriteChanged = false;
         this.time = 3f;
@@ -78,6 +84,11 @@ public class Enemy extends GameObject {
 
         this.defaultSprite = ATLAS_PREFIX + defaultSpriteUrl;
         this.altSprite = ATLAS_PREFIX + altSpriteUrl;
+    }
+
+    public float calculateMultiplier(){
+        float wave = game.getData().getWave();
+        return wave/300;
     }
 
     @Override
@@ -174,23 +185,4 @@ public class Enemy extends GameObject {
         changeSprite(game.atlas.createSprite(sprite));
     }
 
-    public int getScoreWhenKilled() {
-        return scoreWhenKilled;
-    }
-
-    public int getExperienceWhenKilled() {
-        return experienceWhenKilled;
-    }
-
-    public int getSpawnChance() {
-        return spawnChance;
-    }
-
-    public int getDamage() {
-        return damage;
-    }
-
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
 }
