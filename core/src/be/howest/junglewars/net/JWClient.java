@@ -49,7 +49,9 @@ public class JWClient {
             Network.PlayerJoinLeave msg = (Network.PlayerJoinLeave) message;
             if (msg.hasJoined) {
                 data.addPlayer(msg);
+                System.out.println("Player has joined: " + data.getPlayerById(msg.playerId).getName());
             } else {
+                System.out.println("Player has left: " + data.getPlayerById(msg.playerId).getName());
                 data.removePlayer(msg);
             }
         } else if (message instanceof Network.MovementState) {
