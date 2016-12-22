@@ -18,6 +18,7 @@ public class Helper extends GameObject {
     private boolean protecting = false;
     public GameScreen game;
 
+
     private IHelperMovementType helperMovementType;
     private IHelperActionType helperActionType;
 
@@ -30,6 +31,7 @@ public class Helper extends GameObject {
 
         this.helperMovementType = helperMovementType.getHelperMovement();
         this.helperActionType = helperActionType.getHelperAction();
+        this.speed = 160;
     }
 
     private void doHelperAction(float dt) {

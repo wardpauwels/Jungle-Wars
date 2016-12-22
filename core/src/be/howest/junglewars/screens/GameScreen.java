@@ -8,11 +8,13 @@ import be.howest.junglewars.gameobjects.enemy.*;
 import be.howest.junglewars.gameobjects.enemy.utils.*;
 import be.howest.junglewars.gameobjects.power.*;
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.*;
 
 public class GameScreen extends Stage implements Screen {
@@ -36,6 +38,9 @@ public class GameScreen extends Stage implements Screen {
     private String playerName;
 
     private boolean nextLevel;
+    private boolean running;
+
+
 
 
 
@@ -52,6 +57,7 @@ public class GameScreen extends Stage implements Screen {
         this.playerName = game.getPlayer().getName();
 
         this.nextLevel = true;
+        this.running = false;
 
         data.setWave(wave);
         data.setDifficulty(difficulty);
@@ -60,6 +66,7 @@ public class GameScreen extends Stage implements Screen {
         // create full screen background
         backgroundSprite = atlas.createSprite("background/game");
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 
         // TODO: https://github.com/libgdx/libgdx/wiki/Managing-your-assets#loading-a-ttf-using-the-assethandler
         // TODO: work with Actors for GUI layout (buttons, menu, etc...)?
@@ -103,14 +110,16 @@ public class GameScreen extends Stage implements Screen {
             }
         }
 
-        for (Enemy enemy : data.getEnemies()) {
-            for (Player player : data.getPlayers()) {
-                for (Missile missile : enemy.checkCollision(player.getMissiles())) {
-                    enemy.hitBy(missile, player);
-                    return;
+            for (Enemy enemy : data.getEnemies()) {
+                for (Player player : data.getPlayers()) {
+                    for (Missile missile : enemy.checkCollision(player.getMissiles())) {
+                        enemy.hitBy(missile, player);
+                        return;
+                    }
                 }
             }
-        }
+
+
 
         for(Wall wall : data.getWalls()) {
             for (Player player : data.getPlayers()) {
@@ -122,51 +131,28 @@ public class GameScreen extends Stage implements Screen {
                 }
             }
         }
+
     }
 
     //region spawners TODO: create spawners
 
     private void spawnEnemies(boolean nextWave) {
-        if (data.getEnemies().size() == 0) {
-            nextLevel = false;
+        if (data.getEnemies().size()==0 && running) {
             data.setState(GameState.PRE_WAVE);
-            initUpgradeScreen();
-
-
-            if (nextLevel) {
+        }
+        if(data.getEnemies().size()==0 && !running && nextLevel){
                 data.setState(GameState.RUNNING);
                 amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-                data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trumpAnimation", 5, 150, 120, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
+                data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trumpAnimation", 5, 150, 1, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
 
                 for (int i = 0; i < amountEnemies; i++) {
-                    data.getEnemies().add(new Enemy(this, "Zookeeper", 70, 80, "zookeeper3", "zookeeper3Animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.CRYING));
+                    data.getEnemies().add(new Enemy(this, "Zookeeper", 70, 80, "zookeeper3", "zookeeper3Animation", 5, 150, 1, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.CRYING));
                 }
                 if (nextWave) data.setWave(data.getWave() + 1);
-            }}
+            }
     }
 
-    private void initUpgradeScreen(){
-        Dialog d = new Dialog( "UpgradeHelper", skin ) {
-            {
-                text("Upgrade Your Helper");
-                button("To Next Level", "nextLevel");
-            }
 
-            @Override
-            protected void result(Object object) {
-                switch (String.valueOf(object)) {
-                    case "nextLevel":
-                        nextLevel = true;
-                        break;
-
-                }
-
-            }
-        };
-        d.show( stage ).setWidth( 500 );
-        d.setPosition( Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2 );
-        makeSmallCloseDialogButton( d );
-    }
 
     public void makeSmallCloseDialogButton(Dialog d) {
         Button closeButton = new Button( skin, "close" );
@@ -268,6 +254,37 @@ public class GameScreen extends Stage implements Screen {
     }
 
     private void updatePreWave(float dt) {
+        spawnEnemies(true);
+
+        Dialog d = new Dialog("Upgrade your helper", skin) {
+            {
+                text("UPGRADE YOUR HELPER");
+                button("upgrade","upgradeHelper");
+                button("next level", "next");
+                button("Retry", "retry");
+            }
+
+
+
+            @Override
+            protected void result(Object object) {
+                switch (String.valueOf(object)) {
+                    case "upgradeHelper":
+                        data.getPlayers().get(0).getHelper().setSpeed(data.getPlayers().get(0).getHelper().getSpeed()*1.5f);
+                        System.out.println(data.getPlayers().get(0).getHelper().getSpeed());
+                    case "next":
+                        nextLevel = true;
+                        running = false;
+                        break;
+                    case "retry":
+                        game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
+                        break;
+                }
+            }
+        };
+        d.show(stage).setWidth(500);
+        d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+        Gdx.input.setInputProcessor(stage);
 
     }
 
@@ -381,7 +398,8 @@ public class GameScreen extends Stage implements Screen {
     }
 
     private void renderPreWave(SpriteBatch batch) {
-
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
     }
 
     private void renderPaused(SpriteBatch batch) {
@@ -421,15 +439,15 @@ public class GameScreen extends Stage implements Screen {
                 batch.end();
                 break;
             case RUNNING:
+                running = true;
                 updateRunning(dt);
                 renderRunning(batch);
                 batch.end();
                 break;
             case PRE_WAVE:
-
+                batch.end();
                 updatePreWave(dt);
                 renderPreWave(batch);
-                batch.end();
                 break;
             case PAUSED:
                 updatePaused(dt);
