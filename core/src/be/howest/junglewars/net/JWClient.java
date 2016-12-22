@@ -54,6 +54,9 @@ public class JWClient {
                 System.out.println("Player has left: " + data.getPlayerById(msg.playerId).getName());
                 data.removePlayer(msg);
             }
+            for (int i = 0; i < data.getPlayers().size(); i++) {
+                System.out.println(data.getPlayerById(i).getName() + " is online now.");
+            }
         } else if (message instanceof Network.MovementState) {
             Network.MovementState msg = (Network.MovementState) message;
             data.playerMoved(msg);
