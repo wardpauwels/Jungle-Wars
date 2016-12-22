@@ -29,6 +29,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.io.IOException;
+
 public class GameScreen extends Stage implements Screen {
 
     //region fields
@@ -56,15 +58,8 @@ public class GameScreen extends Stage implements Screen {
 
     //endregion
 
-    public GameScreen(JungleWars game, int wave, Difficulty difficulty, boolean isHost, String ip) {
+    public GameScreen(JungleWars game, boolean sp, int wave, Difficulty difficulty, boolean isHost, String ip) {
         super(new ScreenViewport(), game.batch);
-
-        this.isHost = isHost;
-        if (!ip.isEmpty()) {
-            this.ip = ip;
-        } else {
-            this.ip = "localhost";
-        }
 
         data = new GameData();
         this.stage = this;

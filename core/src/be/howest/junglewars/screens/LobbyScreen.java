@@ -17,8 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.io.IOException;
+
 public class LobbyScreen extends Stage implements Screen {
 
+    private final String name;
     private JWServer server;
     private JWClient client;
 
@@ -30,17 +33,20 @@ public class LobbyScreen extends Stage implements Screen {
 
     private Table playerTable;
 
-    public LobbyScreen(JungleWars game) {
+    public LobbyScreen(JungleWars game, String name) {
         super(new ScreenViewport(), game.batch);
         this.game = game;
         this.batch = game.batch;
         this.stage = this;
         this.skin = game.skin;
         this.atlas = game.atlas;
+        this.name = name;
     }
 
     @Override
     public void show() {
+        client = new JWClient(name);
+
         Table table = new Table(skin);
         playerTable = new Table(skin);
 
@@ -54,12 +60,12 @@ public class LobbyScreen extends Stage implements Screen {
 
         TextButton hostButton = new TextButton("host", skin);
         TextButton joinButton = new TextButton("join", skin);
-        TextField host = new TextField("localhost", skin);
+        TextField hostField = new TextField("localhost", skin);
 
         table.row();
         table.add(hostButton);
         table.row();
-        table.add(host, joinButton);
+        table.add(hostField, joinButton);
 
         stage.addActor(table);
         stage.addActor(playerTable);
@@ -67,17 +73,38 @@ public class LobbyScreen extends Stage implements Screen {
         hostButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                startHost();
+            }
+        });
 
+        joinButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                joinHost(hostField.getText());
             }
         });
 
         Gdx.input.setInputProcessor(stage);
     }
 
+    private void startHost(){
+        try{
+            server = new JWServer();
+            client.connectLocal();
+        } catch (IOException e) {
+            System.out.println("fuck mn leven, LobbyScreen::startHost() failed");
+        }
+    }
+
+    private void joinHost(String host){
+        client.connect(host);
+    }
+
     @Override
     public void render(float delta) {
         playerTable.clearChildren();
-        playerTable.add("test");
+
+
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

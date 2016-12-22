@@ -24,6 +24,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class MainMenuScreen extends Stage implements Screen {
     private final JungleWars game;
     private Skin skin;
@@ -272,7 +274,7 @@ public class MainMenuScreen extends Stage implements Screen {
     }
 
     private void startMultiPlayer() {
-        game.setScreen(new LobbyScreen(game));
+        game.setScreen(new LobbyScreen(game, "name"+ ThreadLocalRandom.current().nextInt(0,99999)));
         dispose();
     }
 
@@ -347,7 +349,7 @@ public class MainMenuScreen extends Stage implements Screen {
                     @Override
                     public void run() {
                         dispose();
-                        game.setScreen(new GameScreen(game, 1, Difficulty.EASY, true, "localhost"));
+                        game.setScreen(new GameScreen(game, true, 1, Difficulty.EASY, true, "localhost"));
                     }
                 }, 2 );
             }
@@ -359,9 +361,14 @@ public class MainMenuScreen extends Stage implements Screen {
                 game.setPlayer( new PlayerEntity( "Guest", 1 ) );
                 PlayerDA.getInstance().addPlayer( new PlayerEntity( "Guest", 1 ) );
                 dispose();
-                game.setScreen(new GameScreen(game, 1, Difficulty.EASY, true, "localhost"));
+                startSinglePlayer();
+                game.setScreen(new GameScreen(game, true, 1, Difficulty.EASY, true, "localhost"));
             }
         });
+    }
+
+    private void startSinglePlayer(){
+
     }
 
     public void makeSmallCloseDialogButton(Dialog d) {

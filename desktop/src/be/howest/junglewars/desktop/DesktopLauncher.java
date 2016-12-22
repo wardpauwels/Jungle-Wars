@@ -14,7 +14,7 @@ public class DesktopLauncher {
         settings.debug = false;
         settings.maxHeight = 2048;
         settings.maxWidth = 2048;
-        TexturePacker.process(settings, "images", "atlas", "images");
+//        TexturePacker.process(settings, "images", "atlas", "images");
 
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Jungle Wars: The Revenge of Harambe";

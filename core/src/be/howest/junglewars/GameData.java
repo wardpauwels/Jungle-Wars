@@ -40,74 +40,53 @@ public class GameData {
         return state;
     }
 
-    public void setState(GameState state) {
-        this.state = state;
-    }
-
     public int getWave() {
         return wave;
-    }
-
-    public void setWave(int wave) {
-        this.wave = wave;
     }
 
     public Difficulty getDifficulty() {
         return difficulty;
     }
 
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
-    }
-
     public List<Player> getPlayers() {
         return players;
-    }
-
-    public void setPlayers(List<Player> players) {
-        this.players = players;
     }
 
     public List<Helper> getHelpers() {
         return helpers;
     }
 
-    public void setHelpers(List<Helper> helpers) {
-        this.helpers = helpers;
-    }
-
     public List<Enemy> getEnemies() {
         return enemies;
-    }
-
-    public void setEnemies(List<Enemy> enemies) {
-        this.enemies = enemies;
     }
 
     public List<Missile> getEnemyMissiles() {
         return enemyMissiles;
     }
 
-    public void setEnemyMissiles(List<Missile> enemyMissiles) {
-        this.enemyMissiles = enemyMissiles;
-    }
-
     public List<Power> getPowers() {
         return powers;
-    }
-
-    public void setPowers(List<Power> powers) {
-        this.powers = powers;
     }
 
     public List<Currency> getCurrencies() {
         return currencies;
     }
 
-    public void setCurrencies(List<Currency> currencies) {
-        this.currencies = currencies;
+    public List<Wall> getWalls(){return walls;}
+
+    public void setWave(int wave) {
+        this.wave = wave;
     }
 
-    public List<Wall> getWalls(){return walls;}
-    public void setWalls(List<Wall> walls){this.walls = walls;}
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
+    }
+
+    public void addPlayer(Player p){
+        players.add(p);
+    }
 }

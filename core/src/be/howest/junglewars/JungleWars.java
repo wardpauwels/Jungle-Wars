@@ -67,7 +67,7 @@ public class JungleWars extends Game {
 
         super.render();
 
-        fpsLogger.log();
+//        fpsLogger.log();
     }
 
     @Override
