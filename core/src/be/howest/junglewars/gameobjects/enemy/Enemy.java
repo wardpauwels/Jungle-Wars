@@ -35,26 +35,26 @@ public class Enemy extends GameObject {
     private int experienceWhenKilled;
 
     private List<Vector2> targets;
+    private Vector2 destination;
 
     private IChooseTargetType chooseTargetType;
-    private IChooseTargetType chooseMovementType;
+    private IEnemyMovementType chooseMovementType;
     private IEnemyActionType enemyActionType;
 
     private String defaultSprite;
     public String altSprite;
 
-    private boolean spriteChanged;
+    private boolean isShooting;
     private float timer;
     private float time;
-    private float dabTimer;
 
-    public Enemy(GameScreen game, String name,float width,float height, String defaultSpriteUrl,String altSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
-                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType) {
+    public Enemy(GameScreen game, String name, float width, float height, String defaultSpriteUrl, String altSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
+                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, EnemyMovementType chooseMovementType, EnemyActionType actionType) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height,
                 ThreadLocalRandom.current().nextInt(0 - Math.round(width), Gdx.graphics.getWidth() + Math.round(width)),
                 ThreadLocalRandom.current().nextBoolean() ? 0 - height : Gdx.graphics.getHeight() + height); // TODO: spawns only top or bottom now
-        this.WIDTH=width;
-        this.HEIGHT=height;
+        this.WIDTH = width;
+        this.HEIGHT = height;
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
@@ -66,13 +66,13 @@ public class Enemy extends GameObject {
         this.hitpoints = baseHitpoints;
         this.actionTime = baseAttackSpeed;
         this.actionTimer = 0;
-        this.spriteChanged = false;
-        this.time = 3f;
-        this.dabTimer = 2.5f;
+        this.isShooting = false;
+        this.time = .2f;
+
         this.timer = 0;
 
         this.chooseTargetType = chooseTargetType.getType();
-        this.chooseMovementType = chooseMovementType.getType();
+        this.chooseMovementType = chooseMovementType.getMovementType();
         this.enemyActionType = actionType.getAction();
 
         this.defaultSprite = ATLAS_PREFIX + defaultSpriteUrl;
@@ -84,29 +84,23 @@ public class Enemy extends GameObject {
 
         if (this.hitpoints <= 0) this.remove = true;
 
-        targets = chooseMovementType.chooseTargets(this);
-        for(Vector2 v: targets) {
+        destination = chooseMovementType.returnMovement(this);
 
-            float radians = MathUtils.atan2(v.y - body.y, v.x - body.x);
 
-            body.x += MathUtils.cos(radians) * speed * dt;
-            body.y += MathUtils.sin(radians) * speed * dt;
+        float radians = MathUtils.atan2(destination.y - (body.y + body.getHeight()/4), destination.x - (body.x + body.getWidth()/4));
 
-            doEnemyAction(dt);
-        }
+        body.x += MathUtils.cos(radians) * speed * dt;
+        body.y += MathUtils.sin(radians) * speed * dt;
 
-        if(timer<time && !spriteChanged){
-        timer += dt;
-        }
-        else {
-            spriteChanged = true;
-            timer = 0;
-        }
-        if (dabTimer < time && spriteChanged){
-            dabTimer += dt;
-        } else{
-            spriteChanged = false;
-            dabTimer = 2.5f;
+        doEnemyAction(dt);
+
+        if (isShooting) {
+            if (timer > time) {
+                timer = 0;
+                isShooting = false;
+            } else {
+                timer += dt;
+            }
         }
 
 
@@ -117,10 +111,9 @@ public class Enemy extends GameObject {
     public void draw(SpriteBatch batch) {
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
-        if(!spriteChanged){
+        if (!isShooting) {
             changeSprite(defaultSprite);
-        }
-        else{
+        } else {
             changeSprite(altSprite);
 
         }
@@ -154,16 +147,18 @@ public class Enemy extends GameObject {
     }
 
     private void attack() {
+        isShooting = true;
+        timer = 0;
         targets = chooseTargetType.chooseTargets(this);
         if (targets == null) return;
-        for(Vector2 v: targets) {
-//            float destinationX = v.x;
-//            float destinationY = v.y;
+        for (Vector2 v : targets) {
+            float destinationX = v.x;
+            float destinationY = v.y;
 
             float spawnX = body.x + (body.width / 2);
             float spawnY = body.y + (body.height / 2);
 
-            enemyActionType.attack(this,v,spawnX,spawnY);
+            enemyActionType.attack(this, v, spawnX, spawnY);
 
 
         }

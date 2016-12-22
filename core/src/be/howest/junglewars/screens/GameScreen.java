@@ -109,6 +109,7 @@ public class GameScreen extends Stage implements Screen {
                 for (Brick brick : wall.returnWall()) {
                     for (Missile missile : brick.checkCollision(player.getMissiles())) {
                         brick.remove = true;
+                        missile.remove = true;
                     }
                 }
             }
@@ -120,12 +121,10 @@ public class GameScreen extends Stage implements Screen {
     private void spawnEnemies(boolean nextWave) {
         if (data.getEnemies().size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-//            data.getEnemies().add(new Enemy(this, "Zookeeper",50,70, "zookeeper","zookeeper", 5, 150, 100, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
+            data.getEnemies().add(new Enemy(this, "Trump",140,160, "trump","trumpAnimation", 5, 150, 10000, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
 
-            for (int i = 0; i < amountEnemies; i++) {
-                data.getEnemies().add(new Enemy(this, "Zookeeper",50,70, "zookeeper","zookeeper", 5, 150, 10, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
+            for (int i = 0; i < amountEnemies; i++) {data.getEnemies().add(new Enemy(this, "Zookeeper",70,80, "zookeeper3","zookeeper3Animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.CRYING));
             }
-            data.getEnemies().add( new Enemy( this, "Trump", 150, 80, "trump", "trump", 0, 120, 0, 5f, 20, 20, 20, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.TRUMPING ) );
             if (nextWave) data.setWave(data.getWave() + 1);
         }
     }
@@ -181,7 +180,6 @@ public class GameScreen extends Stage implements Screen {
             data.getEnemyMissiles().get(i).update(dt);
             if (data.getEnemyMissiles().get(i).shouldRemove()) {
                 data.getEnemyMissiles().remove(i);
-
                 i--;
             }
         }
@@ -284,8 +282,6 @@ public class GameScreen extends Stage implements Screen {
         for (Player player : data.getPlayers()) {
             player.draw(batch);
             player.getHelper().draw(batch);
-
-
 
             // TODO: work with LibGDX Actors instead?
             bigFont.setColor(0, 0, 0, 1);
