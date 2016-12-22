@@ -71,6 +71,7 @@ public class Enemy extends GameObject {
         this.dabTimer = 2.5f;
         this.timer = 0;
 
+
         this.chooseTargetType = chooseTargetType.getType();
         this.chooseMovementType = chooseMovementType.getType();
         this.enemyActionType = actionType.getAction();

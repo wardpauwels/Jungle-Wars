@@ -13,6 +13,6 @@ public class ProtectingHelper implements IHelperActionType {
 
     @Override
     public void helperUpgrade(Helper helper) {
-        helper.setSpeed(helper.getSpeed()* 1.1f);
+        helper.setSpeed(helper.getSpeed()* 1.05f);
     }
 }
