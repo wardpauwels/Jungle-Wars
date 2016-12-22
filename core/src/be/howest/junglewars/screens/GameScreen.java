@@ -4,6 +4,8 @@ import be.howest.junglewars.*;
 import be.howest.junglewars.data.da.*;
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.enemy.*;
+import be.howest.junglewars.gameobjects.enemy.utils.Brick;
+import be.howest.junglewars.gameobjects.enemy.utils.Wall;
 import be.howest.junglewars.gameobjects.power.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -89,6 +91,7 @@ public class GameScreen extends Stage implements Screen {
                 player.hitBy(missile);
                 missile.doEffect(player);
             }
+
         }
 
         for (Enemy enemy : data.getEnemies()) {
@@ -100,6 +103,17 @@ public class GameScreen extends Stage implements Screen {
             }
         }
 
+        for(Wall wall : data.getWalls()) {
+            for (Player player : data.getPlayers()) {
+                for (Brick brick : wall.returnWall()) {
+                    for (Missile missile : brick.checkCollision(player.getMissiles())) {
+                        brick.remove = true;
+                    }
+                }
+            }
+        }
+
+
     }
 
     //region spawners TODO: create spawners
@@ -107,8 +121,10 @@ public class GameScreen extends Stage implements Screen {
     private void spawnEnemies(boolean nextWave) {
         if (data.getEnemies().size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
+            data.getEnemies().add(new Enemy(this, "Trump",140,160, "trump","trumpAnimation", 5, 150, 100, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.TRUMPING));
+
             for (int i = 0; i < amountEnemies; i++) {
-                data.getEnemies().add(new Enemy(this, "Zookeeper", "zookeeper", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.STABBING));
+                data.getEnemies().add(new Enemy(this, "Zookeeper",70,80, "zookeeper3","zookeeper3Animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.CRYING));
             }
             if (nextWave) data.setWave(data.getWave() + 1);
         }
@@ -182,6 +198,17 @@ public class GameScreen extends Stage implements Screen {
             if (data.getPowers().get(i).shouldRemove()) {
                 data.getPowers().remove(i);
                 i--;
+            }
+        }
+
+       for (int i = 0; i < data.getWalls().size(); i++) {
+            for (int j = 0; j < data.getWalls().get(i).returnWall().size(); j++) {
+                data.getWalls().get(i).returnWall().get(j).update(dt);
+                if (data.getWalls().get(i).returnWall().get(j).shouldRemove()) {
+                    data.getWalls().get(i).returnWall().remove(j);
+
+
+                }
             }
         }
 
@@ -290,6 +317,12 @@ public class GameScreen extends Stage implements Screen {
 
         for (Power power : data.getPowers()) {
             power.draw(batch);
+        }
+        for (Wall wall: data.getWalls()){
+
+            for(Brick b:wall.returnWall()){
+                b.draw(batch);
+            }
         }
 
         bigFont.draw(batch, "LEVEL " + data.getWave(), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 20);
