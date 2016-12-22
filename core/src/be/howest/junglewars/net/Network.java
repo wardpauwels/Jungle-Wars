@@ -13,8 +13,14 @@ public class Network {
 
     }
 
-    static public class Join {
+    static public class PlayerJoinLobby {
+        public int id;
+        public String name;
 
+        PlayerJoinLobby(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 package be.howest.junglewars.spawners;
 
 import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.data.da.EnemyDao;
 import be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
 
@@ -27,9 +26,9 @@ public class EnemySpawner {
         calcMultiplier();
 
         availableEnemies = new HashSet<>();
-        for (EnemyEntity entity : EnemyDao.getAllEnemies()) {
-            availableEnemies.add(entity);
-        }
+//        for (EnemyEntity entity : EnemyDao.getAllEnemies()) {
+//            availableEnemies.add(entity);
+//        }
 
 
     }

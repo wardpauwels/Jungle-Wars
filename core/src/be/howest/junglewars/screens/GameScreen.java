@@ -102,14 +102,7 @@ public class GameScreen extends Stage implements Screen {
 
     @Override
     public void show() {
-        client = new JWClient(playerName);
 
-        if (isHost) {
-            try {
-                server = new JWServer();
-                client.
-            }
-        }
     }
 
     private void checkGameOver() {
@@ -274,8 +267,8 @@ public class GameScreen extends Stage implements Screen {
             Dialog d = new Dialog("Game over", skin) {
                 {
                     text("Woops, " + data.getPlayers().get(0).getName() + " died... You reached " + data.getPlayers().get(0).getScore() + " points!");
-                    button("Home", "leave");
-                    button("Retry", "retry");
+                    button("Home", "Back to menu");
+//                    button("Retry", "retry");
                 }
 
                 @Override
@@ -285,7 +278,7 @@ public class GameScreen extends Stage implements Screen {
                             game.setScreen(new MainMenuScreen(game));
                             break;
                         case "retry":
-                            game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
+//                            game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
                             break;
                     }
                 }

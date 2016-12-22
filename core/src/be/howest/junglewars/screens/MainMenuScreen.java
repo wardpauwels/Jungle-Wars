@@ -1,18 +1,28 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.*;
-import be.howest.junglewars.data.da.*;
-import be.howest.junglewars.data.entities.*;
-import be.howest.junglewars.util.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.audio.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.scenes.scene2d.*;
+import be.howest.junglewars.Difficulty;
+import be.howest.junglewars.JungleWars;
+import be.howest.junglewars.data.da.HighscoreDA;
+import be.howest.junglewars.data.da.PlayerDA;
+import be.howest.junglewars.data.entities.HighscoreEntity;
+import be.howest.junglewars.data.entities.PlayerEntity;
+import be.howest.junglewars.util.Assets;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.*;
-import com.badlogic.gdx.utils.*;
-import com.badlogic.gdx.utils.viewport.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenuScreen extends Stage implements Screen {
     private final JungleWars game;
@@ -113,7 +123,7 @@ public class MainMenuScreen extends Stage implements Screen {
                                 makeLoginDialog();
                                 break;
                             case "multi":
-                                this.hide();
+                                startMultiPlayer();
                                 break;
                         }
                     }
@@ -261,6 +271,11 @@ public class MainMenuScreen extends Stage implements Screen {
         Gdx.input.setInputProcessor(stage);
     }
 
+    private void startMultiPlayer() {
+        game.setScreen(new LobbyScreen(game));
+        dispose();
+    }
+
     @Override
     public void show() {
 
@@ -332,7 +347,7 @@ public class MainMenuScreen extends Stage implements Screen {
                     @Override
                     public void run() {
                         dispose();
-                        game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
+                        game.setScreen(new GameScreen(game, 1, Difficulty.EASY, true, "localhost"));
                     }
                 }, 2 );
             }
@@ -344,7 +359,7 @@ public class MainMenuScreen extends Stage implements Screen {
                 game.setPlayer( new PlayerEntity( "Guest", 1 ) );
                 PlayerDA.getInstance().addPlayer( new PlayerEntity( "Guest", 1 ) );
                 dispose();
-                game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
+                game.setScreen(new GameScreen(game, 1, Difficulty.EASY, true, "localhost"));
             }
         });
     }
