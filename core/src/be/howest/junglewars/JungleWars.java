@@ -24,6 +24,7 @@ public class JungleWars extends Game {
     private PlayerEntity player;
 
     private GDXFacebook gdxFacebook;
+    private boolean facebookCancelled = false;
 
     @Override
     public void create() {
@@ -99,6 +100,7 @@ public class JungleWars extends Game {
             public void onCancel() {
                 // When the user cancels the login process
                 System.out.println( "login() cancel" );
+                facebookCancelled = true;
                 player = new PlayerEntity( "Guest", 1 );
 
             }
@@ -113,7 +115,7 @@ public class JungleWars extends Game {
 
     private void getUserInfo() {
         GDXFacebookGraphRequest request = new GDXFacebookGraphRequest().setNode( "me" ).useCurrentAccessToken();
-        gdxFacebook.newGraphRequest( request, new GDXFacebookCallback<JsonResult>() {
+        gdxFacebook.graph( request, new GDXFacebookCallback<JsonResult>() {
             @Override
             public void onSuccess(JsonResult result) {
                 JsonValue root = result.getJsonValue();
@@ -151,5 +153,9 @@ public class JungleWars extends Game {
 
     public void setPlayer(PlayerEntity player) {
         this.player = player;
+    }
+
+    public boolean isFacebookCancelled() {
+        return facebookCancelled;
     }
 }

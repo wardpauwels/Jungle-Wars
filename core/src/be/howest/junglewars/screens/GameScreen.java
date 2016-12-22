@@ -4,8 +4,7 @@ import be.howest.junglewars.*;
 import be.howest.junglewars.data.da.*;
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.enemy.*;
-import be.howest.junglewars.gameobjects.enemy.utils.Brick;
-import be.howest.junglewars.gameobjects.enemy.utils.Wall;
+import be.howest.junglewars.gameobjects.enemy.utils.*;
 import be.howest.junglewars.gameobjects.power.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -237,6 +236,7 @@ public class GameScreen extends Stage implements Screen {
                     button("Home", "leave");
                     button("Retry", "retry");
                 }
+
 
                 @Override
                 protected void result(Object object) {
