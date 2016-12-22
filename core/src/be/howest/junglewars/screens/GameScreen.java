@@ -2,6 +2,7 @@ package be.howest.junglewars.screens;
 
 import be.howest.junglewars.*;
 import be.howest.junglewars.data.da.*;
+import be.howest.junglewars.data.entities.PlayerEntity;
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.enemy.*;
 import be.howest.junglewars.gameobjects.enemy.utils.*;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.*;
 
 public class GameScreen extends Stage implements Screen {
@@ -33,6 +35,10 @@ public class GameScreen extends Stage implements Screen {
     private boolean isGameOver;
     private String playerName;
 
+    private boolean nextLevel;
+
+
+
     //endregion
 
     public GameScreen(JungleWars game, int wave, Difficulty difficulty) {
@@ -44,6 +50,8 @@ public class GameScreen extends Stage implements Screen {
         this.skin = game.skin;
         this.isGameOver = false;
         this.playerName = game.getPlayer().getName();
+
+        this.nextLevel = true;
 
         data.setWave(wave);
         data.setDifficulty(difficulty);
@@ -120,13 +128,55 @@ public class GameScreen extends Stage implements Screen {
 
     private void spawnEnemies(boolean nextWave) {
         if (data.getEnemies().size() == 0) {
-            amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-            data.getEnemies().add( new Enemy( this, "Trump", 140, 160, "trump", "trumpAnimation", 5, 150, 120, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING ) );
+            nextLevel = false;
+            data.setState(GameState.PRE_WAVE);
+            initUpgradeScreen();
 
-            for (int i = 0; i < amountEnemies; i++) {data.getEnemies().add(new Enemy(this, "Zookeeper",70,80, "zookeeper3","zookeeper3Animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.CRYING));
+
+            if (nextLevel) {
+                data.setState(GameState.RUNNING);
+                amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
+                data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trumpAnimation", 5, 150, 120, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
+
+                for (int i = 0; i < amountEnemies; i++) {
+                    data.getEnemies().add(new Enemy(this, "Zookeeper", 70, 80, "zookeeper3", "zookeeper3Animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.CRYING));
+                }
+                if (nextWave) data.setWave(data.getWave() + 1);
+            }}
+    }
+
+    private void initUpgradeScreen(){
+        Dialog d = new Dialog( "UpgradeHelper", skin ) {
+            {
+                text("Upgrade Your Helper");
+                button("To Next Level", "nextLevel");
             }
-            if (nextWave) data.setWave(data.getWave() + 1);
-        }
+
+            @Override
+            protected void result(Object object) {
+                switch (String.valueOf(object)) {
+                    case "nextLevel":
+                        nextLevel = true;
+                        break;
+
+                }
+
+            }
+        };
+        d.show( stage ).setWidth( 500 );
+        d.setPosition( Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2 );
+        makeSmallCloseDialogButton( d );
+    }
+
+    public void makeSmallCloseDialogButton(Dialog d) {
+        Button closeButton = new Button( skin, "close" );
+        closeButton.addListener( new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                d.hide();
+            }
+        } );
+        d.getTitleTable().add( closeButton );
     }
 
     private void spawnCurrencies() {
@@ -376,6 +426,7 @@ public class GameScreen extends Stage implements Screen {
                 batch.end();
                 break;
             case PRE_WAVE:
+
                 updatePreWave(dt);
                 renderPreWave(batch);
                 batch.end();
