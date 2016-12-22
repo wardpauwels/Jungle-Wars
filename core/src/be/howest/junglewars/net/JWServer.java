@@ -73,6 +73,7 @@ public class JWServer {
 
             for (Connection c : server.getConnections()) {
                 JWConnection jwc = (JWConnection) c;
+                System.out.println("Player has joined / left: " + data.getPlayerById(jwc.getID()));
 
                 if (jwc.getID() != conn.getID()) {
                     Player connectedPlayer = data.getPlayerById(jwc.getID());
