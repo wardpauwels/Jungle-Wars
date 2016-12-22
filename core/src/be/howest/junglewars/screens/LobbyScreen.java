@@ -84,6 +84,8 @@ public class LobbyScreen extends Stage implements Screen {
         try{
             server = new JWServer();
             client.connect("localhost");
+
+            game.setScreen(new GameScreen(game, false, Difficulty.EASY, client, server));
         } catch (IOException e) {
             System.out.println("fuck mn leven, LobbyScreen::startHost() failed");
         }
@@ -91,6 +93,7 @@ public class LobbyScreen extends Stage implements Screen {
 
     private void joinHost(String host){
         client.connect(host);
+        game.setScreen(new GameScreen(game, false, Difficulty.EASY, client, server));
     }
 
     @Override

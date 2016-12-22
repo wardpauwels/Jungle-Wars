@@ -82,6 +82,17 @@ public class JWServer {
                     conn.sendTCP(connectedPlayer.getMovementState());
                 }
             }
+            if (server.getConnections().length == 2) {
+                //server.sendToAllTCP(); //TODO difficulty vanuit GUI
+                Network.StartNewGame newGameMessage = new Network.StartNewGame();
+                boolean first = true;
+                for (Player p : data.getPlayers().values()) {
+                    if (first) {
+                        server.sendToTCP((int) p.getId(), newGameMessage);
+                    }
+                }
+            }
+
         } else if (message instanceof Network.MovementState) {
             Network.MovementState msg = (Network.MovementState) message;
             msg.playerId = conn.getID();

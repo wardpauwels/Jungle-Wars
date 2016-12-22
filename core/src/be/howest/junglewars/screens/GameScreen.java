@@ -39,20 +39,23 @@ public class GameScreen extends Stage implements Screen {
 
     //endregion
 
-    public GameScreen(JungleWars game, boolean sp, int wave, Difficulty difficulty, boolean isHost, String ip) {
+    public GameScreen(JungleWars game, boolean singleplayer, Difficulty difficulty, JWClient client, JWServer server) {
         super(new ScreenViewport(), game.batch);
 
+        this.isHost = server != null;
+        this.server = server;
+        this.client = client;
         //data = new GameData();
         this.stage = this;
         this.game = game;
         this.atlas = game.atlas;
         this.skin = game.skin;
         this.isGameOver = false;
-        this.playerName = game.getPlayer().getName();
+        this.playerName = "John";
 
-        data.setWave(wave);
-        data.setDifficulty(difficulty);
-        data.setState(GameState.READY);
+//        data.setWave(1);
+//        data.setDifficulty(difficulty);
+//        data.setState(GameState.READY);
 
         // create full screen background
         backgroundSprite = atlas.createSprite("background/game");

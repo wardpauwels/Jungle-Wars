@@ -1,30 +1,20 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.JungleWars;
-import be.howest.junglewars.data.da.HighscoreDA;
-import be.howest.junglewars.data.da.PlayerDA;
-import be.howest.junglewars.data.entities.HighscoreEntity;
-import be.howest.junglewars.data.entities.PlayerEntity;
-import be.howest.junglewars.util.Assets;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import be.howest.junglewars.*;
+import be.howest.junglewars.data.da.*;
+import be.howest.junglewars.data.entities.*;
+import be.howest.junglewars.util.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.*;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.viewport.*;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.*;
 
 public class MainMenuScreen extends Stage implements Screen {
     private final JungleWars game;
@@ -122,7 +112,7 @@ public class MainMenuScreen extends Stage implements Screen {
                     protected void result(Object object) {
                         switch (String.valueOf(object)) {
                             case "single":
-                                makeLoginDialog();
+                                //TODO single player start
                                 break;
                             case "multi":
                                 startMultiPlayer();
@@ -321,50 +311,6 @@ public class MainMenuScreen extends Stage implements Screen {
     public void dispose() {
         super.dispose();
         music.dispose();
-    }
-
-    public void makeLoginDialog() {
-        facebookLoginButton = new TextButton( "Facebook", skin );
-        guestLoginButton = new TextButton( "Login as Guest", skin );
-        Table nameTable = new Table(skin);
-        nameTable.align(Align.center | Align.top);
-
-        Dialog d = new Dialog( "Login", skin );
-        d.add(nameTable);
-        nameTable.add( facebookLoginButton );
-        nameTable.add( guestLoginButton );
-        nameTable.row();
-        nameTable.add( "By logging in as guest, we won't save any highscores." );
-        makeSmallCloseDialogButton( d );
-        d.show( stage );
-        d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
-
-        facebookLoginButton.addListener( new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.login();
-                facebookLoginButton.setDisabled( true );
-                guestLoginButton.setDisabled( false );
-                Timer.schedule( new Timer.Task() {
-                    @Override
-                    public void run() {
-                        dispose();
-                        game.setScreen(new GameScreen(game, true, 1, Difficulty.EASY, true, "localhost"));
-                    }
-                }, 2 );
-            }
-        } );
-
-        guestLoginButton.addListener( new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setPlayer( new PlayerEntity( "Guest", 1 ) );
-                PlayerDA.getInstance().addPlayer( new PlayerEntity( "Guest", 1 ) );
-                dispose();
-                startSinglePlayer();
-                game.setScreen(new GameScreen(game, true, 1, Difficulty.EASY, true, "localhost"));
-            }
-        });
     }
 
     private void startSinglePlayer(){

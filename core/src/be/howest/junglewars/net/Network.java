@@ -1,5 +1,6 @@
 package be.howest.junglewars.net;
 
+import be.howest.junglewars.*;
 import com.badlogic.gdx.math.*;
 import com.esotericsoftware.kryo.*;
 import com.esotericsoftware.kryonet.*;
@@ -20,6 +21,8 @@ public class Network {
         kryo.register(WaveStart.class);
         kryo.register(PlayerSpawned.class);
         kryo.register(Vector2.class);
+        kryo.register(StartNewGame.class);
+        kryo.register(Difficulty.class);
     }
 
     static public class Login {
@@ -120,6 +123,15 @@ public class Network {
             this.playerId = playerId;
             this.movementState = movementState;
         }
+    }
+
+    static public class StartNewGame {
+        public Difficulty difficulty;
+        public boolean isHost;
+
+        public StartNewGame() {
+        }
+
     }
 
 }
