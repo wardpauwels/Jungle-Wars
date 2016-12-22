@@ -1,21 +1,14 @@
 package be.howest.junglewars;
 
-import be.howest.junglewars.data.da.PlayerDA;
-import be.howest.junglewars.data.entities.PlayerEntity;
-import be.howest.junglewars.screens.GameScreen;
-import be.howest.junglewars.screens.MainMenuScreen;
-import be.howest.junglewars.util.Assets;
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.FPSLogger;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.JsonValue;
+import be.howest.junglewars.data.da.*;
+import be.howest.junglewars.data.entities.*;
+import be.howest.junglewars.screens.*;
+import be.howest.junglewars.util.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.*;
 import de.tomgrill.gdxfacebook.core.*;
 
 public class JungleWars extends Game {
@@ -116,7 +109,7 @@ public class JungleWars extends Game {
 
     private void getUserInfo() {
         GDXFacebookGraphRequest request = new GDXFacebookGraphRequest().setNode( "me" ).useCurrentAccessToken();
-        gdxFacebook.newGraphRequest( request, new GDXFacebookCallback<JsonResult>() {
+        gdxFacebook.graph(request, new GDXFacebookCallback<JsonResult>() {
             @Override
             public void onSuccess(JsonResult result) {
                 JsonValue root = result.getJsonValue();

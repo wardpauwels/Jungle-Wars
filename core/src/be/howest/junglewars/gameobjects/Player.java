@@ -1,8 +1,9 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.*;
 import be.howest.junglewars.data.entities.*;
 import be.howest.junglewars.gameobjects.power.*;
-import be.howest.junglewars.screens.*;
+import be.howest.junglewars.net.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.*;
 
@@ -15,7 +16,7 @@ public class Player extends GameObject {
     private static final float BULLET_HEIGHT = 25;
 
     private static final String ATLAS_PREFIX = "player/";
-    private final Sprite SHOOTING_SPRITE = game.atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
+    private final Sprite SHOOTING_SPRITE = getData().atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
     public float timer;
     private boolean isLookingLeft;
     private boolean isShooting;
@@ -41,14 +42,17 @@ public class Player extends GameObject {
     private int missleSpeed = 500;
     private float armor = 0f;
     private float baseSpeed;
+    private boolean me;
+    private Network.MovementState movermentState;
 
-    public Player(GameScreen game, String defaultSpriteUrl, PlayerEntity entity) {
-        this( game, entity.getName(), entity.getId(), defaultSpriteUrl );
+    public Player(String defaultSpriteUrl, PlayerEntity entity, boolean isMe, GameData data) {
+        this(defaultSpriteUrl, isMe, data);
     }
 
-    public Player(GameScreen game, String name, long id, String defaultSpriteUrl) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2);
+    public Player(String defaultSpriteUrl, boolean isMe, GameData data) {
+        super(ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2, data);
 
+        this.me = isMe;
         this.name = name;
         this.id = id;
 
@@ -70,10 +74,13 @@ public class Player extends GameObject {
         this.hitpoints = 100;
         this.damage = 10;
 
-        helper = new Helper(game, "Little Helper", this, "red-wings-up");
+        helper = new Helper("Little Helper", this, "red-wings-up", getData());
     }
 
-    private void handleInput(float dt) {
+    public boolean handleInput(float dt) {
+        float myX = body.x;
+        float myY = body.y;
+
         boolean keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         boolean keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
@@ -121,6 +128,7 @@ public class Player extends GameObject {
             body.x = rightBorderTouch ? Gdx.graphics.getWidth() - body.getWidth() : body.x + currentSpeed;
 
         }
+        return body.x != myX || body.y != myY;
     }
     public boolean isSlowed(){
         if(speed<baseSpeed){
@@ -141,7 +149,7 @@ public class Player extends GameObject {
         float spawnY = body.y + body.getHeight() - 10;
 
         missiles.add(
-                new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3,MissileType.STANDARD)
+                new Missile(BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3, MissileType.STANDARD, getData())
         );
     }
 
@@ -211,7 +219,7 @@ public class Player extends GameObject {
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void render(SpriteBatch batch) {
         if (isShooting)
             changeSprite(SHOOTING_SPRITE);
         else
@@ -221,9 +229,9 @@ public class Player extends GameObject {
             activeSprite.flip(true, false);
         }
 
-        helper.draw(batch);
+        helper.render(batch);
         for (Missile missile : missiles) {
-            missile.draw(batch);
+            missile.render(batch);
         }
 
         activeSprite.setPosition(body.x, body.y);
@@ -262,6 +270,10 @@ public class Player extends GameObject {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getScore() {
@@ -334,5 +346,17 @@ public class Player extends GameObject {
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Network.MovementState getMovementState() {
+        return new Network.MovementState(id, isLookingLeft, isShooting, getPosition());
+    }
+
+    public void setMovementState(Network.MovementState movermentState) {
+        this.movermentState = movermentState;
     }
 }

@@ -1,16 +1,10 @@
 package be.howest.junglewars.gameobjects.enemy.impl;
 
-import be.howest.junglewars.gameobjects.enemy.Enemy;
-import be.howest.junglewars.gameobjects.enemy.IEnemyActionType;
-import be.howest.junglewars.gameobjects.enemy.utils.Brick;
-import be.howest.junglewars.gameobjects.enemy.utils.Wall;
-import be.howest.junglewars.screens.GameScreen;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
-import com.badlogic.gdx.math.Vector2;
+import be.howest.junglewars.gameobjects.enemy.*;
+import be.howest.junglewars.gameobjects.enemy.utils.*;
+import com.badlogic.gdx.math.*;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by jensthiel on 20/12/16.
@@ -23,9 +17,9 @@ public class TrumpAction implements IEnemyActionType {
         Vector2 start = new Vector2(v.x,v.y);
         int curveX = rand.nextInt((10-(-10)+1)+(-10));
         int curveY = rand.nextInt((10-(-10)+1)+(-10));
-        Wall wall = new Wall(enemy.game,start,length,curveX,curveY);
+        Wall wall = new Wall(start, length, curveX, curveY, enemy.getData());
         wall.DrawWall();
-        enemy.game.getData().getWalls().add(wall);
+        //enemy.game.getData().getWalls().add(wall);
         enemy.changeSprite(enemy.altSprite);
 
     }

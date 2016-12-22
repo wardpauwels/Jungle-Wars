@@ -1,23 +1,16 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.JungleWars;
-import be.howest.junglewars.net.JWClient;
-import be.howest.junglewars.net.JWServer;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import be.howest.junglewars.*;
+import be.howest.junglewars.net.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.viewport.*;
 
-import java.io.IOException;
+import java.io.*;
 
 public class LobbyScreen extends Stage implements Screen {
 
@@ -90,7 +83,7 @@ public class LobbyScreen extends Stage implements Screen {
     private void startHost(){
         try{
             server = new JWServer();
-            client.connectLocal();
+            client.connect("localhost");
         } catch (IOException e) {
             System.out.println("fuck mn leven, LobbyScreen::startHost() failed");
         }
@@ -103,8 +96,6 @@ public class LobbyScreen extends Stage implements Screen {
     @Override
     public void render(float delta) {
         playerTable.clearChildren();
-
-
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

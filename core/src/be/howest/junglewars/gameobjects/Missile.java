@@ -1,8 +1,8 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.screens.GameScreen;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
+import be.howest.junglewars.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
 
 public class Missile extends GameObject {
     private static final String ATLAS_PREFIX = "missile/";
@@ -18,9 +18,9 @@ public class Missile extends GameObject {
 
     private IMissileType effect;
 
-    public Missile(GameScreen game, float width, float height, float spawnX, float spawnY, float destinationX, float destinationY, String defaultSpriteUrl, int damage, int speed,
-                   int rotationSpeed, float lifeTime, MissileType effect) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, spawnX, spawnY);
+    public Missile(float width, float height, float spawnX, float spawnY, float destinationX, float destinationY, String defaultSpriteUrl, int damage, int speed,
+                   int rotationSpeed, float lifeTime, MissileType effect, GameData data) {
+        super(ATLAS_PREFIX + defaultSpriteUrl, width, height, spawnX, spawnY, data);
 
         this.damage = damage;
         this.speed = speed;
@@ -49,7 +49,7 @@ public class Missile extends GameObject {
 
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void render(SpriteBatch batch) {
         activeSprite.setPosition(body.x - body.getWidth() / 2, body.y - body.getHeight() / 2);
         activeSprite.rotate(rotationSpeed);
         activeSprite.draw(batch);
@@ -60,6 +60,6 @@ public class Missile extends GameObject {
     }
 
     public void doEffect(Player p){
-        effect.doEffect(game,p);
+        effect.doEffect(p);
     }
 }

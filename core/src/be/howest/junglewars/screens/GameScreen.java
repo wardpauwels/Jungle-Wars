@@ -1,67 +1,48 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.GameState;
-import be.howest.junglewars.JungleWars;
-import be.howest.junglewars.data.da.HighscoreDA;
+import be.howest.junglewars.*;
 import be.howest.junglewars.gameobjects.Currency;
-import be.howest.junglewars.gameobjects.Missile;
-import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.gameobjects.enemy.ChooseTargetType;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
-import be.howest.junglewars.gameobjects.enemy.EnemyActionType;
-import be.howest.junglewars.gameobjects.enemy.utils.Brick;
-import be.howest.junglewars.gameobjects.enemy.utils.Wall;
-import be.howest.junglewars.gameobjects.power.Power;
-import be.howest.junglewars.gameobjects.power.PowerType;
-import be.howest.junglewars.net.JWClient;
-import be.howest.junglewars.net.JWServer;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import be.howest.junglewars.gameobjects.*;
+import be.howest.junglewars.gameobjects.enemy.*;
+import be.howest.junglewars.gameobjects.power.*;
+import be.howest.junglewars.net.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.*;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.viewport.*;
 
-import java.io.IOException;
+import java.util.*;
 
 public class GameScreen extends Stage implements Screen {
 
     //region fields
 
     public TextureAtlas atlas;
+    public boolean isHost;
+    public JWClient client;
+    public JWServer server;
+    public String ip;
     private Skin skin;
     private Stage stage;
     private Sprite backgroundSprite;
     private BitmapFont smallFont;
     private BitmapFont bigFont;
-
     private JungleWars game;
     private GameData data;
-
     private int startingEnemies;
     private float multiplierEnemies;
     private float amountEnemies;
     private boolean isGameOver;
     private String playerName;
 
-    public boolean isHost;
-    public JWClient client;
-    public JWServer server;
-    public String ip;
-
     //endregion
 
     public GameScreen(JungleWars game, boolean sp, int wave, Difficulty difficulty, boolean isHost, String ip) {
         super(new ScreenViewport(), game.batch);
 
-        data = new GameData();
+        //data = new GameData();
         this.stage = this;
         this.game = game;
         this.atlas = game.atlas;
@@ -88,7 +69,7 @@ public class GameScreen extends Stage implements Screen {
         bigFont = generator.generateFont(parameter);
         generator.dispose();
 
-        data.getPlayers().add( new Player( this, "harambe", game.getPlayer() ) );
+        //data.getPlayers().add( new Player( this, "harambe", game.getPlayer() ) );
 
         startingEnemies = 1;
         multiplierEnemies = 0.5f;
@@ -101,45 +82,45 @@ public class GameScreen extends Stage implements Screen {
     }
 
     private void checkGameOver() {
-        for (Player player : data.getPlayers()) {
-            if (player.getHitpoints() > 0) return;
+        for (Map.Entry<Long, Player> playerEntry : data.getPlayers().entrySet()) {
+            if (playerEntry.getValue().getHitpoints() > 0) return;
         }
         data.setState(GameState.GAME_OVER);
     }
 
     private void checkCollisions() {
-        for (Player player : data.getPlayers()) {
-            for (Currency currency : player.checkCollision(data.getCurrencies())) {
-                currency.collectedBy(player);
-            }
-            for (Power power : player.checkCollision(data.getPowers())) {
-                power.collectedBy(player);
-            }
-            for (Missile missile : player.checkCollision(data.getEnemyMissiles())) {
-                player.hitBy(missile);
-                missile.doEffect(player);
-            }
-
-        }
-
-        for (Enemy enemy : data.getEnemies()) {
-            for (Player player : data.getPlayers()) {
-                for (Missile missile : enemy.checkCollision(player.getMissiles())) {
-                    enemy.hitBy(missile, player);
-                    return;
-                }
-            }
-        }
-
-        for(Wall wall : data.getWalls()) {
-            for (Player player : data.getPlayers()) {
-                for (Brick brick : wall.returnWall()) {
-                    for (Missile missile : brick.checkCollision(player.getMissiles())) {
-                        brick.remove = true;
-                    }
-                }
-            }
-        }
+//        for (Player player : data.getPlayers()) {
+//            for (Currency currency : player.checkCollision(data.getCurrencies())) {
+//                currency.collectedBy(player);
+//            }
+//            for (Power power : player.checkCollision(data.getPowers())) {
+//                power.collectedBy(player);
+//            }
+//            for (Missile missile : player.checkCollision(data.getEnemyMissiles())) {
+//                player.hitBy(missile);
+//                missile.doEffect(player);
+//            }
+//
+//        }
+//
+//        for (Enemy enemy : data.getEnemies()) {
+//            for (Player player : data.getPlayers()) {
+//                for (Missile missile : enemy.checkCollision(player.getMissiles())) {
+//                    enemy.hitBy(missile, player);
+//                    return;
+//                }
+//            }
+//        }
+//
+//        for(Wall wall : data.getWalls()) {
+//            for (Player player : data.getPlayers()) {
+//                for (Brick brick : wall.returnWall()) {
+//                    for (Missile missile : brick.checkCollision(player.getMissiles())) {
+//                        brick.remove = true;
+//                    }
+//                }
+//            }
+//        }
 
 
     }
@@ -149,10 +130,10 @@ public class GameScreen extends Stage implements Screen {
     private void spawnEnemies(boolean nextWave) {
         if (data.getEnemies().size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-            data.getEnemies().add(new Enemy(this, "Trump",140,160, "trump","trumpAnimation", 5, 150, 100, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.TRUMPING));
+            data.getEnemies().add(new Enemy("Trump", 140, 160, "trump", "trumpAnimation", 5, 150, 100, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.TRUMPING, getData()));
 
             for (int i = 0; i < amountEnemies; i++) {
-                data.getEnemies().add(new Enemy(this, "Zookeeper",70,80, "zookeeper3","zookeeper3Animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.CRYING));
+                data.getEnemies().add(new Enemy("Zookeeper", 70, 80, "zookeeper3", "zookeeper3Animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.CRYING, getData()));
             }
             if (nextWave) data.setWave(data.getWave() + 1);
         }
@@ -161,19 +142,19 @@ public class GameScreen extends Stage implements Screen {
     private void spawnCurrencies() {
         int maxCurrenciesOnField = 2;
         if (data.getCurrencies().size() < maxCurrenciesOnField) {
-            data.getCurrencies().add(new Currency(this, 5, "coin"));
+            data.getCurrencies().add(new Currency(5, "coin", getData()));
         }
     }
 
     private void spawnPowers() {
         int maxPowersOnField = 5;
         if (data.getPowers().size() < maxPowersOnField) {
-            data.getPowers().add(new Power(this, "Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40));
-            data.getPowers().add(new Power(this, "Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));
-            data.getPowers().add(new Power(this, "Attack Speed", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40));
-            data.getPowers().add(new Power(this, "Missle Speed", "misslespeed", 5, 10, PowerType.MISSLE_SPEED_POWER, 40));
-            data.getPowers().add(new Power(this, "HP bonus", "HP", 5, 1, PowerType.HITPOINTS_POWER, 100));
-            data.getPowers().add(new Power(this, "Armor Bonus", "armor", 5, 10, PowerType.ARMOR_POWER, 20));
+            data.getPowers().add(new Power("Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40, getData()));
+            data.getPowers().add(new Power("Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50, getData()));
+            data.getPowers().add(new Power("Attack Speed", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40, getData()));
+            data.getPowers().add(new Power("Missle Speed", "misslespeed", 5, 10, PowerType.MISSLE_SPEED_POWER, 40, getData()));
+            data.getPowers().add(new Power("HP bonus", "HP", 5, 1, PowerType.HITPOINTS_POWER, 100, getData()));
+            data.getPowers().add(new Power("Armor Bonus", "armor", 5, 10, PowerType.ARMOR_POWER, 20, getData()));
         }
     }
 
@@ -193,52 +174,52 @@ public class GameScreen extends Stage implements Screen {
         spawnCurrencies();
         spawnPowers();
 
-        for (Player player : data.getPlayers()) {
-            player.update(dt);
-        }
-
-        for (int i = 0; i < data.getEnemies().size(); i++) {
-            data.getEnemies().get(i).update(dt);
-            if (data.getEnemies().get(i).shouldRemove()) {
-                data.getEnemies().remove(i);
-                i--;
-            }
-        }
-
-        for (int i = 0; i < data.getEnemyMissiles().size(); i++) {
-            data.getEnemyMissiles().get(i).update(dt);
-            if (data.getEnemyMissiles().get(i).shouldRemove()) {
-                data.getEnemyMissiles().remove(i);
-                i--;
-            }
-        }
-
-        for (int i = 0; i < data.getCurrencies().size(); i++) {
-            data.getCurrencies().get(i).update(dt);
-            if (data.getCurrencies().get(i).shouldRemove()) {
-                data.getCurrencies().remove(i);
-                i--;
-            }
-        }
-
-        for (int i = 0; i < data.getPowers().size(); i++) {
-            data.getPowers().get(i).update(dt);
-            if (data.getPowers().get(i).shouldRemove()) {
-                data.getPowers().remove(i);
-                i--;
-            }
-        }
-
-       for (int i = 0; i < data.getWalls().size(); i++) {
-            for (int j = 0; j < data.getWalls().get(i).returnWall().size(); j++) {
-                data.getWalls().get(i).returnWall().get(j).update(dt);
-                if (data.getWalls().get(i).returnWall().get(j).shouldRemove()) {
-                    data.getWalls().get(i).returnWall().remove(j);
-
-
-                }
-            }
-        }
+//        for (Player player : data.getPlayers()) {
+//            player.update(dt);
+//        }
+//
+//        for (int i = 0; i < data.getEnemies().size(); i++) {
+//            data.getEnemies().get(i).update(dt);
+//            if (data.getEnemies().get(i).shouldRemove()) {
+//                data.getEnemies().remove(i);
+//                i--;
+//            }
+//        }
+//
+//        for (int i = 0; i < data.getEnemyMissiles().size(); i++) {
+//            data.getEnemyMissiles().get(i).update(dt);
+//            if (data.getEnemyMissiles().get(i).shouldRemove()) {
+//                data.getEnemyMissiles().remove(i);
+//                i--;
+//            }
+//        }
+//
+//        for (int i = 0; i < data.getCurrencies().size(); i++) {
+//            data.getCurrencies().get(i).update(dt);
+//            if (data.getCurrencies().get(i).shouldRemove()) {
+//                data.getCurrencies().remove(i);
+//                i--;
+//            }
+//        }
+//
+//        for (int i = 0; i < data.getPowers().size(); i++) {
+//            data.getPowers().get(i).update(dt);
+//            if (data.getPowers().get(i).shouldRemove()) {
+//                data.getPowers().remove(i);
+//                i--;
+//            }
+//        }
+//
+//       for (int i = 0; i < data.getWalls().size(); i++) {
+//            for (int j = 0; j < data.getWalls().get(i).returnWall().size(); j++) {
+//                data.getWalls().get(i).returnWall().get(j).update(dt);
+//                if (data.getWalls().get(i).returnWall().get(j).shouldRemove()) {
+//                    data.getWalls().get(i).returnWall().remove(j);
+//
+//
+//                }
+//            }
+//        }
 
         checkCollisions();
 
@@ -257,11 +238,11 @@ public class GameScreen extends Stage implements Screen {
     private void updateGameOver(float dt) {
         if (!isGameOver) {
             isGameOver = true;
-            HighscoreDA.getInstance().addHighscore( data.getPlayers().get( 0 ) );
+            //HighscoreDA.getInstance().addHighscore( data.getPlayers().get( 0 ) );
 
             Dialog d = new Dialog("Game over", skin) {
                 {
-                    text("Woops, " + data.getPlayers().get(0).getName() + " died... You reached " + data.getPlayers().get(0).getScore() + " points!");
+                    //text("Woops, " + data.getPlayers().get(0).getName() + " died... You reached " + data.getPlayers().get(0).getScore() + " points!");
                     button("Home", "Back to menu");
 //                    button("Retry", "retry");
                 }
@@ -295,8 +276,8 @@ public class GameScreen extends Stage implements Screen {
     private void renderRunning(SpriteBatch batch) {
         // if all players have 0 hitpoints => game over
         boolean isGameOver = true;
-        for (Player p : data.getPlayers()) {
-            if (p.getHitpoints() >= 0) {
+        for (Map.Entry<Long, Player> p : data.getPlayers().entrySet()) {
+            if (p.getValue().getHitpoints() >= 0) {
                 isGameOver = false;
                 break;
             }
@@ -307,9 +288,10 @@ public class GameScreen extends Stage implements Screen {
             return;
         }
 
-        for (Player player : data.getPlayers()) {
-            player.draw(batch);
-            player.getHelper().draw(batch);
+        for (Map.Entry<Long, Player> p : data.getPlayers().entrySet()) {
+            Player player = p.getValue();
+            player.render(batch);
+            player.getHelper().render(batch);
 
             // TODO: work with LibGDX Actors instead?
             bigFont.setColor(0, 0, 0, 1);
@@ -331,27 +313,27 @@ public class GameScreen extends Stage implements Screen {
 
         }
 
-        for (Enemy enemy : data.getEnemies()) {
-            enemy.draw(batch);
-        }
-
-        for (Missile missile : data.getEnemyMissiles()) {
-            missile.draw(batch);
-        }
-
-        for (Currency currency : data.getCurrencies()) {
-            currency.draw(batch);
-        }
-
-        for (Power power : data.getPowers()) {
-            power.draw(batch);
-        }
-        for (Wall wall: data.getWalls()){
-
-            for(Brick b:wall.returnWall()){
-                b.draw(batch);
-            }
-        }
+//        for (Enemy enemy : data.getEnemies()) {
+//            enemy.render(batch);
+//        }
+//
+//        for (Missile missile : data.getEnemyMissiles()) {
+//            missile.render(batch);
+//        }
+//
+//        for (Currency currency : data.getCurrencies()) {
+//            currency.render(batch);
+//        }
+//
+//        for (Power power : data.getPowers()) {
+//            power.render(batch);
+//        }
+//        for (Wall wall: data.getWalls()){
+//
+//            for(Brick b:wall.returnWall()){
+//                b.render(batch);
+//            }
+//        }
 
         bigFont.draw(batch, "LEVEL " + data.getWave(), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 20);
 
@@ -366,9 +348,9 @@ public class GameScreen extends Stage implements Screen {
     }
 
     private void renderGameOver(SpriteBatch batch) {
-//        bigFont.draw(batch, "GAME OVER!", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+//        bigFont.render(batch, "GAME OVER!", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 //        for (Player player : players) {
-//            smallFont.draw(batch, player.getName() + ": " + player.getScore() + " points", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 40);
+//            smallFont.render(batch, player.getName() + ": " + player.getScore() + " points", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 40);
 //        }
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

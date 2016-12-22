@@ -1,58 +1,45 @@
 package be.howest.junglewars.gameobjects.enemy;
 
-import be.howest.junglewars.gameobjects.GameObject;
-import be.howest.junglewars.gameobjects.Missile;
-import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.screens.GameScreen;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
+import be.howest.junglewars.*;
+import be.howest.junglewars.gameobjects.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
 
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class Enemy extends GameObject {
-    private float WIDTH;
-    private float HEIGHT;
     public static final float BULLET_WIDTH = 15;
     public static final float BULLET_HEIGHT = 15;
-
     private static final String ATLAS_PREFIX = "enemy/";
-
+    public String altSprite;
+    private float WIDTH;
+    private float HEIGHT;
     private String name;
-
     private int damage;
     private int hitpoints;
     private int speed;
-
     private float actionTime;
     private float actionTimer;
-
     private int spawnChance;
-
     private int scoreWhenKilled;
     private int experienceWhenKilled;
-
     private List<Vector2> targets;
-
     private IChooseTargetType chooseTargetType;
     private IChooseTargetType chooseMovementType;
     private IEnemyActionType enemyActionType;
-
     private String defaultSprite;
-    public String altSprite;
-
     private boolean spriteChanged;
     private float timer;
     private float time;
     private float dabTimer;
 
-    public Enemy(GameScreen game, String name,float width,float height, String defaultSpriteUrl,String altSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
-                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height,
+    public Enemy(String name, float width, float height, String defaultSpriteUrl, String altSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
+                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType, GameData data) {
+        super(ATLAS_PREFIX + defaultSpriteUrl, width, height,
                 ThreadLocalRandom.current().nextInt(0 - Math.round(width), Gdx.graphics.getWidth() + Math.round(width)),
-                ThreadLocalRandom.current().nextBoolean() ? 0 - height : Gdx.graphics.getHeight() + height); // TODO: spawns only top or bottom now
+                ThreadLocalRandom.current().nextBoolean() ? 0 - height : Gdx.graphics.getHeight() + height, data); // TODO: spawns only top or bottom now
         this.WIDTH=width;
         this.HEIGHT=height;
         this.name = name;
@@ -114,7 +101,7 @@ public class Enemy extends GameObject {
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void render(SpriteBatch batch) {
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
         if(!spriteChanged){
@@ -167,7 +154,7 @@ public class Enemy extends GameObject {
     }
 
     public void changeSprite(String sprite){
-        changeSprite(game.atlas.createSprite(sprite));
+        changeSprite(getData().atlas.createSprite(sprite));
     }
 
     public int getScoreWhenKilled() {

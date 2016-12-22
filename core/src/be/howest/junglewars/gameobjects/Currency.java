@@ -1,10 +1,10 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.screens.GameScreen;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import be.howest.junglewars.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.g2d.*;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.*;
 
 // Buy upgrades for your helpers with these
 // Looks like a Power where the "power" just adds some coins...
@@ -17,8 +17,8 @@ public class Currency extends GameObject {
     private float lifeTime;
     private float lifeTimer;
 
-    public Currency(GameScreen game, float lifeTime, String defaultSpriteUrl) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
+    public Currency(float lifeTime, String defaultSpriteUrl, GameData data) {
+        super(ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()), data);
 
         this.lifeTime = lifeTime;
     }
@@ -37,7 +37,7 @@ public class Currency extends GameObject {
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void render(SpriteBatch batch) {
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
     }

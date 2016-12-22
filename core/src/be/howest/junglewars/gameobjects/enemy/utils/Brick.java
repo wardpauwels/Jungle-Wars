@@ -1,8 +1,8 @@
 package be.howest.junglewars.gameobjects.enemy.utils;
 
-import be.howest.junglewars.gameobjects.GameObject;
-import be.howest.junglewars.screens.GameScreen;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import be.howest.junglewars.*;
+import be.howest.junglewars.gameobjects.*;
+import com.badlogic.gdx.graphics.g2d.*;
 
 /**
  * Created by jensthiel on 20/12/16.
@@ -13,8 +13,8 @@ public class Brick extends GameObject {
     private float lifeTime;
     private float lifeTimer;
 
-    public Brick(GameScreen g, float width, float height, float x, float y){
-        super(g,ATLAS_PREFIX +"brick",width,height,x,y);
+    public Brick(float width, float height, float x, float y, GameData data) {
+        super(ATLAS_PREFIX + "brick", width, height, x, y, data);
         lifeTime = 10;
         lifeTimer = 0;
     }
@@ -29,7 +29,7 @@ public class Brick extends GameObject {
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void render(SpriteBatch batch) {
         activeSprite.setPosition(body.x,body.y);
         activeSprite.draw(batch);
     }
