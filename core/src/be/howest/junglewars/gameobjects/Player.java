@@ -79,8 +79,6 @@ public class Player extends GameObject {
     }
 
     private void handleInput(float dt) {
-        float myX = body.x;
-        float myY = body.y;
 
         boolean keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
@@ -96,34 +94,42 @@ public class Player extends GameObject {
         boolean upTouchWall = false;
         boolean downTouchWall = false;
         boolean rightTouchWall = false;
+
         for(Wall w : game.getData().getWalls()){
             List<Brick> bricks = this.checkCollision(w.returnWall());
             if(bricks.size() > 0) {
-                Rectangle rUp = new Rectangle(body.x,body.y+HEIGHT,body.x+WIDTH,body.y+HEIGHT);
-                Rectangle rRight = new Rectangle(body.x+WIDTH,body.y,body.x+WIDTH,body.y+HEIGHT);
-                Rectangle rDown = new Rectangle(body.x,body.y,body.x+WIDTH,body.y);
-                Rectangle rLeft = new Rectangle(body.x,body.y,body.x,body.y+HEIGHT);
+                int margin = 0;
+                Rectangle rUp = new Rectangle(body.x - margin,body.y+HEIGHT  + margin,body.x+WIDTH + margin,body.y+HEIGHT + margin);
+                Rectangle rRight = new Rectangle(body.x + margin+WIDTH,body.y - margin,body.x+WIDTH + margin,body.y+HEIGHT + margin);
+                Rectangle rDown = new Rectangle(body.x - margin ,body.y + margin,body.x+WIDTH + margin,body.y + margin);
+                Rectangle rLeft = new Rectangle(body.x + margin ,body.y - margin,body.x ,body.y+HEIGHT + margin);
                 for(Brick b: bricks){
-                    if(rUp.contains(b.getBody())){
+                    if(rUp.overlaps(b.getBody())){
                         upTouchWall = true;
-                    };
-                    if(rDown.contains(b.getBody())){
+                    }
+                    else{
+                        upTouchWall = false;
+                    }
+                    if(rDown.overlaps(b.getBody())){
                         downTouchWall = true;
-                    };
-                    if(rRight.contains(b.getBody())){
+                    }
+                    else{
+                        downTouchWall = false;
+                    }
+                    if(rRight.overlaps(b.getBody())){
                         rightTouchWall = true;
-                    };
-                    if(rLeft.contains(b.getBody())){
+                    }
+                    else{
+                        rightTouchWall = false;
+                    }
+                    if(rLeft.overlaps(b.getBody())){
                         leftTouchWall = true;
-                    };
+                    } else{
+                        leftTouchWall = false;
+                    }
                 }
             }
-            else{
-                upTouchWall = false;
-                downTouchWall = false;
-                rightTouchWall = false;
-                leftTouchWall = false;
-            }
+
 
         }
 
