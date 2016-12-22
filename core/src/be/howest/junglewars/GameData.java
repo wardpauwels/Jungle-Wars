@@ -205,7 +205,7 @@ public class GameData {
         return missiles;
     }
 
-    public Player getPlayerById(int id) {
+    public Player getPlayerById(long id) {
         return players.get(id);
     }
 

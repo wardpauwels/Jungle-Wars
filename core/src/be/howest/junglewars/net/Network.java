@@ -15,6 +15,11 @@ public class Network {
         kryo.register(PlayerJoinLeave.class);
         kryo.register(MovementState.class);
         kryo.register(PlayerShoot.class);
+        kryo.register(PlayerWasHit.class);
+        kryo.register(WaveEnd.class);
+        kryo.register(WaveStart.class);
+        kryo.register(PlayerSpawned.class);
+        kryo.register(Vector2.class);
     }
 
     static public class Login {
