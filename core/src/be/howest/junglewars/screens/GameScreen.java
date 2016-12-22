@@ -135,6 +135,7 @@ public class GameScreen extends Stage implements Screen {
                 for (Brick brick : wall.returnWall()) {
                     for (Missile missile : brick.checkCollision(player.getMissiles())) {
                         brick.remove = true;
+                        missile.remove = true;
                     }
                 }
             }

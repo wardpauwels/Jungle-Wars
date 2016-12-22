@@ -18,13 +18,19 @@ import java.util.Random;
 public class TrumpAction implements IEnemyActionType {
     @Override
     public void attack(Enemy enemy, Vector2 v, float spawnX, float spawnY) {
-        Random rand = new Random();
-        int length = randomWithRange(10,50);
+
+        int length = randomWithRange(20,150);
         Vector2 start = new Vector2(v.x,v.y);
         int curveX = randomWithRange(-10,10);
         int curveY = randomWithRange(-10,10);
         Wall wall = new Wall(enemy.game,start,length,curveX,curveY);
-        wall.DrawWall();
+        int vertOrHorz = randomWithRange(1,2);
+        if (vertOrHorz==1){
+            wall.DrawWallVert();
+
+        }else{
+            wall.DrawWallHorz();
+        }
         enemy.game.getData().getWalls().add(wall);
 
 

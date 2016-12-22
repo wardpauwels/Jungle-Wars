@@ -45,13 +45,24 @@ public class Wall {
 
 
     public void DrawWallHorz(){
-        for(int i = 0; i < length; i = i + 5){
-            Brick b = new Brick (g,10,5,start.x+i,start.y);
+        for(int i = 0; i < length; i = i + 25){
+            Brick b = new Brick (g,25,25,start.x+i,start.y);
             wall.add(b);
 
 
         }
     }
+
+
+    public void DrawWallVert(){
+        for(int i = 0; i < length; i = i + 25){
+            Brick b = new Brick (g,25,25,start.x,start.y+i);
+            wall.add(b);
+
+
+        }
+    }
+
 
     public void DrawWallDia(){
         for(int i = 0; i < length; i = i + 5){
