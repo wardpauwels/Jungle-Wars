@@ -308,6 +308,8 @@ public class GameScreen extends Stage implements Screen {
             player.draw(batch);
             player.getHelper().draw(batch);
 
+
+
             // TODO: work with LibGDX Actors instead?
             bigFont.setColor(0, 0, 0, 1);
             bigFont.draw(batch, "Player 1", 20, Gdx.graphics.getHeight() - 20);
@@ -317,6 +319,7 @@ public class GameScreen extends Stage implements Screen {
             smallFont.draw(batch, "XP: " + player.getXp(), 20, Gdx.graphics.getHeight() - 100); // TODO: xp till next wave
             smallFont.draw(batch, "Coins collected: " + player.getCollectedCoins(), 20, Gdx.graphics.getHeight() - 120);
             smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
+            smallFont.draw(batch, "Multiplier: " + (float)Math.round(player.getScoreMultiplier()*100)/100, 20, Gdx.graphics.getHeight() -160);
             smallFont.draw(batch, "ACTIVE POWERS: ", 300, Gdx.graphics.getHeight() - 20);
             for (int i = 0; i < player.getPowers().size(); i++) {
                 smallFont.draw(batch, player.getPowers().get(i).toString() + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
