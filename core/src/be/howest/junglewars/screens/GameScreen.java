@@ -6,6 +6,9 @@ import be.howest.junglewars.data.entities.PlayerEntity;
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.enemy.*;
 import be.howest.junglewars.gameobjects.enemy.utils.*;
+import be.howest.junglewars.gameobjects.helper.Helper;
+import be.howest.junglewars.gameobjects.helper.HelperActionType;
+import be.howest.junglewars.gameobjects.helper.HelperMovementType;
 import be.howest.junglewars.gameobjects.power.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,6 +19,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.*;
+
+import java.util.ArrayList;
 
 public class GameScreen extends Stage implements Screen {
 
@@ -39,6 +44,11 @@ public class GameScreen extends Stage implements Screen {
 
     private boolean nextLevel;
     private boolean running;
+    private Helper[] helpers;
+
+    private int upgradeCost;
+
+    private SelectBox<Helper> helperSelectBox;
 
 
 
@@ -57,7 +67,10 @@ public class GameScreen extends Stage implements Screen {
         this.playerName = game.getPlayer().getName();
 
         this.nextLevel = true;
+
+        this.upgradeCost = 20;
         this.running = false;
+
 
         data.setWave(wave);
         data.setDifficulty(difficulty);
@@ -84,6 +97,22 @@ public class GameScreen extends Stage implements Screen {
         startingEnemies = 1;
         multiplierEnemies = 0.5f;
         spawnEnemies(false);
+        helperSelectBox = new SelectBox<Helper>(skin);
+        fillHelperBox();
+    }
+
+    private void fillHelperBox(){
+
+        helpers = new Helper[5];
+        helpers[0]=(new Helper(this, "Power Collector", data.getPlayers().get(0), "red-wings-up", HelperMovementType.POWERCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER));
+        helpers[1]=(new Helper(this, "Coin Collector", data.getPlayers().get(0), "red-wings-up", HelperMovementType.COINCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER));
+        helpers[2]=(new Helper(this, "Shield", data.getPlayers().get(0), "red-wings-up", HelperMovementType.PROTECTING_HELPER, HelperActionType.PROTECTING_HELPER));
+        helpers[3]=(new Helper(this, "Shooter", data.getPlayers().get(0), "red-wings-up", HelperMovementType.FOLLOWING_HELPER, HelperActionType.SHOOTING_HELPER));
+        helpers[4]=(new Helper(this, "Stabber", data.getPlayers().get(0), "red-wings-up", HelperMovementType.PROTECTING_HELPER, HelperActionType.STABBING_HELPER));
+        helperSelectBox.setItems(helpers);
+        helperSelectBox.setSize(100,50);
+        helperSelectBox.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
+
     }
 
     private void checkGameOver() {
@@ -199,6 +228,7 @@ public class GameScreen extends Stage implements Screen {
         spawnEnemies(true);
         spawnCurrencies();
         spawnPowers();
+        System.out.println(data.getPlayers().get(0).getHelper().getName());
 
         for (Player player : data.getPlayers()) {
             player.update(dt);
@@ -259,9 +289,28 @@ public class GameScreen extends Stage implements Screen {
         Dialog d = new Dialog("Upgrade your helper", skin) {
             {
                 text("UPGRADE YOUR HELPER");
+                row();
                 button("upgrade","upgradeHelper");
+
+                text("HELPERS:");
+                addActor(helperSelectBox);
+                row();
+                button("Coin Collector","pickCoinCollector");
+                button("Power Collector","pickPowerCollector");
+
+                row();
+                button("Shield","pickShield");
+                button("Shooter","pickShooter");
+
+                row();
+                button("Stabber","pickStabber");
+
+
                 button("next level", "next");
                 button("Retry", "retry");
+
+
+
             }
 
 
@@ -270,11 +319,28 @@ public class GameScreen extends Stage implements Screen {
             protected void result(Object object) {
                 switch (String.valueOf(object)) {
                     case "upgradeHelper":
-                        data.getPlayers().get(0).getHelper().setSpeed(data.getPlayers().get(0).getHelper().getSpeed()*1.5f);
-                        System.out.println(data.getPlayers().get(0).getHelper().getSpeed());
+                        if(data.getPlayers().get(0).getCollectedCoins()>=upgradeCost){
+                        data.getPlayers().get(0).getHelper().setSpeed(data.getPlayers().get(0).getHelper().getSpeed()*1.1f);}
+                        break;
+
                     case "next":
                         nextLevel = true;
                         running = false;
+                        break;
+                    case "pickPowerCollector":
+                        data.getPlayers().get(0).setHelper(helpers[0]);
+                        break;
+                    case "pickCoinCollector":
+                        data.getPlayers().get(0).setHelper(helpers[1]);
+                        break;
+                    case "pickShield":
+                        data.getPlayers().get(0).setHelper(helpers[2]);
+                        break;
+                    case "pickShooter":
+                        data.getPlayers().get(0).setHelper(helpers[3]);
+                        break;
+                    case "pickStabber":
+                        data.getPlayers().get(0).setHelper(helpers[4]);
                         break;
                     case "retry":
                         game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
@@ -282,7 +348,8 @@ public class GameScreen extends Stage implements Screen {
                 }
             }
         };
-        d.show(stage).setWidth(500);
+
+        d.show(stage).setWidth(1000);
         d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
         Gdx.input.setInputProcessor(stage);
 
@@ -302,6 +369,7 @@ public class GameScreen extends Stage implements Screen {
                     text("Woops, " + data.getPlayers().get(0).getName() + " died... You reached " + data.getPlayers().get(0).getScore() + " points!");
                     button("Home", "leave");
                     button("Retry", "retry");
+
                 }
 
 

@@ -297,6 +297,10 @@ public class Player extends GameObject {
         checkLevelUp();
     }
 
+    public void setHelper(Helper helper){
+        this.helper = helper;
+    }
+
     public void addCoin(int coin) {
         this.collectedCoins += coin;
     }

@@ -62,6 +62,10 @@ public class Helper extends GameObject {
         return owner;
     }
 
+    public String getName(){
+        return name;
+    }
+
     public void setProtecting(boolean protecting) {
         this.protecting = protecting;
     }
