@@ -17,10 +17,6 @@ public class SlowEffect implements IMissileType {
 
     @Override
     public void doEffect(GameScreen g,Player player) {
-
-        //Power p = new Power(g,"Slow","HP",1,3, PowerType.MOVEMENT_SPEED_POWER,30);
-        //p.setPowerUp(false);
-        //p.collectedBy(player);
         if (!player.isSlowed()) {
             player.setSpeed(player.getSpeed() - 200);
         }
