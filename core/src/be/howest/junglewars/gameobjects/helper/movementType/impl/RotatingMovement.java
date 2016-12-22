@@ -8,13 +8,16 @@ public class RotatingMovement implements IHelperMovementType {
 
     private double angle = 0;
 
+
     @Override
     public Vector2 movementType(Helper helper, float dt){
         angle += dt;
-        angle = (Math.PI/180) + angle;
+        angle = ((Math.PI/180) + angle);
 
-        float rotatedX = (float) (helper.getOwner().getBody().getX()+ (helper.getOwner().getBody().getWidth()/5)  + Math.cos(angle) * 100f);
-        float rotatedY = (float) (helper.getOwner().getBody().getY()+ (helper.getOwner().getBody().getHeight()/5)+ Math.sin(angle) * 100f);
+        double rotationSpeed = angle * helper.getSpeed();
+
+        float rotatedX = (float) (helper.getOwner().getBody().getX()+ (helper.getOwner().getBody().getWidth()/5) + Math.cos(rotationSpeed) * 100f);
+        float rotatedY = (float) (helper.getOwner().getBody().getY()+ (helper.getOwner().getBody().getHeight()/5)+ Math.sin(rotationSpeed) * 100f);
 
         return new Vector2(rotatedX, rotatedY);
     }

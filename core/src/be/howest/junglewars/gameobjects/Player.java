@@ -35,7 +35,8 @@ public class Player extends GameObject {
     private int hitpoints;
     private float speed;
     private float attackSpeed;
-    private float scoreMultiplier = 1; // TODO: when multiplier? over time? when x score is reached, ...?
+    private float scoreMultiplier = 1;
+    public int toReachXP = 100; // Setter/getter voor maken
     private int xp = 0;
     private int level = 1;
     private int score = 0;
@@ -73,7 +74,7 @@ public class Player extends GameObject {
         this.hitpoints = 100;
         this.damage = 10;
 
-        helper = new Helper(game, "Little Helper", this, "red-wings-up", HelperMovementType.POWERCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER);
+        helper = new Helper(game, "Little Helper", this, "red-wings-up", HelperMovementType.PROTECTING_HELPER, HelperActionType.STABBING_HELPER);
     }
 
     private void handleInput(float dt) {
@@ -240,6 +241,7 @@ public class Player extends GameObject {
     public void addXp(int xp) {
         this.xp += xp;
         checkLevelUp();
+        helper.checkLevelUp();
     }
 
     public void addCoin(int coin) {
@@ -256,7 +258,18 @@ public class Player extends GameObject {
     }
 
     private void checkLevelUp() {
-        // TODO: if level up condition true => level++
+        if(xp >= toReachXP){
+            this.level += 1;
+            toReachXP = Math.round(toReachXP * 2.6f);
+            levelUp();
+        }
+    }
+
+    public void levelUp(){
+        this.attackSpeed *= 1.03f;
+        this.damage *= 1.03f;
+        this.speed *= 1.03f;
+        this.missileSpeed *= 1.03f;
     }
 
     public Helper getHelper() {
@@ -345,5 +358,13 @@ public class Player extends GameObject {
 
     public void setScoreMultiplier(float scoreMultiplier) {
         this.scoreMultiplier = scoreMultiplier;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

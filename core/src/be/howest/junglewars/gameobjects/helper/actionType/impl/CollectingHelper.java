@@ -9,4 +9,9 @@ public class CollectingHelper implements IHelperActionType {
     public void helperAction(Helper helper) {
         helper.setProtecting(false);
     }
+
+    @Override
+    public void helperUpgrade(Helper helper) {
+        helper.setSpeed(helper.getSpeed()* 1.1f);
+    }
 }
