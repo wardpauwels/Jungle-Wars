@@ -1,30 +1,45 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.*;
-import be.howest.junglewars.data.da.*;
+import be.howest.junglewars.Difficulty;
+import be.howest.junglewars.GameData;
+import be.howest.junglewars.GameState;
+import be.howest.junglewars.JungleWars;
+import be.howest.junglewars.data.da.HighscoreDA;
+import be.howest.junglewars.data.da.JungleWarsDA;
 import be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.data.entities.HelperEntity;
 import be.howest.junglewars.data.entities.PlayerEntity;
-import be.howest.junglewars.data.entities.PowerEntity;
-import be.howest.junglewars.gameobjects.*;
-import be.howest.junglewars.gameobjects.enemy.*;
-import be.howest.junglewars.gameobjects.enemy.utils.*;
+import be.howest.junglewars.gameobjects.Currency;
+import be.howest.junglewars.gameobjects.Missile;
+import be.howest.junglewars.gameobjects.Player;
+import be.howest.junglewars.gameobjects.enemy.ChooseTargetType;
+import be.howest.junglewars.gameobjects.enemy.Enemy;
+import be.howest.junglewars.gameobjects.enemy.EnemyActionType;
+import be.howest.junglewars.gameobjects.enemy.EnemyMovementType;
+import be.howest.junglewars.gameobjects.enemy.utils.Brick;
+import be.howest.junglewars.gameobjects.enemy.utils.Wall;
 import be.howest.junglewars.gameobjects.helper.Helper;
 import be.howest.junglewars.gameobjects.helper.HelperActionType;
 import be.howest.junglewars.gameobjects.helper.HelperMovementType;
-import be.howest.junglewars.gameobjects.power.*;
-import be.howest.junglewars.util.Assets;
-import com.badlogic.gdx.*;
+import be.howest.junglewars.gameobjects.power.Power;
+import be.howest.junglewars.gameobjects.power.PowerType;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.*;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.*;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 
@@ -489,9 +504,11 @@ public class GameScreen extends Stage implements Screen {
                     switch (String.valueOf(object)) {
                         case "leave":
                             game.setScreen(new MainMenuScreen(game));
+                            dispose();
                             break;
                         case "retry":
                             game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
+                            dispose();
                             break;
                     }
                 }

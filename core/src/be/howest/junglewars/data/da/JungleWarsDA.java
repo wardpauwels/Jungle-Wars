@@ -9,11 +9,11 @@ import java.util.ArrayList;
 
 
 public class JungleWarsDA {
-    private static final String URL = "jdbc:mysql://188.166.66.6/junglewars?useSSL=false";
+    private static final String URL = "jdbc:mysql://188.166.66.6:3306/junglewars?useSSL=false";
     //private static final String URL = "jdbc:mysql://localhost:3306/JungleWars";
 
-    private static final String UID = "ward";
-    private static final String PWD = "pauwels";
+    private static final String UID = "harambe";
+    private static final String PWD = "zB7MuMoaozD60A74Hm";
     private static JungleWarsDA instance;
     private Connection connection;
 
