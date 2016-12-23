@@ -102,10 +102,6 @@ public class GameData {
             if (e.shouldRemove()) {
                 enemies.remove(i);
             }
-
-            if (!isClient) {
-                serverSendMessage(new Network.EnemyMovementState(e.getId(), e.isShooting, e.getPos()));
-            }
         }
 
         //update missiles
@@ -138,6 +134,14 @@ public class GameData {
 
         if (!isClient) {
             spawnManager.manageAllSpawners();
+            for(Enemy e : enemies){
+//                Network.EnemySpawned msg = new Network.EnemySpawned(currentId, e);
+//                manager.getData().addEnemy(msg);
+//                manager.getData().serverSendMessage(msg);
+                Network.EnemyMovementState msg = new Network.EnemyMovementState(e.getId(), e.isShooting, e.getPos());
+                enemyMoved(msg);
+                serverSendMessage(msg);
+            }
         }
 
     }

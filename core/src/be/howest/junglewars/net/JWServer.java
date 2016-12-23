@@ -100,9 +100,9 @@ public class JWServer {
 //            Network.EnemySpawned msg = (Network.EnemySpawned) message;
 //            data.onEnemySpawn(msg);
 //            server.sendToAllTCP(msg);
-        } else if (message instanceof Network.EnemyMovementState) {
-            Network.EnemyMovementState msg = (Network.EnemyMovementState) message;
-            server.sendToAllTCP(msg);
+//        } else if (message instanceof Network.EnemyMovementState) {
+//            Network.EnemyMovementState msg = (Network.EnemyMovementState) message;
+//            server.sendToAllTCP(msg);
         }
     }
 
