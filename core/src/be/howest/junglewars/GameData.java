@@ -145,7 +145,7 @@ public class GameData {
 
         //render enemies
         for (Enemy enemy : enemies) {
-            System.out.println(enemy);
+            System.out.println("Enemy ID: " + enemy.getId());
             enemy.render(batch);
         }
 
