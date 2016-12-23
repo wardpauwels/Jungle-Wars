@@ -34,6 +34,8 @@ public class EnemySpawner implements ISpawner {
         enemies = new EnemyEntity[2]; // TODO: length is size of resultset of DB
 
         enemies[0] = new EnemyEntity();
+        enemies[0].setWidth(50);
+        enemies[0].setHeight(70);
         enemies[0].setName("STABBER");
         enemies[0].setDefaultSpriteUrl("zookeeper");
         enemies[0].setBaseDamage(5);
@@ -48,6 +50,8 @@ public class EnemySpawner implements ISpawner {
         enemies[0].setAttackType("STABBING");
 
         enemies[1] = new EnemyEntity();
+        enemies[1].setWidth(50);
+        enemies[1].setHeight(70);
         enemies[1].setName("SHOOTER");
         enemies[1].setDefaultSpriteUrl("zookeeper");
         enemies[1].setBaseDamage(5);

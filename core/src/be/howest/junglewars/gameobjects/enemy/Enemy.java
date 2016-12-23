@@ -39,13 +39,13 @@ public class Enemy extends GameObject {
     private float dabTimer;
     private long id;
     private GameData data;
-    private Network.EnemyMovementState enemyMovenentState;
 
     public Enemy(long id, String name, float width, float height, String defaultSpriteUrl, String altSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
                  float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType, GameData data) {
         super(ATLAS_PREFIX + defaultSpriteUrl, width, height,
                 ThreadLocalRandom.current().nextInt(0 - Math.round(width), Gdx.graphics.getWidth() + Math.round(width)),
                 ThreadLocalRandom.current().nextBoolean() ? 0 - height : Gdx.graphics.getHeight() + height, data); // TODO: spawns only top or bottom now
+        this.id = id;
         this.data = data;
         this.WIDTH = width;
         this.HEIGHT = height;
