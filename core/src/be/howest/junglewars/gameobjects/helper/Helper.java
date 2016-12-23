@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 // TODO: should be upgradable
 public class Helper extends GameObject {
-    private static final float WIDTH = 50;
-    private static final float HEIGHT = 50;
+    private static final float WIDTH = 25;
+    private static final float HEIGHT = 25;
 
     private static final String ATLAS_PREFIX = "helper/";
     private Player owner;
@@ -18,6 +18,10 @@ public class Helper extends GameObject {
     private float toReachXP;
     private boolean protecting = false;
     public GameScreen game;
+    public boolean upgrade;
+
+    private float rotationSpeed;
+
 
     private float speed = 1.5f;
 
@@ -30,11 +34,14 @@ public class Helper extends GameObject {
         this.owner = owner;
         this.name = name;
         this.game = game;
+        this.rotationSpeed = 25;
+
 
         this.toReachXP = owner.toReachXP;
 
         this.helperMovementType = helperMovementType.getHelperMovement();
         this.helperActionType = helperActionType.getHelperAction();
+        this.speed = 160;
     }
 
     private void doHelperAction(float dt) {
@@ -58,6 +65,7 @@ public class Helper extends GameObject {
     @Override
     public void draw(SpriteBatch batch) {
         activeSprite.setPosition(body.x, body.y);
+        activeSprite.rotate(rotationSpeed);
         activeSprite.draw(batch);
     }
 
@@ -69,24 +77,13 @@ public class Helper extends GameObject {
         return name;
     }
 
+    public void upgrade(){
+        upgrade = true;
+    }
+
     public void setProtecting(boolean protecting) {
         this.protecting = protecting;
     }
 
-    public void checkLevelUp() { // TODO: iets met coins
-        if(owner.getXp() >= toReachXP){
-            toReachXP = toReachXP * 1.5f;
-            helperActionType.helperUpgrade(this);
-        }
-    }
 
-    @Override
-    public float getSpeed() {
-        return speed;
-    }
-
-    @Override
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
 }

@@ -11,6 +11,10 @@ public class PowercollectingMovement implements IHelperMovementType {
 
     @Override
     public Vector2 movementType(Helper helper, float dt){
+        if(helper.upgrade){
+            helper.setSpeed(helper.getSpeed()*1.1f);
+            helper.upgrade = false;
+        }
         for(Power power : helper.checkCollision(helper.game.getData().getPowers())){
             power.collectedBy(helper.getOwner());
         }

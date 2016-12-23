@@ -8,11 +8,14 @@ public class RotatingMovement implements IHelperMovementType {
 
     private double angle = 0;
 
-
     @Override
     public Vector2 movementType(Helper helper, float dt){
         angle += dt;
-        angle = ((Math.PI/180) + angle);
+        angle = (Math.PI/180) + angle;
+        if(helper.upgrade){
+            helper.setSpeed(helper.getSpeed()*1.1f);
+            helper.upgrade = false;
+        }
 
         double rotationSpeed = angle * helper.getSpeed();
 

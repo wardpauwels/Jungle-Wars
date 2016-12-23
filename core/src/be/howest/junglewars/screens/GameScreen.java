@@ -11,6 +11,7 @@ import be.howest.junglewars.gameobjects.helper.HelperActionType;
 import be.howest.junglewars.gameobjects.helper.HelperMovementType;
 import be.howest.junglewars.gameobjects.power.*;
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.*;
@@ -46,9 +47,12 @@ public class GameScreen extends Stage implements Screen {
     private boolean running;
     private Helper[] helpers;
 
+    public ArrayList<Sound> sounds;
+
     private int upgradeCost;
 
     private SelectBox<Helper> helperSelectBox;
+    private int currentPlayer;
 
 
 
@@ -70,6 +74,8 @@ public class GameScreen extends Stage implements Screen {
 
         this.upgradeCost = 20;
         this.running = false;
+        this.currentPlayer = 0;
+
 
 
         data.setWave(wave);
@@ -98,16 +104,26 @@ public class GameScreen extends Stage implements Screen {
         spawnEnemies(false);
         helperSelectBox = new SelectBox<Helper>(skin);
         fillHelperBox();
+        innitSounds();
     }
 
+    private void innitSounds(){
+        sounds = new ArrayList<>();
+        sounds.add(Gdx.audio.newSound(Gdx.files.internal("sound/smallloan.wav")));
+        sounds.add(Gdx.audio.newSound(Gdx.files.internal("sound/wall.wav")));
+        sounds.add(Gdx.audio.newSound(Gdx.files.internal("sound/grabem.wav")));
+        sounds.add(Gdx.audio.newSound(Gdx.files.internal("sound/beauty.wav")));
+        sounds.add(Gdx.audio.newSound(Gdx.files.internal("sound/losers.wav")));
+
+    }
     private void fillHelperBox(){
 
         helpers = new Helper[5];
-        helpers[0]=(new Helper(this, "Power Collector", data.getPlayers().get(0), "red-wings-up", HelperMovementType.POWERCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER));
-        helpers[1]=(new Helper(this, "Coin Collector", data.getPlayers().get(0), "red-wings-up", HelperMovementType.COINCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER));
-        helpers[2]=(new Helper(this, "Shield", data.getPlayers().get(0), "red-wings-up", HelperMovementType.PROTECTING_HELPER, HelperActionType.PROTECTING_HELPER));
-        helpers[3]=(new Helper(this, "Shooter", data.getPlayers().get(0), "red-wings-up", HelperMovementType.FOLLOWING_HELPER, HelperActionType.SHOOTING_HELPER));
-        helpers[4]=(new Helper(this, "Stabber", data.getPlayers().get(0), "red-wings-up", HelperMovementType.PROTECTING_HELPER, HelperActionType.STABBING_HELPER));
+        helpers[0]=(new Helper(this, "Power Collector", data.getPlayers().get(currentPlayer), "red-wings-up", HelperMovementType.POWERCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER));
+        helpers[1]=(new Helper(this, "Coin Collector", data.getPlayers().get(currentPlayer), "red-wings-up", HelperMovementType.COINCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER));
+        helpers[2]=(new Helper(this, "Shield", data.getPlayers().get(currentPlayer), "red-wings-up", HelperMovementType.PROTECTING_HELPER, HelperActionType.PROTECTING_HELPER));
+        helpers[3]=(new Helper(this, "Shooter", data.getPlayers().get(currentPlayer), "red-wings-up", HelperMovementType.FOLLOWING_HELPER, HelperActionType.SHOOTING_HELPER));
+        helpers[4]=(new Helper(this, "Stabber", data.getPlayers().get(currentPlayer), "red-wings-up", HelperMovementType.PROTECTING_HELPER, HelperActionType.STABBING_HELPER));
         helperSelectBox.setItems(helpers);
         helperSelectBox.setSize(100,50);
         helperSelectBox.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
@@ -211,6 +227,7 @@ public class GameScreen extends Stage implements Screen {
         spawnEnemies(true);
         spawnCurrencies();
         spawnPowers();
+        System.out.println(data.getPlayers().get(currentPlayer).getHelper().getName());
 
         for (Player player : data.getPlayers()) {
             player.update(dt);
@@ -303,8 +320,9 @@ public class GameScreen extends Stage implements Screen {
             protected void result(Object object) {
                 switch (String.valueOf(object)) {
                     case "upgradeHelper":
-                        if(data.getPlayers().get(0).getCollectedCoins()>=upgradeCost){
-                        data.getPlayers().get(0).getHelper().setSpeed(data.getPlayers().get(0).getHelper().getSpeed()*1.1f);}
+                        if(data.getPlayers().get(currentPlayer).getCollectedCoins()>=upgradeCost){
+                       data.getPlayers().get(currentPlayer).getHelper().upgrade();
+                        data.getPlayers().get(currentPlayer).collectedCoins-=upgradeCost;}
                         break;
 
                     case "next":
@@ -312,19 +330,19 @@ public class GameScreen extends Stage implements Screen {
                         running = false;
                         break;
                     case "pickPowerCollector":
-                        data.getPlayers().get(0).setHelper(helpers[0]);
+                        data.getPlayers().get(currentPlayer).setHelper(helpers[0]);
                         break;
                     case "pickCoinCollector":
-                        data.getPlayers().get(0).setHelper(helpers[1]);
+                        data.getPlayers().get(currentPlayer).setHelper(helpers[1]);
                         break;
                     case "pickShield":
-                        data.getPlayers().get(0).setHelper(helpers[2]);
+                        data.getPlayers().get(currentPlayer).setHelper(helpers[2]);
                         break;
                     case "pickShooter":
-                        data.getPlayers().get(0).setHelper(helpers[3]);
+                        data.getPlayers().get(currentPlayer).setHelper(helpers[3]);
                         break;
                     case "pickStabber":
-                        data.getPlayers().get(0).setHelper(helpers[4]);
+                        data.getPlayers().get(currentPlayer).setHelper(helpers[4]);
                         break;
                     case "retry":
                         game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
@@ -350,10 +368,12 @@ public class GameScreen extends Stage implements Screen {
 
             Dialog d = new Dialog("Game over", skin) {
                 {
-                    text("Woops, " + data.getPlayers().get(0).getName() + " died... You reached " + data.getPlayers().get(0).getScore() + " points!");
+                    text("Woops, " + data.getPlayers().get(currentPlayer).getName() + " died... You reached " + data.getPlayers().get(currentPlayer).getScore() + " points!");
                     button("Home", "leave");
                     button("Retry", "retry");
+
                 }
+
 
                 @Override
                 protected void result(Object object) {

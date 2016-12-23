@@ -17,9 +17,15 @@ public class ShootingHelper implements IHelperActionType {
 
     private float shootTime = 2;
     private float shootTimer= 0 ;
+    private int dmg = 15;
 
     @Override
     public void helperAction(Helper helper) {
+        if(helper.upgrade){
+            shootTime = shootTime / 1.1f;
+            dmg = dmg + 5;
+            helper.upgrade = false;
+        }
         shootTimer += Gdx.graphics.getDeltaTime();
         if (shootTimer > shootTime) {
             shoot(helper);
@@ -49,6 +55,10 @@ public class ShootingHelper implements IHelperActionType {
 
     public Enemy chooseTarget(Helper helper) {
         return helper.getNearest(helper.game.getData().getEnemies());
+    }
+
+    public void upgrade(){
+
     }
 
 
