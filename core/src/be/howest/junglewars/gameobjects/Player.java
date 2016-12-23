@@ -306,7 +306,6 @@ public class Player extends GameObject {
     public void addXp(int xp) {
         this.xp += xp;
         checkLevelUp();
-
     }
 
     public void setHelper(Helper helper){

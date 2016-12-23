@@ -79,7 +79,7 @@ public class GameScreen extends Stage implements Screen {
 
         this.nextLevel = true;
 
-        this.upgradeCost = 20;
+        this.upgradeCost = 1;
         this.running = false;
         this.currentPlayer = 0;
         db = JungleWarsDA.getInstance();
@@ -98,6 +98,7 @@ public class GameScreen extends Stage implements Screen {
         // create full screen background
         backgroundSprite = atlas.createSprite("background/game");
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 
         // TODO: https://github.com/libgdx/libgdx/wiki/Managing-your-assets#loading-a-ttf-using-the-assethandler
         // TODO: work with Actors for GUI layout (buttons, menu, etc...)?
@@ -179,6 +180,8 @@ public class GameScreen extends Stage implements Screen {
                 }
             }
 
+
+
         for(Wall wall : data.getWalls()) {
             for (Player player : data.getPlayers()) {
                 for (Brick brick : wall.returnWall()) {
@@ -189,6 +192,7 @@ public class GameScreen extends Stage implements Screen {
                 }
             }
         }
+
     }
 
     //region spawners TODO: create spawners
@@ -207,6 +211,19 @@ public class GameScreen extends Stage implements Screen {
                 }
                 if (nextWave) data.setWave(data.getWave() + 1);
             }
+    }
+
+
+
+    public void makeSmallCloseDialogButton(Dialog d) {
+        Button closeButton = new Button( skin, "close" );
+        closeButton.addListener( new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                d.hide();
+            }
+        } );
+        d.getTitleTable().add( closeButton );
     }
 
     private void spawnCurrencies() {
@@ -441,11 +458,10 @@ public class GameScreen extends Stage implements Screen {
             smallFont.draw(batch, "Name: " + player.getName(), 20, Gdx.graphics.getHeight() - 40);
             smallFont.draw(batch, "Score: " + player.getScore(), 20, Gdx.graphics.getHeight() - 60);
             smallFont.draw(batch, "Wave: " + player.getWave(), 20, Gdx.graphics.getHeight() - 80);
-            smallFont.draw(batch, "XP: " + player.getXp() + "/" + player.toReachXP, 20, Gdx.graphics.getHeight() - 100); // TODO: xp till next LEVEL
+            smallFont.draw(batch, "XP: " + player.getXp(), 20, Gdx.graphics.getHeight() - 100); // TODO: xp till next wave
             smallFont.draw(batch, "Coins collected: " + player.getCollectedCoins(), 20, Gdx.graphics.getHeight() - 120);
             smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
             smallFont.draw(batch, "Multiplier: " + (float)Math.round(player.getScoreMultiplier()*100)/100, 20, Gdx.graphics.getHeight() -160);
-            smallFont.draw(batch, "Level: " + player.getLevel(), 20, Gdx.graphics.getHeight() -180);
             smallFont.draw(batch, "ACTIVE POWERS: ", 300, Gdx.graphics.getHeight() - 20);
             for (int i = 0; i < player.getPowers().size(); i++) {
                 smallFont.draw(batch, player.getPowers().get(i).toString() + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
@@ -479,7 +495,7 @@ public class GameScreen extends Stage implements Screen {
             }
         }
 
-        bigFont.draw(batch, "Wave " + data.getWave(), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 20);
+        bigFont.draw(batch, "LEVEL " + data.getWave(), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 20);
 
     }
 

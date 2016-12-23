@@ -13,14 +13,12 @@ public class RotatingMovement implements IHelperMovementType {
         angle += dt;
         angle = (Math.PI/180) + angle;
         if(helper.upgrade){
-            helper.setSpeed(helper.getSpeed()*1.1f);
+            angle *= 1.1f;
             helper.upgrade = false;
         }
 
-        double rotationSpeed = angle * helper.getSpeed();
-
-        float rotatedX = (float) (helper.getOwner().getBody().getX()+ (helper.getOwner().getBody().getWidth()/5) + Math.cos(rotationSpeed) * 100f);
-        float rotatedY = (float) (helper.getOwner().getBody().getY()+ (helper.getOwner().getBody().getHeight()/5)+ Math.sin(rotationSpeed) * 100f);
+        float rotatedX = (float) (helper.getOwner().getBody().getX()+ (helper.getOwner().getBody().getWidth()/5)  + Math.cos(angle) * 100f);
+        float rotatedY = (float) (helper.getOwner().getBody().getY()+ (helper.getOwner().getBody().getHeight()/5)+ Math.sin(angle) * 100f);
 
         return new Vector2(rotatedX, rotatedY);
     }
