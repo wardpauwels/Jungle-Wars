@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Table(name = "enemies", schema = "junglewars")
 public class EnemyEntity {
 
+    private int spawnChance;
     //region Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,9 +57,15 @@ public class EnemyEntity {
 
     @Column(name = "action_type")
     private String attackType;
+    private int spawnProbabitlity;
+    private int spawnProbability;
     //endregion
 
-    public EnemyEntity(int id, String name, String textureFileName, String altTextureFileName, float width, float height, int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int rarity, String movementType, String targetSelectionType, String attackType) {
+    public EnemyEntity(){
+
+    }
+
+    public EnemyEntity(int id, String name, String textureFileName, String altTextureFileName, float width, float height, int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int rarity, String movementType, String targetSelectionType, String attackType, int spawnChance) {
         this.name = name;
         this.id = id;
         this.textureFileName = textureFileName;
@@ -75,6 +82,7 @@ public class EnemyEntity {
         this.movementType = movementType;
         this.targetSelectionType = targetSelectionType;
         this.attackType = attackType;
+        this.spawnChance = spawnChance;
     }
 
     //region Getters/Setters
@@ -204,6 +212,22 @@ public class EnemyEntity {
 
     public void setAltTextureFileName(String altTextureFileName) {
         this.altTextureFileName = altTextureFileName;
+    }
+
+    public int getSpawnChance() {
+        return 0;
+    }
+
+    public void setSpawnProbabitlity(int spawnProbabitlity) {
+        this.spawnProbabitlity = spawnProbabitlity;
+    }
+
+    public void setSpawnProbability(int spawnProbability) {
+        this.spawnProbability = spawnProbability;
+    }
+
+    public int getSpawnProbability() {
+        return spawnProbability;
     }
     //endregion
 

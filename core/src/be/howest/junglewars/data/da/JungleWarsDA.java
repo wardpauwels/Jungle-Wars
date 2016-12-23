@@ -49,7 +49,25 @@ public class JungleWarsDA {
             ResultSet rs = prep.executeQuery();
             while (rs.next()) {
                 EnemyEntity enemy = null;
-                enemy = new EnemyEntity(rs.getInt("id"), rs.getString("name"), rs.getString("sprite"), rs.getString("alt_sprite"), rs.getInt("width"), rs.getInt("height"), rs.getInt("dmg"), rs.getInt("speed"), rs.getInt("hp"), rs.getFloat("attackspeed"), rs.getInt("killed_xp"), rs.getInt("killed_score"), rs.getInt("spawn_chance"), rs.getString("movement_type"), rs.getString("target_type"), rs.getString("action_type"));
+                enemy = new EnemyEntity(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("sprite"),
+                        rs.getString("alt_sprite"),
+                        rs.getInt("width"),
+                        rs.getInt("height"),
+                        rs.getInt("dmg"),
+                        rs.getInt("speed"),
+                        rs.getInt("hp"),
+                        rs.getFloat("attackspeed"),
+                        rs.getInt("killed_xp"),
+                        rs.getInt("killed_score"),
+                        rs.getInt("spawn_chance"),
+                        rs.getString("movement_type"),
+                        rs.getString("target_type"),
+                        rs.getString("action_type"),
+                        rs.getInt("spawnChance")
+                );
                 enemies.add(enemy);
             }
             prep.close();

@@ -135,7 +135,7 @@ public class MainMenuScreen extends Stage implements Screen {
                                     game.setPlayer( player );
                                     //PlayerDA.getInstance().addPlayer( player );
                                 }
-                                game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
+                                game.setScreen( new GameScreen( game, false, Difficulty.EASY, true, "localhost") );
                                 break;
                             case "multi":
                                 this.hide();

@@ -48,6 +48,7 @@ public class Player extends GameObject {
     private GameData data;
 
     private Random random = new Random();
+    private int missileSpeed;
 
     public Player(String defaultSpriteUrl, PlayerEntity entity, boolean isMe, GameData data) {
         this(defaultSpriteUrl, isMe, data);
@@ -332,7 +333,7 @@ public class Player extends GameObject {
 
     public int getMissleSpeed(){return missleSpeed;}
 
-    public void setMissleSpeed(int missleSpeed){ this.missleSpeed = missleSpeed;}
+    public void setMissileSpeed(int missleSpeed){ this.missleSpeed = missleSpeed;}
 
     public float getArmor() {
         return armor;
@@ -363,5 +364,9 @@ public class Player extends GameObject {
 
     public void setPlayerShoot(Network.PlayerShoot msg) {
         this.isShooting = msg.isShooting;
+    }
+
+    public int getMissileSpeed() {
+        return missileSpeed;
     }
 }

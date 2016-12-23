@@ -15,6 +15,7 @@ public abstract class GameObject implements Serializable {
     protected float speed = 0;
     protected Sprite activeSprite;
     private GameData data;
+    private Vector2 position;
 
     protected GameObject(String defaultSpriteUrl, float width, float height, float x, float y, GameData data) {
         this.data = data;
@@ -29,7 +30,7 @@ public abstract class GameObject implements Serializable {
 
     protected abstract void update(float dt);
 
-    protected abstract void render(SpriteBatch batch);
+    public abstract void render(SpriteBatch batch);
 
     protected void changeSprite(Sprite sprite) {
         activeSprite = sprite;
@@ -109,5 +110,9 @@ public abstract class GameObject implements Serializable {
 
     public void setData(GameData data) {
         this.data = data;
+    }
+
+    public Vector2 getPosition() {
+        return position;
     }
 }

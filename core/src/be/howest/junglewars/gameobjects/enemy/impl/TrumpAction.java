@@ -26,16 +26,16 @@ public class TrumpAction implements IEnemyActionType {
         Vector2 start = new Vector2(v.x,v.y);
         int curveX = randomWithRange(-10,10);
         int curveY = randomWithRange(-10,10);
-        Wall wall = new Wall(enemy.game,start,length,curveX,curveY);
+        Wall wall = new Wall(start,length,curveX,curveY, enemy.getData());
         int vertOrHorz = randomWithRange(1,2);
         if (vertOrHorz==1){
-            wall.DrawWallVert();
+//            wall.DrawWallVert();
 
         }else{
             wall.DrawWallHorz();
         }
-        enemy.game.getData().getWalls().add(wall);
-        enemy.game.sounds.get(randomWithRange(0,enemy.game.sounds.size()-1)).play();
+//        enemy.getData().getWalls().add(wall);
+//        enemy.sounds.get(randomWithRange(0,enemy.game.sounds.size()-1)).play();
 
 
     }

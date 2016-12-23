@@ -37,14 +37,14 @@ public class EnemySpawner implements ISpawner {
         enemies[0].setWidth(50);
         enemies[0].setHeight(70);
         enemies[0].setName("STABBER");
-        enemies[0].setDefaultSpriteUrl("zookeeper");
+        enemies[0].setTextureFileName("zookeeper");
         enemies[0].setBaseDamage(5);
         enemies[0].setBaseSpeed(150);
         enemies[0].setBaseHitpoints(15);
         enemies[0].setBaseAttackSpeed(1.5f);
         enemies[0].setExperienceWhenKilled(10);
         enemies[0].setScoreWhenKilled(15);
-        enemies[0].setSpawnProbability(20);
+        enemies[0].setSpawnProbabitlity(20);
         enemies[0].setMovementType("NEAREST_PLAYER");
         enemies[0].setTargetSelectionType("NEAREST_PLAYER");
         enemies[0].setAttackType("STABBING");
@@ -53,7 +53,7 @@ public class EnemySpawner implements ISpawner {
         enemies[1].setWidth(50);
         enemies[1].setHeight(70);
         enemies[1].setName("SHOOTER");
-        enemies[1].setDefaultSpriteUrl("zookeeper");
+        enemies[1].setTextureFileName("zookeeper");
         enemies[1].setBaseDamage(5);
         enemies[1].setBaseSpeed(150);
         enemies[1].setBaseHitpoints(15);

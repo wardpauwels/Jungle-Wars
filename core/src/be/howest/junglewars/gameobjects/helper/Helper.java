@@ -1,5 +1,6 @@
 package be.howest.junglewars.gameobjects.helper;
 
+import be.howest.junglewars.GameData;
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.Player;
 import be.howest.junglewars.gameobjects.enemy.Enemy;
@@ -26,8 +27,8 @@ public class Helper extends GameObject {
     private IHelperMovementType helperMovementType;
     private IHelperActionType helperActionType;
 
-    public Helper(GameScreen game, String name, Player owner, String defaultSpriteUrl, HelperMovementType helperMovementType, HelperActionType helperActionType) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, owner.getBody().x - 1.5f * WIDTH, owner.getBody().y + 1.5f * HEIGHT);
+    public Helper(String name, Player owner, String defaultSpriteUrl, HelperMovementType helperMovementType, HelperActionType helperActionType, GameData data) {
+        super(ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, owner.getBody().x - 1.5f * WIDTH, owner.getBody().y + 1.5f * HEIGHT, data);
 
         this.owner = owner;
         this.name = name;
@@ -59,7 +60,7 @@ public class Helper extends GameObject {
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void render(SpriteBatch batch) {
         activeSprite.setPosition(body.x, body.y);
         activeSprite.rotate(rotationSpeed);
         activeSprite.draw(batch);

@@ -43,7 +43,7 @@ public class ShootingHelper implements IHelperActionType {
         float spawnX = helper.getBody().x + (helper.getBody().width / 2);
         float spawnY = helper.getBody().y + (helper.getBody().height / 2);
 
-        helper.getOwner().getMissiles().add(new Missile(helper.game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 15, 800, 30, 1.5f, MissileType.STANDARD));
+        helper.getOwner().getMissiles().add(new Missile(BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 15, 800, 30, 1.5f, MissileType.STANDARD));
 
     }
 

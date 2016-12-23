@@ -16,7 +16,7 @@ public class NearestPlayerMovement implements IEnemyMovementType {
     public Vector2 returnMovement(Enemy enemy) {
 
 
-                return new Vector2(enemy.getNearest(enemy.game.getData().getPlayers()).getBody().getX(),enemy.getNearest(enemy.game.getData().getPlayers()).getBody().getY());
+                return new Vector2(enemy.getNearest((List<Enemy>)enemy.getData().getPlayers()).getBody().getX(),enemy.getNearest((List<Enemy>)enemy.getData().getPlayers()).getBody().getY());
 
 
 

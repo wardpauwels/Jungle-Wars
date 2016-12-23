@@ -1,8 +1,11 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.screens.GameScreen;
+import be.howest.junglewars.GameData;
+import be.howest.junglewars.gameobjects.enemy.Enemy;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+
+import java.security.InvalidParameterException;
 
 public class Missile extends GameObject {
     private static final String ATLAS_PREFIX = "missile/";
@@ -57,9 +60,8 @@ public class Missile extends GameObject {
     }
 
 
-
     @Override
-    public void draw(SpriteBatch batch) {
+    public void render(SpriteBatch batch) {
         activeSprite.setPosition(body.x - body.getWidth() / 2, body.y - body.getHeight() / 2);
         activeSprite.rotate(rotationSpeed);
         activeSprite.draw(batch);
@@ -69,7 +71,7 @@ public class Missile extends GameObject {
         return damage;
     }
 
-    public void doEffect(Player p){
+    public void doEffect(Player p) {
         effect.doEffect(p);
     }
 }
