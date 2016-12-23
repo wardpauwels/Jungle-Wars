@@ -95,8 +95,12 @@ public abstract class GameObject implements Serializable {
         this.speed = speed;
     }
 
-    public Vector2 getPosition() {
+    public Vector2 getPos() {
         return new Vector2(body.x, body.y);
+    }
+
+    public void setPos(Vector2 position) {
+        body.setPosition(position.x, position.y);
     }
 
     public GameData getData() {

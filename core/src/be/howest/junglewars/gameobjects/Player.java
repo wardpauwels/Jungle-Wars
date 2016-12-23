@@ -6,6 +6,7 @@ import be.howest.junglewars.gameobjects.power.*;
 import be.howest.junglewars.net.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
 
 import java.util.*;
 
@@ -43,7 +44,10 @@ public class Player extends GameObject {
     private float armor = 0f;
     private float baseSpeed;
     private boolean me;
-    private Network.MovementState movermentState;
+    private Network.PlayerMovementState playerMovementState;
+    private GameData data;
+
+    private Random random = new Random();
 
     public Player(String defaultSpriteUrl, PlayerEntity entity, boolean isMe, GameData data) {
         this(defaultSpriteUrl, isMe, data);
@@ -52,6 +56,7 @@ public class Player extends GameObject {
     public Player(String defaultSpriteUrl, boolean isMe, GameData data) {
         super(ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2, data);
 
+        this.data = data;
         this.me = isMe;
         this.name = name;
         this.id = id;
@@ -148,9 +153,13 @@ public class Player extends GameObject {
         if (!isLookingLeft) spawnX += body.getWidth() / 2;
         float spawnY = body.y + body.getHeight() - 10;
 
-        missiles.add(
-                new Missile(BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3, MissileType.STANDARD, getData())
-        );
+        Missile missile = new Missile(this, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3, MissileType.STANDARD, getData());
+        data.addMissile(missile);
+        Network.PlayerShoot msgPlayershoot = new Network.PlayerShoot(id, new Vector2(spawnX, spawnY), new Vector2(destinationX, destinationY));
+
+        if (me) {
+            data.clientSendMessage(msgPlayershoot);
+        }
     }
 
     public void hitBy(Missile missile) {
@@ -169,9 +178,15 @@ public class Player extends GameObject {
         return 1 / (attackSpeed / 100);
     }
 
+    // Client
+
+    public void spawn(Network.PlayerSpawned msg) {
+        hitpoints = 100;
+        setPlayerMovementState(msg.playerMovementState);
+    }
+
     @Override
     public void update(float dt) {
-        handleInput(dt);
 
         shootTime = calcShootTime();
         if(timer>0){
@@ -216,6 +231,7 @@ public class Player extends GameObject {
         }
 
         helper.update(dt);
+
     }
 
     @Override
@@ -352,11 +368,14 @@ public class Player extends GameObject {
         this.id = id;
     }
 
-    public Network.MovementState getMovementState() {
-        return new Network.MovementState(id, isLookingLeft, isShooting, getPosition());
+    public Network.PlayerMovementState getPlayerMovementState() {
+        return new Network.PlayerMovementState(id, isLookingLeft, isShooting, getPos());
     }
 
-    public void setMovementState(Network.MovementState movermentState) {
-        this.movermentState = movermentState;
+    public void setPlayerMovementState(Network.PlayerMovementState msg) {
+        this.id = msg.playerId;
+        this.isLookingLeft = msg.isLookingLeft;
+        this.isShooting = msg.isShooting;
+        this.setPos(msg.position);
     }
 }

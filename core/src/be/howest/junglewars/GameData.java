@@ -36,14 +36,15 @@ public class GameData {
     private SpawnerManager spawnManager;
 
 
-    //constructor server
+    //for server
     public GameData(JWServer server) {
         this.server = server;
+        this.isClient = false;
         atlas = new TextureAtlas(Assets.IMAGES_ATLAS);
         spawnManager = new SpawnerManager(this);
     }
 
-    //constructor client
+    //for client
     public GameData(JWClient client) {
         this.isClient = true;
         this.client = client;
@@ -62,10 +63,11 @@ public class GameData {
         if (client != null && me != null) {
             if (me.handleInput(dt)) {
                 //TODO udp message to server
+                client.sendMessageUDP(me.getPlayerMovementState());
             }
         }
 
-        //update player
+        //update players
         for (Map.Entry<Long, Player> playerEntry : players.entrySet()) {
             playerEntry.getValue().update(dt);
         }
@@ -209,14 +211,23 @@ public class GameData {
         return missiles;
     }
 
+    public void addMissile(Missile missile) {
+        missiles.add(missile);
+    }
+
     public Player getPlayerById(long id) {
         return players.get(id);
     }
 
-    public void playerMoved(Network.MovementState msg) {
+    public void playerMoved(Network.PlayerMovementState msg) {
+        System.out.println("GameData::playerMoved");
         Player p = players.get(msg.playerId);
-        if (p != null) p.setMovementState(msg);
+        if (p != null) p.setPlayerMovementState(msg);
 
+    }
+
+    public void playerHasShot(Network.PlayerShoot msg) {
+        missiles.add(new Missile(getPlayerById(msg.playerId), 30, 30, msg.position.x, msg.position.y, msg.destination.x, msg.destination.y, "banana", 5, 300, -10, 3, MissileType.STANDARD, this));
     }
 
     public void removePlayer(Network.PlayerJoinLeave msg) {
@@ -228,15 +239,31 @@ public class GameData {
 
     }
 
-    public void onWwaveEnd(Network.WaveEnd msg) {
-
+    public void clientSendMessage(Object msg) {
+        client.sendMessageTCP(msg);
     }
 
-    public void onWaveEnd(Network.WaveStart msg) {
+    public void serverSendMessage(Object msg) {
+        server.sendMessage(msg);
+    }
+
+    public void onWaveEnd(Network.WaveEnd msg) {
 
     }
 
     public void onPlayerSpawned(Network.PlayerSpawned msg) {
+        Player spawner = players.get(msg.playerId);
+        if (spawner != null) {
+            spawner.spawn(msg);
+        }
+    }
+
+    public void onWaveStart(Network.WaveStart msg) {
+
+
+    }
+
+    public void dispose() {
 
     }
 }

@@ -1,19 +1,19 @@
 package be.howest.junglewars.net;
 
-import be.howest.junglewars.GameData;
-import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
+import be.howest.junglewars.*;
+import com.esotericsoftware.kryonet.*;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 
 public class JWClient {
 
-    private final GameData data;
-    public String name;
     public long id;
+    public String name;
     public String remoteIP;
     private Client client;
+    private GameData data;
+    private Random random = new Random();
 
     public JWClient(String name) {
         this.data = new GameData(this);
@@ -59,18 +59,18 @@ public class JWClient {
             for (long id : data.getPlayers().keySet()) {
                 System.out.println(data.getPlayerById(id).getName() + " is online now.");
             }
-        } else if (message instanceof Network.MovementState) {
-            Network.MovementState msg = (Network.MovementState) message;
+        } else if (message instanceof Network.PlayerMovementState) {
+            Network.PlayerMovementState msg = (Network.PlayerMovementState) message;
             data.playerMoved(msg);
         } else if (message instanceof Network.PlayerWasHit) {
             Network.PlayerWasHit msg = (Network.PlayerWasHit) message;
             data.onPlayerWasHit(msg);
         } else if (message instanceof Network.WaveEnd) {
             Network.WaveEnd msg = (Network.WaveEnd) message;
-            data.onWwaveEnd(msg);
+            data.onWaveEnd(msg);
         } else if (message instanceof Network.WaveStart) {
             Network.WaveStart msg = (Network.WaveStart) message;
-            data.onWaveEnd(msg);
+            data.onWaveStart(msg);
         } else if (message instanceof Network.PlayerSpawned) {
             Network.PlayerSpawned msg = (Network.PlayerSpawned) message;
             data.onPlayerSpawned(msg);
@@ -101,6 +101,20 @@ public class JWClient {
     }
 
     public GameData getData() {
-        return data;
+        return this.data;
+    }
+
+    public void sendMessageTCP(Object msg) {
+        System.out.println("SENT packet TCP");
+        if (client.isConnected()) {
+            client.sendTCP(msg);
+        }
+    }
+
+    public void sendMessageUDP(Object message) {
+        System.out.println("SENT packet UPD");
+        if (client.isConnected()) {
+            client.sendUDP(message);
+        }
     }
 }

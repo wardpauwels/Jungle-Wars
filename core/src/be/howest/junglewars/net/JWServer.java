@@ -5,11 +5,13 @@ import be.howest.junglewars.gameobjects.*;
 import com.esotericsoftware.kryonet.*;
 
 import java.io.*;
+import java.util.*;
 
 public class JWServer {
 
     Server server;
     GameData data;
+    private Random random = new Random();
 
     public JWServer() throws IOException {
         server = new Server() {
@@ -18,7 +20,7 @@ public class JWServer {
             }
         };
 
-        this.data = new GameData(this);
+        data = new GameData(this);
 
         Network.register(server);
 
@@ -37,6 +39,7 @@ public class JWServer {
         server.bind(Network.portTCP, Network.portUDP);
         server.start();
     }
+
 
     public void update(float dt) {
         data.update(dt);
@@ -79,28 +82,20 @@ public class JWServer {
                     Player connectedPlayer = data.getPlayerById(jwc.getID());
                     Network.PlayerJoinLeave connectedMsg = new Network.PlayerJoinLeave(jwc.getID(), connectedPlayer.getName(), true);
                     conn.sendTCP(connectedMsg);
-                    conn.sendTCP(connectedPlayer.getMovementState());
+                    conn.sendTCP(connectedPlayer.getPlayerMovementState());
                 }
             }
-            if (server.getConnections().length == 2) {
-                //server.sendToAllTCP(); //TODO difficulty vanuit GUI
-                Network.StartNewGame newGameMessage = new Network.StartNewGame();
-                boolean first = true;
-                for (Player p : data.getPlayers().values()) {
-                    if (first) {
-                        server.sendToTCP((int) p.getId(), newGameMessage);
-                    }
-                }
-            }
+            return;
 
-        } else if (message instanceof Network.MovementState) {
-            Network.MovementState msg = (Network.MovementState) message;
+        } else if (message instanceof Network.PlayerMovementState) {
+            Network.PlayerMovementState msg = (Network.PlayerMovementState) message;
             msg.playerId = conn.getID();
             data.playerMoved(msg);
             server.sendToAllExceptUDP(conn.getID(), msg);
         } else if (message instanceof Network.PlayerShoot) {
             Network.PlayerShoot msg = (Network.PlayerShoot) message;
             msg.playerId = conn.getID();
+            data.playerHasShot(msg);
             server.sendToAllExceptTCP(conn.getID(), msg);
         }
     }
@@ -108,6 +103,10 @@ public class JWServer {
     public void shutdown() {
         server.close();
         server.stop();
+    }
+
+    public void sendMessage(Object msg) {
+        server.sendToAllTCP(msg);
     }
 
     static class JWConnection extends Connection {

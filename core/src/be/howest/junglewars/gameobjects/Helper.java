@@ -49,7 +49,7 @@ public class Helper extends GameObject {
         float spawnY = body.y + (body.height / 2);
 
         owner.getMissiles().add(
-                new Missile(BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 15, 800, 30, 1.5f, MissileType.TEAR, getData())
+                new Missile(owner, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 15, 800, 30, 1.5f, MissileType.TEAR, getData())
         );
     }
 

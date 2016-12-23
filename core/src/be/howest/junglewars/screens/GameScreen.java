@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.*;
 
+import java.io.*;
 import java.util.*;
 
 public class GameScreen extends Stage implements Screen {
@@ -37,10 +38,16 @@ public class GameScreen extends Stage implements Screen {
 
     //endregion
 
-    public GameScreen(JungleWars game, boolean singleplayer, Difficulty difficulty, JWClient client, JWServer server) {
+    public GameScreen(JungleWars game, boolean singleplayer, Difficulty difficulty, boolean isHost, String ip) {
         super(new ScreenViewport(), game.batch);
 
-        this.isHost = server != null;
+        this.isHost = isHost;
+        if (!ip.isEmpty()) {
+            this.ip = ip;
+        } else {
+            this.ip = "localhost";
+        }
+
         this.server = server;
         this.client = client;
         //data = new GameData();
@@ -49,7 +56,7 @@ public class GameScreen extends Stage implements Screen {
         this.atlas = game.atlas;
         this.skin = game.skin;
         this.isGameOver = false;
-        this.playerName = "John";
+        this.playerName = "john";
 
 //        data.setWave(1);
 //        data.setDifficulty(difficulty);
@@ -78,7 +85,25 @@ public class GameScreen extends Stage implements Screen {
 
     @Override
     public void show() {
+        Gdx.input.setCatchBackKey(true);
+
+        client = new JWClient(playerName);
         data = client.getData();
+
+        if (isHost) {
+            // Start server
+            System.out.println("Starting server...");
+            try {
+                server = new JWServer();
+                client.connect("localhost");
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Can't start server. Already running?");
+                game.setScreen(new MainMenuScreen(game));
+            }
+        } else {
+            client.connect(ip);
+        }
     }
 
     private void checkGameOver() {
@@ -237,49 +262,48 @@ public class GameScreen extends Stage implements Screen {
 
     //region renders
 
-    private void renderReady(SpriteBatch batch) {
-
-    }
-
-    private void renderRunning(SpriteBatch batch) {
-        // if all players have 0 hitpoints => game over
-        boolean isGameOver = true;
-        for (Map.Entry<Long, Player> p : data.getPlayers().entrySet()) {
-            if (p.getValue().getHitpoints() >= 0) {
-                isGameOver = false;
-                break;
-            }
-        }
-
-        if (isGameOver) {
-            data.setState(GameState.GAME_OVER);
-            return;
-        }
-
-        for (Map.Entry<Long, Player> p : data.getPlayers().entrySet()) {
-            Player player = p.getValue();
-            player.render(batch);
-            player.getHelper().render(batch);
-
-            // TODO: work with LibGDX Actors instead?
-            bigFont.setColor(0, 0, 0, 1);
-            bigFont.draw(batch, "Player 1", 20, Gdx.graphics.getHeight() - 20);
-            smallFont.draw(batch, "Name: " + player.getName(), 20, Gdx.graphics.getHeight() - 40);
-            smallFont.draw(batch, "Score: " + player.getScore(), 20, Gdx.graphics.getHeight() - 60);
-            smallFont.draw(batch, "Wave: " + player.getWave(), 20, Gdx.graphics.getHeight() - 80);
-            smallFont.draw(batch, "XP: " + player.getXp(), 20, Gdx.graphics.getHeight() - 100); // TODO: xp till next wave
-            smallFont.draw(batch, "Coins collected: " + player.getCollectedCoins(), 20, Gdx.graphics.getHeight() - 120);
-            smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
-            smallFont.draw(batch, "ACTIVE POWERS: ", 300, Gdx.graphics.getHeight() - 20);
-            for (int i = 0; i < player.getPowers().size(); i++) {
-                smallFont.draw(batch, player.getPowers().get(i).toString() + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
-            }
-            smallFont.draw(batch, "ATTACK SPEED: " + player.getAttackSpeed(), 20, 40);
-            smallFont.draw(batch, "DAMAGE: " + player.getDamage(), 20, 60);
-            smallFont.draw(batch, "MOVEMENT SPEED: " + player.getSpeed(), 20, 80);
-            smallFont.draw(batch, "MISSLE SPEED: " + player.getMissleSpeed(), 20, 100);
-
-        }
+//    private void renderReady(SpriteBatch batch) {
+//
+//    }
+//
+//    private void renderRunning(SpriteBatch batch) {
+//        // if all players have 0 hitpoints => game over
+//        boolean isGameOver = true;
+//        for (Map.Entry<Long, Player> p : data.getPlayers().entrySet()) {
+//            if (p.getValue().getHitpoints() >= 0) {
+//                isGameOver = false;
+//                break;
+//            }
+//        }
+//
+//        if (isGameOver) {
+//            data.setState(GameState.GAME_OVER);
+//            return;
+//        }
+//
+//        for (Map.Entry<Long, Player> p : data.getPlayers().entrySet()) {
+//            Player player = p.getValue();
+//            player.render(batch);
+//            player.getHelper().render(batch);
+//
+//            // TODO: work with LibGDX Actors instead?
+//            bigFont.setColor(0, 0, 0, 1);
+//            bigFont.draw(batch, "Player 1", 20, Gdx.graphics.getHeight() - 20);
+//            smallFont.draw(batch, "Name: " + player.getName(), 20, Gdx.graphics.getHeight() - 40);
+//            smallFont.draw(batch, "Score: " + player.getScore(), 20, Gdx.graphics.getHeight() - 60);
+//            smallFont.draw(batch, "Wave: " + player.getWave(), 20, Gdx.graphics.getHeight() - 80);
+//            smallFont.draw(batch, "XP: " + player.getXp(), 20, Gdx.graphics.getHeight() - 100); // TODO: xp till next wave
+//            smallFont.draw(batch, "Coins collected: " + player.getCollectedCoins(), 20, Gdx.graphics.getHeight() - 120);
+//            smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
+//            smallFont.draw(batch, "ACTIVE POWERS: ", 300, Gdx.graphics.getHeight() - 20);
+//            for (int i = 0; i < player.getPowers().size(); i++) {
+//                smallFont.draw(batch, player.getPowers().get(i).toString() + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
+//            }
+//            smallFont.draw(batch, "ATTACK SPEED: " + player.getAttackSpeed(), 20, 40);
+//            smallFont.draw(batch, "DAMAGE: " + player.getDamage(), 20, 60);
+//            smallFont.draw(batch, "MOVEMENT SPEED: " + player.getSpeed(), 20, 80);
+//            smallFont.draw(batch, "MISSLE SPEED: " + player.getMissleSpeed(), 20, 100);
+//        }
 
 //        for (Enemy enemy : data.getEnemies()) {
 //            enemy.render(batch);
@@ -302,10 +326,10 @@ public class GameScreen extends Stage implements Screen {
 //                b.render(batch);
 //            }
 //        }
-
-        bigFont.draw(batch, "LEVEL " + data.getWave(), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 20);
-
-    }
+//
+//        bigFont.draw(batch, "LEVEL " + data.getWave(), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 20);
+//
+//    }
 
     private void renderPreWave(SpriteBatch batch) {
 
@@ -330,6 +354,7 @@ public class GameScreen extends Stage implements Screen {
     public void render(float dt) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         data.update(dt);
         data.render();
 
@@ -355,7 +380,11 @@ public class GameScreen extends Stage implements Screen {
 
     @Override
     public void hide() {
-
+        Gdx.input.setCatchBackKey(false);
+        client.shutdown();
+        if (server != null)
+            server.shutdown();
+        data.dispose();
     }
 
     @Override

@@ -14,7 +14,7 @@ public class Network {
         Kryo kryo = endPoint.getKryo();
         kryo.register(Login.class);
         kryo.register(PlayerJoinLeave.class);
-        kryo.register(MovementState.class);
+        kryo.register(PlayerMovementState.class);
         kryo.register(PlayerShoot.class);
         kryo.register(PlayerWasHit.class);
         kryo.register(WaveEnd.class);
@@ -50,20 +50,27 @@ public class Network {
         }
     }
 
-    static public class MovementState {
+    static public class PlayerMovementState {
         public long playerId;
         public boolean isLookingLeft;
         public boolean isShooting;
         public Vector2 position;
 
-        public MovementState() {
+        public PlayerMovementState() {
         }
 
-        public MovementState(long playerId, boolean isLookingLeft, boolean isShooting, Vector2 position) {
+        public PlayerMovementState(long playerId, boolean isLookingLeft, boolean isShooting, Vector2 position) {
             this.playerId = playerId;
             this.isLookingLeft = isLookingLeft;
             this.isShooting = isShooting;
             this.position = position;
+        }
+    }
+
+    static public class MissileMovementState {
+
+
+        public MissileMovementState() {
         }
     }
 
@@ -114,14 +121,14 @@ public class Network {
 
     static public class PlayerSpawned {
         public long playerId;
-        public MovementState movementState;
+        public PlayerMovementState playerMovementState;
 
         public PlayerSpawned() {
         }
 
-        public PlayerSpawned(long playerId, MovementState movementState) {
+        public PlayerSpawned(long playerId, PlayerMovementState playerMovementState) {
             this.playerId = playerId;
-            this.movementState = movementState;
+            this.playerMovementState = playerMovementState;
         }
     }
 

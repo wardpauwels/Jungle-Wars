@@ -17,8 +17,8 @@ public class DesktopLauncher {
 
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Jungle Wars: The Revenge of Harambe";
-        config.width = 1500;
-        config.height = 900;
+        config.width = 800;
+        config.height = 500;
         config.resizable = true;
         config.useGL30 = false;
         config.addIcon("images/player/harambe32.png", Files.FileType.Internal);

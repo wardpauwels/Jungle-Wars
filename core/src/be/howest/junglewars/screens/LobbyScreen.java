@@ -10,8 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.viewport.*;
 
-import java.io.*;
-
 public class LobbyScreen extends Stage implements Screen {
 
     private final String name;
@@ -66,7 +64,7 @@ public class LobbyScreen extends Stage implements Screen {
         hostButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                startHost();
+                startHost("localhost");
             }
         });
 
@@ -80,20 +78,12 @@ public class LobbyScreen extends Stage implements Screen {
         Gdx.input.setInputProcessor(stage);
     }
 
-    private void startHost(){
-        try{
-            server = new JWServer();
-            client.connect("localhost");
-
-            game.setScreen(new GameScreen(game, false, Difficulty.EASY, client, server));
-        } catch (IOException e) {
-            System.out.println("fuck mn leven, LobbyScreen::startHost() failed");
-        }
+    private void startHost(String host) {
+        game.setScreen(new GameScreen(game, false, Difficulty.EASY, true, host));
     }
 
     private void joinHost(String host){
-        client.connect(host);
-        game.setScreen(new GameScreen(game, false, Difficulty.EASY, client, server));
+        game.setScreen(new GameScreen(game, false, Difficulty.EASY, false, host));
     }
 
     @Override
