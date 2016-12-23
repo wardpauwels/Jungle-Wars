@@ -10,9 +10,4 @@ public class ProtectingHelper implements IHelperActionType {
     public void helperAction(Helper helper) {
         helper.setProtecting(true);
     }
-
-    @Override
-    public void helperUpgrade(Helper helper) {
-        helper.setSpeed(helper.getSpeed()* 1.05f);
-    }
 }

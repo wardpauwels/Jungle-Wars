@@ -15,8 +15,11 @@ public class EnemyEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "texture_file_name")
+    @Column(name = "sprite")
     private String textureFileName;
+
+    @Column(name = "alt_sprite")
+    private String altTextureFileName;
 
     @Column(name = "width")
     private float width;
@@ -24,36 +27,55 @@ public class EnemyEntity {
     @Column(name = "height")
     private float height;
 
-    @Column(name = "base_damage")
+    @Column(name = "dmg")
     private int baseDamage;
 
-    @Column(name = "base_speed")
+    @Column(name = "speed")
     private int baseSpeed;
 
-    @Column(name = "base_hitpoints")
+    @Column(name = "hp")
     private int baseHitpoints;
 
     @Column(name = "base_attack_speed")
     private float baseAttackSpeed;
 
-    @Column(name = "experience_when_killed")
+    @Column(name = "killed_xp")
     private int experienceWhenKilled;
 
-    @Column(name = "score_when_killed")
+    @Column(name = "killed_score")
     private int scoreWhenKilled;
 
-    @Column(name = "rarity")
+    @Column(name = "spawn_chance")
     private int rarity;
 
     @Column(name = "movement_type")
     private String movementType;
 
-    @Column(name = "target_selection_type")
+    @Column(name = "target_type")
     private String targetSelectionType;
 
-    @Column(name = "attack_type")
+    @Column(name = "action_type")
     private String attackType;
     //endregion
+
+    public EnemyEntity(int id, String name, String textureFileName, String altTextureFileName, float width, float height, int baseDamage, int baseSpeed, int baseHitpoints, float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int rarity, String movementType, String targetSelectionType, String attackType) {
+        this.name = name;
+        this.id = id;
+        this.textureFileName = textureFileName;
+        this.altTextureFileName = altTextureFileName;
+        this.width = width;
+        this.height = height;
+        this.baseDamage = baseDamage;
+        this.baseSpeed = baseSpeed;
+        this.baseHitpoints = baseHitpoints;
+        this.baseAttackSpeed = baseAttackSpeed;
+        this.experienceWhenKilled = experienceWhenKilled;
+        this.scoreWhenKilled = scoreWhenKilled;
+        this.rarity = rarity;
+        this.movementType = movementType;
+        this.targetSelectionType = targetSelectionType;
+        this.attackType = attackType;
+    }
 
     //region Getters/Setters
     public int getId() {
@@ -175,6 +197,15 @@ public class EnemyEntity {
     public void setAttackType(String attackType) {
         this.attackType = attackType;
     }
+
+    public String getAltTextureFileName() {
+        return altTextureFileName;
+    }
+
+    public void setAltTextureFileName(String altTextureFileName) {
+        this.altTextureFileName = altTextureFileName;
+    }
     //endregion
+
 
 }

@@ -1,5 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.data.da.JungleWarsDA;
 import be.howest.junglewars.gameobjects.helper.Helper;
 import be.howest.junglewars.gameobjects.helper.HelperActionType;
 import be.howest.junglewars.gameobjects.helper.HelperMovementType;
@@ -9,9 +10,9 @@ import be.howest.junglewars.gameobjects.enemy.utils.Wall;
 import be.howest.junglewars.gameobjects.power.*;
 import be.howest.junglewars.screens.*;
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 
 import java.util.*;
 
@@ -44,11 +45,12 @@ public class Player extends GameObject {
     private int xp = 0;
     private int level = 1;
     private int score = 0;
-    private int collectedCoins = 0;
+    public int collectedCoins = 0;
     private int damage;
     private int missileSpeed = 500;
     private float armor = 0f;
     private float baseSpeed;
+    private Sound throwSound;
 
     public Player(GameScreen game, String defaultSpriteUrl, PlayerEntity entity) {
         this( game, entity.getName(), entity.getId(), defaultSpriteUrl );
@@ -78,7 +80,10 @@ public class Player extends GameObject {
         this.hitpoints = 100;
         this.damage = 10;
 
-        helper = new Helper(game, "Little Helper", this, "red-wings-up", HelperMovementType.PROTECTING_HELPER, HelperActionType.STABBING_HELPER);
+        this.throwSound = Gdx.audio.newSound(Gdx.files.internal("sound/throw.wav"));
+
+
+        helper = new Helper(game, "Little Helper", this, "red-wings-up", HelperMovementType.POWERCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER);
     }
 
     private void handleInput(float dt) {
@@ -202,6 +207,11 @@ public class Player extends GameObject {
         missiles.add(
                 new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3,MissileType.STANDARD)
         );
+        throwSound.play(.1f);
+
+        //TODO
+
+
     }
 
     public void hitBy(Missile missile) {
@@ -296,7 +306,10 @@ public class Player extends GameObject {
     public void addXp(int xp) {
         this.xp += xp;
         checkLevelUp();
-        helper.checkLevelUp();
+    }
+
+    public void setHelper(Helper helper){
+        this.helper = helper;
     }
 
     public void addCoin(int coin) {

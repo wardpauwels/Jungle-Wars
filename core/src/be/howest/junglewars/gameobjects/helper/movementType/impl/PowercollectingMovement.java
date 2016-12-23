@@ -11,10 +11,14 @@ public class PowercollectingMovement implements IHelperMovementType {
 
     @Override
     public Vector2 movementType(Helper helper, float dt){
+        if(helper.upgrade){
+            helper.setSpeed(helper.getSpeed()*1.1f);
+            helper.upgrade = false;
+        }
         for(Power power : helper.checkCollision(helper.game.getData().getPowers())){
             power.collectedBy(helper.getOwner());
         }
-        float speed = 160;
+        float speed = helper.getSpeed();
         float radians = MathUtils.atan2(helper.getNearest(helper.game.getData().getPowers()).getPosition().y - helper.getBody().y, helper.getNearest(helper.game.getData().getPowers()).getPosition().x - helper.getBody().x);
         return new Vector2(helper.getBody().x += MathUtils.cos(radians) * speed * dt, helper.getBody().y += MathUtils.sin(radians) * speed * dt);
 
