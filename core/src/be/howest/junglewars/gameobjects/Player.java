@@ -9,6 +9,7 @@ import be.howest.junglewars.gameobjects.enemy.utils.Wall;
 import be.howest.junglewars.gameobjects.power.*;
 import be.howest.junglewars.screens.*;
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -39,15 +40,17 @@ public class Player extends GameObject {
     private int hitpoints;
     private float speed;
     private float attackSpeed;
-    private float scoreMultiplier = 1; // TODO: when multiplier? over time? when x score is reached, ...?
+    private float scoreMultiplier = 1;
+    public int toReachXP = 100; // Setter/getter voor maken
     private int xp = 0;
     private int level = 1;
     private int score = 0;
-    private int collectedCoins = 0;
+    public int collectedCoins = 0;
     private int damage;
     private int missileSpeed = 500;
     private float armor = 0f;
     private float baseSpeed;
+    private Sound throwSound;
 
     public Player(GameScreen game, String defaultSpriteUrl, PlayerEntity entity) {
         this( game, entity.getName(), entity.getId(), defaultSpriteUrl );
@@ -76,6 +79,9 @@ public class Player extends GameObject {
         this.attackSpeed = 300;
         this.hitpoints = 100;
         this.damage = 10;
+
+        this.throwSound = Gdx.audio.newSound(Gdx.files.internal("sound/throw.wav"));
+
 
         helper = new Helper(game, "Little Helper", this, "red-wings-up", HelperMovementType.POWERCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER);
     }
@@ -201,6 +207,7 @@ public class Player extends GameObject {
         missiles.add(
                 new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3,MissileType.STANDARD)
         );
+        throwSound.play(.1f);
     }
 
     public void hitBy(Missile missile) {
@@ -315,7 +322,18 @@ public class Player extends GameObject {
     }
 
     private void checkLevelUp() {
-        // TODO: if level up condition true => level++
+        if(xp >= toReachXP){
+            this.level += 1;
+            toReachXP = Math.round(toReachXP * 2.6f);
+            levelUp();
+        }
+    }
+
+    public void levelUp(){
+        this.attackSpeed *= 1.03f;
+        this.damage *= 1.03f;
+        this.speed *= 1.03f;
+        this.missileSpeed *= 1.03f;
     }
 
     public Helper getHelper() {
@@ -404,5 +422,13 @@ public class Player extends GameObject {
 
     public void setScoreMultiplier(float scoreMultiplier) {
         this.scoreMultiplier = scoreMultiplier;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

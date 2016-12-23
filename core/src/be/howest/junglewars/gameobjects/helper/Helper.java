@@ -9,14 +9,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 // TODO: should be upgradable
 public class Helper extends GameObject {
-    private static final float WIDTH = 50;
-    private static final float HEIGHT = 50;
+    private static final float WIDTH = 25;
+    private static final float HEIGHT = 25;
 
     private static final String ATLAS_PREFIX = "helper/";
     private Player owner;
     private String name;
     private boolean protecting = false;
     public GameScreen game;
+    public boolean upgrade;
+
+    private float rotationSpeed;
+
 
 
     private IHelperMovementType helperMovementType;
@@ -28,6 +32,8 @@ public class Helper extends GameObject {
         this.owner = owner;
         this.name = name;
         this.game = game;
+        this.rotationSpeed = 25;
+
 
         this.helperMovementType = helperMovementType.getHelperMovement();
         this.helperActionType = helperActionType.getHelperAction();
@@ -55,6 +61,7 @@ public class Helper extends GameObject {
     @Override
     public void draw(SpriteBatch batch) {
         activeSprite.setPosition(body.x, body.y);
+        activeSprite.rotate(rotationSpeed);
         activeSprite.draw(batch);
     }
 
@@ -62,11 +69,19 @@ public class Helper extends GameObject {
         return owner;
     }
 
+
+
     public String getName(){
         return name;
+    }
+
+    public void upgrade(){
+        upgrade = true;
     }
 
     public void setProtecting(boolean protecting) {
         this.protecting = protecting;
     }
+
+
 }
