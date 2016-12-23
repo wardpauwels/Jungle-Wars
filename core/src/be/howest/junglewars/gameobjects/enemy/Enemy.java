@@ -3,6 +3,7 @@ package be.howest.junglewars.gameobjects.enemy;
 import be.howest.junglewars.*;
 import be.howest.junglewars.data.entities.*;
 import be.howest.junglewars.gameobjects.*;
+import be.howest.junglewars.net.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
@@ -35,14 +36,16 @@ public class Enemy extends GameObject {
     private float timer;
     private float time;
     private float dabTimer;
+    private boolean isShooting;
+    private long id;
 
-    public Enemy(String name, float width, float height, String defaultSpriteUrl, String altSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
+    public Enemy(long id, String name, float width, float height, String defaultSpriteUrl, String altSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
                  float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType, GameData data) {
         super(ATLAS_PREFIX + defaultSpriteUrl, width, height,
                 ThreadLocalRandom.current().nextInt(0 - Math.round(width), Gdx.graphics.getWidth() + Math.round(width)),
                 ThreadLocalRandom.current().nextBoolean() ? 0 - height : Gdx.graphics.getHeight() + height, data); // TODO: spawns only top or bottom now
-        this.WIDTH=width;
-        this.HEIGHT=height;
+        this.WIDTH = width;
+        this.HEIGHT = height;
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
@@ -65,10 +68,12 @@ public class Enemy extends GameObject {
 
         this.defaultSprite = ATLAS_PREFIX + defaultSpriteUrl;
         this.altSprite = ATLAS_PREFIX + altSpriteUrl;
+        this.isShooting = false;
     }
 
-    public Enemy(GameData data, EnemyEntity e) {
+    public Enemy(long id, GameData data, EnemyEntity e) {
         this(
+                id,
                 e.getName(),
                 e.getWidth(),
                 e.getHeight(),
@@ -91,10 +96,12 @@ public class Enemy extends GameObject {
     @Override
     public void update(float dt) {
 
+        System.out.println("I'm an enemy -> I'm updating");
+
         if (this.hitpoints <= 0) this.remove = true;
 
         targets = chooseMovementType.chooseTargets(this);
-        for(Vector2 v: targets) {
+        for (Vector2 v : targets) {
 
             float radians = MathUtils.atan2(v.y - body.y, v.x - body.x);
 
@@ -104,32 +111,30 @@ public class Enemy extends GameObject {
             doEnemyAction(dt);
         }
 
-        if(timer<time && !spriteChanged){
-        timer += dt;
-        }
-        else {
+        if (timer < time && !spriteChanged) {
+            timer += dt;
+        } else {
             spriteChanged = true;
             timer = 0;
         }
-        if (dabTimer < time && spriteChanged){
+        if (dabTimer < time && spriteChanged) {
             dabTimer += dt;
-        } else{
+        } else {
             spriteChanged = false;
             dabTimer = 2.5f;
         }
-
-
 
     }
 
     @Override
     public void render(SpriteBatch batch) {
+        System.out.println("I'm an enemy -> I'm rendering");
+
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
-        if(!spriteChanged){
+        if (!spriteChanged) {
             changeSprite(defaultSprite);
-        }
-        else{
+        } else {
             changeSprite(altSprite);
 
         }
@@ -162,20 +167,18 @@ public class Enemy extends GameObject {
     private void attack() {
         targets = chooseTargetType.chooseTargets(this);
         if (targets == null) return;
-        for(Vector2 v: targets) {
+        for (Vector2 v : targets) {
             float destinationX = v.x;
             float destinationY = v.y;
 
             float spawnX = body.x + (body.width / 2);
             float spawnY = body.y + (body.height / 2);
 
-            enemyActionType.attack(this,v,spawnX,spawnY);
-
-
+            enemyActionType.attack(this, v, spawnX, spawnY);
         }
     }
 
-    public void changeSprite(String sprite){
+    public void changeSprite(String sprite) {
         changeSprite(getData().atlas.createSprite(sprite));
     }
 
@@ -197,5 +200,15 @@ public class Enemy extends GameObject {
 
     public void setDamage(int damage) {
         this.damage = damage;
+    }
+
+    public Network.EnemyMovementState getEnemyMovementState() {
+        return new Network.EnemyMovementState(id, isShooting, getPos());
+    }
+
+    public void setEnemyMovementState(Network.EnemyMovementState msg) {
+        this.setPos(msg.position);
+        this.id = msg.id;
+        this.isShooting = msg.isShooting;
     }
 }

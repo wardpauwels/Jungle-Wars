@@ -80,6 +80,9 @@ public class JWClient {
         } else if (message instanceof Network.EnemySpawned) {
             Network.EnemySpawned msg = (Network.EnemySpawned) message;
             data.onEnemySpawn(msg);
+        } else if (message instanceof Network.EnemyMovementState) {
+            Network.EnemyMovementState msg = (Network.EnemyMovementState) message;
+            data.enemyMoved(msg);
         }
     }
 

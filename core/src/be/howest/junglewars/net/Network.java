@@ -142,24 +142,28 @@ public class Network {
     }
 
     static public class EnemySpawned {
+        public long id;
         public EnemyEntity enemy;
 
         public EnemySpawned() {
         }
 
-        public EnemySpawned(EnemyEntity enemy) {
+        public EnemySpawned(long currentId, EnemyEntity enemy) {
+            this.id = currentId;
             this.enemy = enemy;
         }
     }
 
     static public class EnemyMovementState {
+        public long id;
         public Vector2 position;
         public boolean isShooting;
 
         public EnemyMovementState() {
         }
 
-        public EnemyMovementState(boolean isShooting, Vector2 position) {
+        public EnemyMovementState(long id, boolean isShooting, Vector2 position) {
+            this.id = id;
             this.position = position;
             this.isShooting = isShooting;
         }

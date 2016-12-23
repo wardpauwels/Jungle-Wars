@@ -71,7 +71,7 @@ public class GameData {
 
     }
 
-    public void update(float dt) {
+    public synchronized void update(float dt) {
         //client ready and enemy spawned
         if (client != null && me != null) {
             if (me.handleInput(dt)) {
@@ -88,6 +88,9 @@ public class GameData {
         //update enemies
         for (Enemy enemy : enemies) {
             enemy.update(dt);
+//            if (!isClient){
+//                server.sendMessage(enemy.getEnemyMovementState());
+//            }
         }
 
         //update missiles
@@ -277,7 +280,7 @@ public class GameData {
     }
 
     public void onEnemySpawn(Network.EnemySpawned msg) {
-        enemies.add(new Enemy(this, msg.enemy));
+        enemies.add(new Enemy(msg.id, this, msg.enemy));
         System.out.println(enemies.size());
     }
 
@@ -316,5 +319,9 @@ public class GameData {
 
     public void dispose() {
 
+    }
+
+    public void enemyMoved(Network.EnemyMovementState msg) {
+        server.sendMessage(msg);
     }
 }

@@ -9,6 +9,8 @@ import java.util.stream.*;
 
 public class EnemySpawner implements ISpawner {
 
+    private long currentId = 0;
+
     private SpawnerManager manager;
 
     private float secondsBetweenSpawn;
@@ -102,7 +104,8 @@ public class EnemySpawner implements ISpawner {
             if (random <= 0) {
                 updateStats(e);
                 //manager.getData().getEnemies().add(new Enemy(manager.getData(), e));
-                manager.getData().serverSendMessage(new Network.EnemySpawned(e));
+                manager.getData().serverSendMessage(new Network.EnemySpawned(currentId, e));
+                currentId++;
                 System.out.println(e.getName());
                 break;
             }
