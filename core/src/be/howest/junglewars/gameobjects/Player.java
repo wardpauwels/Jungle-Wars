@@ -155,7 +155,7 @@ public class Player extends GameObject {
 
 //        Missile missile = new Missile(this, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3, MissileType.STANDARD, getData());
 //        data.addMissile(missile);
-        Network.PlayerShoot msgPlayershoot = new Network.PlayerShoot(id, new Vector2(spawnX, spawnY), new Vector2(destinationX, destinationY));
+        Network.PlayerShoot msgPlayershoot = new Network.PlayerShoot(id, new Vector2(spawnX, spawnY), new Vector2(destinationX, destinationY), isShooting);
 
         data.clientSendMessage(msgPlayershoot);
 

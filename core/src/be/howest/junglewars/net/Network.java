@@ -51,9 +51,9 @@ public class Network {
     }
 
     static public class PlayerMovementState {
+        public boolean isShooting;
         public long playerId;
         public boolean isLookingLeft;
-        public boolean isShooting;
         public Vector2 position;
 
         public PlayerMovementState() {
@@ -62,15 +62,8 @@ public class Network {
         public PlayerMovementState(long playerId, boolean isLookingLeft, boolean isShooting, Vector2 position) {
             this.playerId = playerId;
             this.isLookingLeft = isLookingLeft;
-            this.isShooting = isShooting;
             this.position = position;
-        }
-    }
-
-    static public class MissileMovementState {
-
-
-        public MissileMovementState() {
+            this.isShooting = isShooting;
         }
     }
 
@@ -78,14 +71,16 @@ public class Network {
         public long playerId;
         public Vector2 position;
         public Vector2 destination;
+        public boolean isShooting;
 
         public PlayerShoot() {
         }
 
-        public PlayerShoot(long playerId, Vector2 position, Vector2 destination) {
+        public PlayerShoot(long playerId, Vector2 position, Vector2 destination, boolean isShooting) {
             this.playerId = playerId;
             this.position = position;
             this.destination = destination;
+            this.isShooting = isShooting;
         }
     }
 
@@ -139,6 +134,17 @@ public class Network {
         public StartNewGame() {
         }
 
+    }
+
+    static public class EnemyMovementState {
+        public Vector2 position;
+
+        public EnemyMovementState() {
+        }
+
+        public EnemyMovementState(boolean isLookingLeft, boolean isShooting, Vector2 position) {
+            this.position = position;
+        }
     }
 
 }
