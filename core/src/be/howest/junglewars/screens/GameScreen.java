@@ -79,7 +79,6 @@ public class GameScreen extends Stage implements Screen {
         this.atlas = game.atlas;
         this.skin = game.skin;
         this.isGameOver = false;
-        this.playerName = game.getPlayer().getName();
 
         this.nextLevel = true;
 
@@ -129,6 +128,66 @@ public class GameScreen extends Stage implements Screen {
         innitSounds();
     }
 
+    public GameScreen(JungleWars game,int AmountOfPlayers, int wave, Difficulty difficulty) {
+        super(new ScreenViewport(), game.batch);
+        data = new GameData();
+        this.stage = this;
+        this.game = game;
+        this.atlas = game.atlas;
+        this.skin = game.skin;
+        this.isGameOver = false;
+        this.playerName = game.getPlayer().getName();
+
+        this.nextLevel = true;
+
+        this.upgradeCost = 1;
+        this.running = false;
+        this.currentPlayer = 0;
+        db = JungleWarsDA.getInstance();
+
+        music = Gdx.audio.newMusic( Gdx.files.internal( "music/welcome.mp3" ) );
+        music.setLooping( true );
+        music.setVolume( 0.05f );
+        music.play();
+
+
+
+
+        data.setWave(wave);
+        data.setDifficulty(difficulty);
+        data.setState(GameState.READY);
+
+        helpers = new ArrayList<>();
+        powers = new ArrayList<>();
+        enemies = new ArrayList<>();
+
+        // create full screen background
+        backgroundSprite = atlas.createSprite("background/game");
+        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+
+        // TODO: https://github.com/libgdx/libgdx/wiki/Managing-your-assets#loading-a-ttf-using-the-assethandler
+        // TODO: work with Actors for GUI layout (buttons, menu, etc...)?
+        // Fonts
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/roboto-regular.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 20;
+        smallFont = generator.generateFont(parameter);
+        parameter.size = 24;
+        bigFont = generator.generateFont(parameter);
+        generator.dispose();
+
+        data.getPlayers().add( new Player( this, "harambe", game.getPlayer() ) );
+        data.getPlayers().add( new Player(this, "harambe",new PlayerEntity("harambe bro",2)));
+        data.getPlayers().get(1).controller = true;
+        data.getPlayers().get(1).autoAim = true;
+        startingEnemies = 1;
+        multiplierEnemies = 0.5f;
+        spawnEnemies(false);
+        fillHelperBox();
+        innitSounds();
+    }
+
     private void innitSounds(){
         sounds = new ArrayList<>();
         sounds.add(Gdx.audio.newSound(Gdx.files.internal("sound/smallloan.wav")));
@@ -138,6 +197,8 @@ public class GameScreen extends Stage implements Screen {
         sounds.add(Gdx.audio.newSound(Gdx.files.internal("sound/losers.wav")));
 
     }
+
+
     private void fillHelperBox(){
 
         ArrayList<HelperEntity> helperDB = new ArrayList<>();
@@ -216,7 +277,7 @@ public class GameScreen extends Stage implements Screen {
                 data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trump-animation", 5, 150, 1, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
 
                 for (int i = 0; i < amountEnemies; i++) {
-                    data.getEnemies().add(new Enemy(this, "Zookeeper", 70, 80, "zookeeper3", "zookeeper-animation", 5, 150, 1, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.CRYING));
+                    data.getEnemies().add(new Enemy(this, "Zookeeper", 70, 80, "zookeeper3", "zookeeper3-animation", 5, 150, 1, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.CRYING));
                 }
                 if (nextWave) data.setWave(data.getWave() + 1);
             }
