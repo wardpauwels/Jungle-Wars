@@ -1,19 +1,28 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.*;
-import be.howest.junglewars.gameobjects.*;
-import be.howest.junglewars.net.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.*;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.viewport.*;
+import be.howest.junglewars.Difficulty;
+import be.howest.junglewars.GameData;
+import be.howest.junglewars.GameState;
+import be.howest.junglewars.JungleWars;
+import be.howest.junglewars.gameobjects.Player;
+import be.howest.junglewars.net.JWClient;
+import be.howest.junglewars.net.JWServer;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameScreen extends Stage implements Screen {
 
@@ -150,7 +159,6 @@ public class GameScreen extends Stage implements Screen {
     }
 
     //region spawners TODO: create spawners
-
 
 
     //endregion
@@ -331,11 +339,13 @@ public class GameScreen extends Stage implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        data.update(dt);
-        data.render();
+        if (data.getPlayers().size() > 1) {
+            data.update(dt);
+            data.render();
 
-        if (isHost) {
-            server.update(dt);
+            if (isHost) {
+                server.update(dt);
+            }
         }
     }
 
@@ -367,7 +377,7 @@ public class GameScreen extends Stage implements Screen {
     public void dispose() {
     }
 
-    public GameData getData(){
+    public GameData getData() {
         return data;
     }
 
