@@ -2,7 +2,7 @@ package be.howest.junglewars.spawners;
 
 public class PowerSpawner implements ISpawner {
 
-    public PowerSpawner(SpawnerManager manager){
+    public PowerSpawner(SpawnerManager manager) {
 
     }
 

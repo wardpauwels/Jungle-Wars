@@ -1,10 +1,9 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
-import be.howest.junglewars.screens.GameScreen;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
+import be.howest.junglewars.*;
+import be.howest.junglewars.gameobjects.enemy.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
 
 // TODO: should be upgradable
 public class Helper extends GameObject {
@@ -21,8 +20,8 @@ public class Helper extends GameObject {
     private float shootTime;
     private float shootTimer;
 
-    public Helper(GameData game, String name, Player owner, String defaultSpriteUrl) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, owner.body.x - 1.5f * WIDTH, owner.body.y + 1.5f * HEIGHT);
+    public Helper(String name, Player owner, String defaultSpriteUrl, GameData data) {
+        super(ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, owner.body.x - 1.5f * WIDTH, owner.body.y + 1.5f * HEIGHT, data);
 
         this.owner = owner;
         this.name = name;
@@ -50,12 +49,12 @@ public class Helper extends GameObject {
         float spawnY = body.y + (body.height / 2);
 
         owner.getMissiles().add(
-                new Missile(data, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 15, 800, 30, 1.5f,MissileType.TEAR)
+                new Missile(owner, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 15, 800, 30, 1.5f, MissileType.TEAR, getData())
         );
     }
 
     private Enemy chooseTarget() {
-        return getNearest(data.getEnemies());
+        return getNearest(getData().getEnemies());
     }
 
     private Vector2 leftTopOfOwnerPosition(float dt) {
@@ -69,7 +68,7 @@ public class Helper extends GameObject {
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void render(SpriteBatch batch) {
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
     }

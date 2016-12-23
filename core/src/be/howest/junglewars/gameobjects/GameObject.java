@@ -1,8 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.screens.*;
-import com.badlogic.gdx.Game;
+import be.howest.junglewars.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 
@@ -11,19 +9,17 @@ import java.util.*;
 
 public abstract class GameObject implements Serializable {
 
-    public String defaultSpriteUrl;
     protected final Sprite DEFAULT_SPRITE;
-    public GameData data;
     public boolean remove = false;
     protected Rectangle body; // has: .width, .height, .overlaps(), .x, .y
     protected float speed = 0;
     protected Sprite activeSprite;
+    private GameData data;
 
-    protected GameObject(GameData data, String defaultSpriteUrl, float width, float height, float x, float y) {
-        this.defaultSpriteUrl = defaultSpriteUrl;
+    protected GameObject(String defaultSpriteUrl, float width, float height, float x, float y, GameData data) {
         this.data = data;
         body = initBody(width, height, x, y);
-        DEFAULT_SPRITE = data.getGame().atlas.createSprite(defaultSpriteUrl);
+        DEFAULT_SPRITE = data.atlas.createSprite(defaultSpriteUrl);
         changeSprite(DEFAULT_SPRITE);
     }
 
@@ -33,7 +29,7 @@ public abstract class GameObject implements Serializable {
 
     protected abstract void update(float dt);
 
-    protected abstract void draw(SpriteBatch batch);
+    protected abstract void render(SpriteBatch batch);
 
     protected void changeSprite(Sprite sprite) {
         activeSprite = sprite;
@@ -49,6 +45,7 @@ public abstract class GameObject implements Serializable {
                 collision.add(go);
             }
         }
+
         return collision;
     }
 
@@ -96,5 +93,21 @@ public abstract class GameObject implements Serializable {
 
     public void setSpeed(float speed) {
         this.speed = speed;
+    }
+
+    public Vector2 getPos() {
+        return new Vector2(body.x, body.y);
+    }
+
+    public void setPos(Vector2 position) {
+        body.setPosition(position.x, position.y);
+    }
+
+    public GameData getData() {
+        return data;
+    }
+
+    public void setData(GameData data) {
+        this.data = data;
     }
 }

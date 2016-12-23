@@ -1,12 +1,14 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.GameData;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Missile extends GameObject {
     private static final String ATLAS_PREFIX = "missile/";
+
+    private Player playerOwner;
+    private Enemy enemyOwner;
 
     private int damage;
     private float rotationSpeed;
@@ -19,10 +21,17 @@ public class Missile extends GameObject {
 
     private IMissileType effect;
 
-    public Missile(GameData game, float width, float height, float spawnX, float spawnY, float destinationX, float destinationY, String defaultSpriteUrl, int damage, int speed,
-                   int rotationSpeed, float lifeTime, MissileType effect) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height, spawnX, spawnY);
+    public Missile(GameObject owner, float width, float height, float spawnX, float spawnY, float destinationX, float destinationY, String defaultSpriteUrl, int damage, int speed,
+                   int rotationSpeed, float lifeTime, MissileType effect, GameData data) {
+        super(ATLAS_PREFIX + defaultSpriteUrl, width, height, spawnX, spawnY, data);
 
+        if (owner instanceof Player) {
+            playerOwner = (Player) owner;
+        } else if (owner instanceof Enemy) {
+            enemyOwner = (Enemy) owner;
+        } else {
+            throw new InvalidParameterException("Missile owner is no player/enemy");
+        }
         this.damage = damage;
         this.speed = speed;
         this.rotationSpeed = rotationSpeed;
@@ -61,6 +70,6 @@ public class Missile extends GameObject {
     }
 
     public void doEffect(Player p){
-        effect.doEffect(data,p);
+        effect.doEffect(p);
     }
 }

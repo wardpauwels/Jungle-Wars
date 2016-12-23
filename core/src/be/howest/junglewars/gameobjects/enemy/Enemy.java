@@ -5,6 +5,7 @@ import be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.Missile;
 import be.howest.junglewars.gameobjects.Player;
+import be.howest.junglewars.net.Network;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,41 +15,75 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Enemy extends GameObject {
-    private static final float WIDTH = 70;
-    private static final float HEIGHT = 80;
     public static final float BULLET_WIDTH = 15;
     public static final float BULLET_HEIGHT = 15;
-
     private static final String ATLAS_PREFIX = "enemy/";
-
-    private EnemyActionType enemyAction;
-    private ChooseTargetType chooseMovement;
-    private ChooseTargetType chooseTarget;
-
+    public String altSprite;
+    public boolean isShooting;
+    private float WIDTH;
+    private float HEIGHT;
     private String name;
-
-    private int baseDamage;
-    private int baseHitpoints;
-    private int baseSpeed;
-
+    private int damage;
+    private int hitpoints;
+    private int speed;
     private float actionTime;
     private float actionTimer;
-
-    private int spawnProbability;
-
+    private int spawnChance;
     private int scoreWhenKilled;
     private int experienceWhenKilled;
-
     private List<Vector2> targets;
-
     private IChooseTargetType chooseTargetType;
     private IChooseTargetType chooseMovementType;
     private IEnemyActionType enemyActionType;
+    private String defaultSprite;
+    private boolean spriteChanged;
+    private float timer;
+    private float time;
+    private float dabTimer;
+    private long id;
+    private GameData data;
 
-    public Enemy(GameData data, EnemyEntity e) {
+    public Enemy(long id, String name, float width, float height, String defaultSpriteUrl, String altSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
+                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType, GameData data) {
+        super(ATLAS_PREFIX + defaultSpriteUrl, width, height,
+                ThreadLocalRandom.current().nextInt(0 - Math.round(width), Gdx.graphics.getWidth() + Math.round(width)),
+                ThreadLocalRandom.current().nextBoolean() ? 0 - height : Gdx.graphics.getHeight() + height, data); // TODO: spawns only top or bottom now
+        this.id = id;
+        this.data = data;
+        this.WIDTH = width;
+        this.HEIGHT = height;
+        this.name = name;
+        this.scoreWhenKilled = scoreWhenKilled;
+        this.experienceWhenKilled = experienceWhenKilled;
+        this.spawnChance = spawnChance;
+
+        // TODO: calculate stats based by game level and difficulty
+        this.damage = baseDamage;
+        this.speed = baseSpeed;
+        this.hitpoints = baseHitpoints;
+        this.actionTime = baseAttackSpeed;
+        this.actionTimer = 0;
+        this.spriteChanged = false;
+        this.time = 3f;
+        this.dabTimer = 2.5f;
+        this.timer = 0;
+
+        this.chooseTargetType = chooseTargetType.getType();
+        this.chooseMovementType = chooseMovementType.getType();
+        this.enemyActionType = actionType.getAction();
+
+        this.defaultSprite = ATLAS_PREFIX + defaultSpriteUrl;
+        this.altSprite = ATLAS_PREFIX + altSpriteUrl;
+        this.isShooting = false;
+    }
+
+    public Enemy(long id, GameData data, EnemyEntity e) {
         this(
-                data,
+                id,
                 e.getName(),
+                e.getWidth(),
+                e.getHeight(),
+                e.getDefaultSpriteUrl(),
                 e.getDefaultSpriteUrl(),
                 e.getBaseDamage(),
                 e.getBaseSpeed(),
@@ -59,57 +94,54 @@ public class Enemy extends GameObject {
                 e.getSpawnProbability(),
                 ChooseTargetType.valueOf(e.getTargetSelectionType()),
                 ChooseTargetType.valueOf(e.getMovementType()),
-                EnemyActionType.valueOf(e.getAttackType())
+                EnemyActionType.valueOf(e.getAttackType()),
+                data
         );
-    }
-
-    public Enemy(GameData data, String name, String defaultSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
-                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnProbability, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType) {
-        super(data, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT,
-                ThreadLocalRandom.current().nextInt(0 - Math.round(WIDTH), Gdx.graphics.getWidth() + Math.round(WIDTH)),
-                ThreadLocalRandom.current().nextBoolean() ? 0 - HEIGHT : Gdx.graphics.getHeight() + HEIGHT); // TODO: spawns only top or bottom now
-
-        this.name = name;
-        this.scoreWhenKilled = scoreWhenKilled;
-        this.experienceWhenKilled = experienceWhenKilled;
-        this.spawnProbability = spawnProbability;
-
-        // TODO: calculate stats based by game level and difficulty
-        this.baseDamage = baseDamage;
-        this.baseSpeed = baseSpeed;
-        this.baseHitpoints = baseHitpoints;
-        this.actionTime = baseAttackSpeed;
-        this.actionTimer = 0;
-
-        this.chooseTarget = chooseTargetType;
-        this.chooseTargetType = chooseTargetType.getType();
-        this.chooseMovement = chooseMovementType;
-        this.chooseMovementType = chooseMovementType.getType();
-        this.enemyAction = actionType;
-        this.enemyActionType = actionType.getAction();
     }
 
     @Override
     public void update(float dt) {
 
-        if (this.baseHitpoints <= 0) this.remove = true;
+        if (this.hitpoints <= 0) this.remove = true;
 
         targets = chooseMovementType.chooseTargets(this);
         for (Vector2 v : targets) {
+            v = new Vector2(data.getPlayerById(1).getPos().x, data.getPlayerById(1).getPos().y);
 
             float radians = MathUtils.atan2(v.y - body.y, v.x - body.x);
 
-            body.x += MathUtils.cos(radians) * baseSpeed * dt;
-            body.y += MathUtils.sin(radians) * baseSpeed * dt;
+            body.x += MathUtils.cos(radians) * speed * dt;
+            body.y += MathUtils.sin(radians) * speed * dt;
 
             doEnemyAction(dt);
+
+        }
+
+        if (timer < time && !spriteChanged) {
+            timer += dt;
+        } else {
+            spriteChanged = true;
+            timer = 0;
+        }
+        if (dabTimer < time && spriteChanged) {
+            dabTimer += dt;
+        } else {
+            spriteChanged = false;
+            dabTimer = 2.5f;
         }
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void render(SpriteBatch batch) {
+
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
+        if (!spriteChanged) {
+            changeSprite(defaultSprite);
+        } else {
+            changeSprite(altSprite);
+
+        }
     }
 
     public void hitBy(Missile missile, Player player) {
@@ -123,8 +155,8 @@ public class Enemy extends GameObject {
     }
 
     public int catchDamage(int dmg) {
-        this.baseHitpoints -= dmg;
-        return baseHitpoints;
+        this.hitpoints -= dmg;
+        return hitpoints;
     }
 
 
@@ -147,8 +179,11 @@ public class Enemy extends GameObject {
             float spawnY = body.y + (body.height / 2);
 
             enemyActionType.attack(this, v, spawnX, spawnY);
-
         }
+    }
+
+    public void changeSprite(String sprite) {
+        changeSprite(getData().atlas.createSprite(sprite));
     }
 
     public int getScoreWhenKilled() {
@@ -159,15 +194,33 @@ public class Enemy extends GameObject {
         return experienceWhenKilled;
     }
 
-    public int getSpawnProbability() {
-        return spawnProbability;
+    public int getSpawnChance() {
+        return spawnChance;
     }
 
-    public int getBaseDamage() {
-        return baseDamage;
+    public int getDamage() {
+        return damage;
     }
 
-    public void setBaseDamage(int baseDamage) {
-        this.baseDamage = baseDamage;
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setEnemyMovenentState(Network.EnemyMovementState msg) {
+        this.setPos(msg.position);
+        this.isShooting = msg.isShooting;
+        this.id = msg.id;
+    }
+
+    public GameData getData() {
+        return data;
     }
 }

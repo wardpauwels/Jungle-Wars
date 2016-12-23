@@ -1,10 +1,12 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.GameData;
+import be.howest.junglewars.*;
+import be.howest.junglewars.data.entities.*;
 import be.howest.junglewars.gameobjects.power.*;
-import be.howest.junglewars.screens.*;
+import be.howest.junglewars.net.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
 
 import java.util.*;
 
@@ -15,23 +17,20 @@ public class Player extends GameObject {
     private static final float BULLET_HEIGHT = 25;
 
     private static final String ATLAS_PREFIX = "player/";
-    private final Sprite SHOOTING_SPRITE = data.getGame().atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
-
+    private final Sprite SHOOTING_SPRITE = getData().atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
+    public float timer;
     private boolean isLookingLeft;
-
     private boolean isShooting;
     private float shootingAnimationTime;
     private float shootingAnimationTimer;
-
     private float shootTime;
     private float shootTimer;
     private boolean canShoot;
-
     private Helper helper;
     private ArrayList<Missile> missiles;
     private ArrayList<Power> powers;
-
     private String name;
+    private long id;
     private int hitpoints;
     private float speed;
     private float attackSpeed;
@@ -41,18 +40,26 @@ public class Player extends GameObject {
     private int score = 0;
     private int collectedCoins = 0;
     private int damage;
-
     private int missleSpeed = 500;
     private float armor = 0f;
-
     private float baseSpeed;
-    public float timer;
+    private boolean me;
+    private Network.PlayerMovementState playerMovementState;
+    private GameData data;
 
+    private Random random = new Random();
 
-    public Player(GameData game, String name, String defaultSpriteUrl) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2);
+    public Player(String defaultSpriteUrl, PlayerEntity entity, boolean isMe, GameData data) {
+        this(defaultSpriteUrl, isMe, data);
+    }
 
+    public Player(String defaultSpriteUrl, boolean isMe, GameData data) {
+        super(ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2, data);
+
+        this.data = data;
+        this.me = isMe;
         this.name = name;
+        this.id = id;
 
         missiles = new ArrayList<>();
         powers = new ArrayList<>();
@@ -72,10 +79,13 @@ public class Player extends GameObject {
         this.hitpoints = 100;
         this.damage = 10;
 
-        helper = new Helper(game, "Little Helper", this, "red-wings-up");
+        helper = new Helper("Little Helper", this, "red-wings-up", getData());
     }
 
-    private void handleInput(float dt) {
+    public boolean handleInput(float dt) {
+        float myX = body.x;
+        float myY = body.y;
+
         boolean keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         boolean keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
@@ -121,7 +131,9 @@ public class Player extends GameObject {
             if (topBorderTouch || bottomBorderTouch)
                 currentSpeed = normalizedSpeed;
             body.x = rightBorderTouch ? Gdx.graphics.getWidth() - body.getWidth() : body.x + currentSpeed;
+
         }
+        return body.x != myX || body.y != myY;
     }
     public boolean isSlowed(){
         if(speed<baseSpeed){
@@ -141,9 +153,9 @@ public class Player extends GameObject {
         if (!isLookingLeft) spawnX += body.getWidth() / 2;
         float spawnY = body.y + body.getHeight() - 10;
 
-        missiles.add(
-                new Missile(data, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3,MissileType.STANDARD)
-        );
+        Network.PlayerShoot msgPlayershoot = new Network.PlayerShoot(id, new Vector2(spawnX, spawnY), new Vector2(destinationX, destinationY), isShooting);
+
+        data.clientSendMessage(msgPlayershoot);
     }
 
     public void hitBy(Missile missile) {
@@ -162,9 +174,15 @@ public class Player extends GameObject {
         return 1 / (attackSpeed / 100);
     }
 
+    // Client
+
+    public void spawn(Network.PlayerSpawned msg) {
+        hitpoints = 100;
+        setPlayerMovementState(msg.playerMovementState);
+    }
+
     @Override
     public void update(float dt) {
-        handleInput(dt);
 
         shootTime = calcShootTime();
         if(timer>0){
@@ -190,15 +208,6 @@ public class Player extends GameObject {
             }
         }
 
-        for (int i = 0; i < missiles.size(); i++) {
-            if (missiles.get(i).shouldRemove()) {
-                missiles.remove(i);
-                i--;
-                continue;
-            }
-            missiles.get(i).update(dt);
-        }
-
         for (int i = 0; i < powers.size(); i++) {
             if (powers.get(i).isActionEnded()) {
                 powers.remove(i);
@@ -207,12 +216,11 @@ public class Player extends GameObject {
             }
             powers.get(i).update(dt);
         }
-
         helper.update(dt);
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void render(SpriteBatch batch) {
         if (isShooting)
             changeSprite(SHOOTING_SPRITE);
         else
@@ -222,10 +230,7 @@ public class Player extends GameObject {
             activeSprite.flip(true, false);
         }
 
-        helper.draw(batch);
-        for (Missile missile : missiles) {
-            missile.draw(batch);
-        }
+        helper.render(batch);
 
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
@@ -265,12 +270,20 @@ public class Player extends GameObject {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getScore() {
         return score;
     }
 
     public int getHitpoints() {
         return hitpoints;
+    }
+
+    public void setHitpoints(int hitpoints) {
+        this.hitpoints = hitpoints;
     }
 
     public ArrayList<Power> getPowers() {
@@ -321,15 +334,34 @@ public class Player extends GameObject {
 
     public void setMissleSpeed(int missleSpeed){ this.missleSpeed = missleSpeed;}
 
-    public void setHitpoints(int hitpoints) {
-        this.hitpoints = hitpoints;
-    }
-
     public float getArmor() {
         return armor;
     }
 
     public void setArmor(float armor) {
         this.armor = armor;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Network.PlayerMovementState getPlayerMovementState() {
+        return new Network.PlayerMovementState(id, isLookingLeft, isShooting, getPos());
+    }
+
+    public void setPlayerMovementState(Network.PlayerMovementState msg) {
+        this.id = msg.playerId;
+        this.isLookingLeft = msg.isLookingLeft;
+        this.isShooting = msg.isShooting;
+        this.setPos(msg.position);
+    }
+
+    public void setPlayerShoot(Network.PlayerShoot msg) {
+        this.isShooting = msg.isShooting;
     }
 }

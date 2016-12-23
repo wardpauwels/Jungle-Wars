@@ -1,9 +1,8 @@
 package be.howest.junglewars.spawners;
 
-import be.howest.junglewars.GameData;
+import be.howest.junglewars.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class SpawnerManager {
 
@@ -24,9 +23,9 @@ public class SpawnerManager {
         enemySpawner = new EnemySpawner(this);
         spawners.add(enemySpawner);
         powerSpawner = new PowerSpawner(this);
-//        spawners.add(powerSpawner);
+        spawners.add(powerSpawner);
         currencySpawner = new CurrencySpawner(this);
-//        spawners.add(currencySpawner);
+        spawners.add(currencySpawner);
     }
 
     public void manageAllSpawners() {

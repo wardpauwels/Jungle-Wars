@@ -1,13 +1,16 @@
 package be.howest.junglewars.spawners;
 
-import be.howest.junglewars.data.entities.EnemyEntity;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
-import com.badlogic.gdx.Gdx;
+import be.howest.junglewars.data.entities.*;
+import be.howest.junglewars.gameobjects.enemy.*;
+import be.howest.junglewars.net.*;
+import com.badlogic.gdx.*;
 
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.IntStream;
+import java.util.concurrent.*;
+import java.util.stream.*;
 
 public class EnemySpawner implements ISpawner {
+
+    private int currentId = 0;
 
     private SpawnerManager manager;
 
@@ -19,7 +22,7 @@ public class EnemySpawner implements ISpawner {
     private int totalEnemiesSpawned;
     private int totalEnemiesToSpawn;
 
-    // TODO should be database enemies or enemies should be clonable
+    // TODO: should be database enemies
     private EnemyEntity[] enemies;
     private int[] probabilities;
     private int totalProbability;
@@ -95,7 +98,7 @@ public class EnemySpawner implements ISpawner {
         }
     }
 
-    public void updateStats(Enemy enemy) {
+    public void updateStats(EnemyEntity enemy) {
         // TODO: update stats with game difficulty and game level
     }
 
@@ -104,7 +107,14 @@ public class EnemySpawner implements ISpawner {
         for (EnemyEntity e : enemies) {
             random -= e.getSpawnProbability();
             if (random <= 0) {
-                manager.getData().getEnemies().add(new Enemy(manager.getData(), e));
+                updateStats(e);
+//                manager.getData().getEnemies().add(new Enemy(currentId, manager.getData(), e));
+//                manager.getData().addEnemy(currentId, e);
+//                manager.getData().serverSendMessage(new Network.EnemySpawned(currentId, e));
+                Network.EnemySpawned msg = new Network.EnemySpawned(currentId, e);
+                manager.getData().addEnemy(msg);
+                manager.getData().serverSendMessage(msg);
+                currentId++;
                 System.out.println(e.getName());
                 break;
             }

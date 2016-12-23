@@ -1,22 +1,18 @@
 package be.howest.junglewars.gameobjects.power;
 
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.gameobjects.GameObject;
-import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.screens.GameScreen;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
+import be.howest.junglewars.*;
+import be.howest.junglewars.gameobjects.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.g2d.*;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.*;
 
 public class Power extends GameObject {
     private static final float WIDTH = 30;
     private static final float HEIGHT = 30;
 
     private static final String ATLAS_PREFIX = "power/";
-    private final Sprite HIDDEN_SPRITE = data.getGame().atlas.createSprite(ATLAS_PREFIX + "hidden");
+    private final Sprite HIDDEN_SPRITE = getData().atlas.createSprite(ATLAS_PREFIX + "hidden");
 
     private String name;
 
@@ -38,8 +34,8 @@ public class Power extends GameObject {
     private Player owner;
     private IPowerType powerType;
 
-    public Power(GameData data, String name, String defaultSpriteUrl, float lifeTime, float activeTime, PowerType powerType, float percentage) {
-        super(data, ATLAS_PREFIX + defaultSpriteUrl + "_down", WIDTH, HEIGHT, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
+    public Power(String name, String defaultSpriteUrl, float lifeTime, float activeTime, PowerType powerType, float percentage, GameData data) {
+        super(ATLAS_PREFIX + defaultSpriteUrl + "_down", WIDTH, HEIGHT, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()), data);
 
         this.lifeTime = lifeTime;
         this.activeTime = activeTime;
@@ -49,7 +45,7 @@ public class Power extends GameObject {
 
         } else if (isPowerUp()) {
             defaultSpriteUrl = defaultSpriteUrl + "_up";
-            changeSprite(data.getGame().atlas.createSprite(ATLAS_PREFIX + defaultSpriteUrl));
+            changeSprite(getData().atlas.createSprite(ATLAS_PREFIX + defaultSpriteUrl));
         }
         this.name = name;
         this.bonusPercentage = isHidden ? percentage / 50 : percentage / 100;
@@ -57,10 +53,6 @@ public class Power extends GameObject {
         this.collectedState = CollectedState.ON_FIELD;
 
         this.powerType = powerType.getPower();
-    }
-
-    public void setPowerUp(boolean up){
-        isPowerUp = up;
     }
 
     public void activatePower() {
@@ -79,10 +71,6 @@ public class Power extends GameObject {
         owner.addPower(this);
         this.bonusValue = powerType.initBonusValue(this);
         activatePower();
-    }
-
-    public Vector2 getPosition(){
-        return new Vector2(body.x, body.y);
     }
 
     @Override
@@ -123,7 +111,7 @@ public class Power extends GameObject {
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void render(SpriteBatch batch) {
         switch (collectedState) {
             case ON_FIELD:
                 drawOnField(batch);
@@ -165,6 +153,10 @@ public class Power extends GameObject {
 
     public boolean isPowerUp() {
         return isPowerUp;
+    }
+
+    public void setPowerUp(boolean up) {
+        isPowerUp = up;
     }
 
     public Player getOwner() {
