@@ -17,7 +17,7 @@ public abstract class GameObject implements Serializable {
     private GameData data;
 
     protected GameObject(String defaultSpriteUrl, float width, float height, float x, float y, GameData data) {
-        this.data = data;
+        this.data = data;  
         body = initBody(width, height, x, y);
         DEFAULT_SPRITE = data.atlas.createSprite(defaultSpriteUrl);
         changeSprite(DEFAULT_SPRITE);

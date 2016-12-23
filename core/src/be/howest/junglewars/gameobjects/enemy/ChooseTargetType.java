@@ -2,9 +2,6 @@ package be.howest.junglewars.gameobjects.enemy;
 
 import be.howest.junglewars.gameobjects.enemy.chooseTarget.impl.*;
 
-/**
- * Created by jensthiel on 19/12/16.
- */
 public enum ChooseTargetType {
 
     ALL_PLAYERS {
