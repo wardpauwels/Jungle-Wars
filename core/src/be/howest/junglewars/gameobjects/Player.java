@@ -1,6 +1,5 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.data.da.JungleWarsDA;
 import be.howest.junglewars.gameobjects.helper.Helper;
 import be.howest.junglewars.gameobjects.helper.HelperActionType;
 import be.howest.junglewars.gameobjects.helper.HelperMovementType;
@@ -112,39 +111,17 @@ public class Player extends GameObject {
                 Rectangle rDown = new Rectangle(body.x - margin ,body.y + margin,body.x+WIDTH + margin,body.y + margin);
                 Rectangle rLeft = new Rectangle(body.x + margin ,body.y - margin,body.x ,body.y+HEIGHT + margin);
                 for(Brick b: bricks){
-                    if(rUp.overlaps(b.getBody())){
-                        upTouchWall = true;
-                    }
-                    else{
-                        upTouchWall = false;
-                    }
-                    if(rDown.overlaps(b.getBody())){
-                        downTouchWall = true;
-                    }
-                    else{
-                        downTouchWall = false;
-                    }
-                    if(rRight.overlaps(b.getBody())){
-                        rightTouchWall = true;
-                    }
-                    else{
-                        rightTouchWall = false;
-                    }
-                    if(rLeft.overlaps(b.getBody())){
-                        leftTouchWall = true;
-                    } else{
-                        leftTouchWall = false;
-                    }
+                    upTouchWall = rUp.overlaps(b.getBody());
+                    downTouchWall = rDown.overlaps(b.getBody());
+                    rightTouchWall = rRight.overlaps(b.getBody());
+                    leftTouchWall = rLeft.overlaps(b.getBody());
                 }
             }
-
-
         }
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && canShoot) {
             shoot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
         }
-
 
         float normalizedSpeed = speed * dt;
         float currentSpeed = normalizedSpeed;
@@ -154,9 +131,6 @@ public class Player extends GameObject {
                 (keyDownPressed && (keyLeftPressed || keyRightPressed))) {
             currentSpeed = sqrtSpeed;
         }
-
-
-
             if (keyUpPressed) {
                 if (leftBorderTouch || rightBorderTouch)
                     currentSpeed = normalizedSpeed;
@@ -187,12 +161,7 @@ public class Player extends GameObject {
 
 
     public boolean isSlowed(){
-        if(speed<baseSpeed){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return speed < baseSpeed;
     }
 
     private void shoot(float destinationX, float destinationY) {
@@ -210,8 +179,6 @@ public class Player extends GameObject {
         throwSound.play(.1f);
 
         //TODO
-
-
     }
 
     public void hitBy(Missile missile) {
@@ -241,14 +208,11 @@ public class Player extends GameObject {
                 speed = baseSpeed;
             }
         }
-
-
         if (shootTimer > shootTime) {
             canShoot = true;
         } else {
             shootTimer += dt;
         }
-
         if (isShooting) {
             if (shootingAnimationTimer > shootingAnimationTime) {
                 shootingAnimationTimer = 0;
@@ -257,7 +221,6 @@ public class Player extends GameObject {
                 shootingAnimationTimer += dt;
             }
         }
-
         for (int i = 0; i < missiles.size(); i++) {
             if (missiles.get(i).shouldRemove()) {
                 missiles.remove(i);
@@ -266,7 +229,6 @@ public class Player extends GameObject {
             }
             missiles.get(i).update(dt);
         }
-
         for (int i = 0; i < powers.size(); i++) {
             if (powers.get(i).isActionEnded()) {
                 powers.remove(i);
@@ -275,7 +237,6 @@ public class Player extends GameObject {
             }
             powers.get(i).update(dt);
         }
-
         helper.update(dt);
     }
 
@@ -289,12 +250,10 @@ public class Player extends GameObject {
         if (activeSprite.isFlipX() != isLookingLeft) {
             activeSprite.flip(true, false);
         }
-
         helper.draw(batch);
         for (Missile missile : missiles) {
             missile.draw(batch);
         }
-
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
     }
@@ -312,8 +271,8 @@ public class Player extends GameObject {
         this.helper = helper;
     }
 
-    public void addCoin(int coin) {
-        this.collectedCoins += coin;
+    public void addCoin() {
+        this.collectedCoins += 1;
     }
 
     public void addPower(Power power) {
@@ -332,7 +291,6 @@ public class Player extends GameObject {
             levelUp();
         }
     }
-
     public void levelUp(){
         this.attackSpeed *= 1.03f;
         this.damage *= 1.03f;
@@ -408,10 +366,6 @@ public class Player extends GameObject {
 
     public void setMissileSpeed(int missileSpeed){ this.missileSpeed = missileSpeed;}
 
-    public float getArmor() {
-        return armor;
-    }
-
     public void setArmor(float armor) {
         this.armor = armor;
     }
@@ -428,11 +382,5 @@ public class Player extends GameObject {
         this.scoreMultiplier = scoreMultiplier;
     }
 
-    public int getLevel() {
-        return level;
-    }
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
 }

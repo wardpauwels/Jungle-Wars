@@ -7,9 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
 
-/**
- * Created by jensthiel on 20/12/16.
- */
 public class ZigZagMovement implements IEnemyMovementType {
     Random rand = new Random();
     private Vector2 position = new Vector2(0,0);

@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Created by jensthiel on 19/12/16.
- */
+
 public class RandomSpot implements IChooseTargetType {
     @Override
     public List<Vector2> chooseTargets(Enemy enemy) {

@@ -174,9 +174,6 @@ public class Power extends GameObject {
         return bonusValue;
     }
 
-    public void setBonusValue(int bonusValue) {
-        this.bonusValue = bonusValue;
-    }
 
     public enum CollectedState {
         ON_FIELD,

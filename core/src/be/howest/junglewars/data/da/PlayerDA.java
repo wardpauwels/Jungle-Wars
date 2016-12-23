@@ -4,9 +4,7 @@ import be.howest.junglewars.data.entities.*;
 
 import java.sql.*;
 
-/**
- * Created by Ward on 20/12/2016.
- */
+
 public class PlayerDA {
     private static final String URL = "jdbc:mysql://188.166.66.6/junglewars?useSSL=false";
     private static final String UID = "ward";

@@ -65,10 +65,6 @@ public class GameScreen extends Stage implements Screen {
 
     private Music music;
 
-
-
-
-
     //endregion
 
     public GameScreen(JungleWars game, int wave, Difficulty difficulty) {
@@ -83,7 +79,7 @@ public class GameScreen extends Stage implements Screen {
 
         this.nextLevel = true;
 
-        this.upgradeCost = 1;
+        this.upgradeCost = 10;
         this.running = false;
         this.currentPlayer = 0;
         db = JungleWarsDA.getInstance();
@@ -201,7 +197,6 @@ public class GameScreen extends Stage implements Screen {
                 }
             }
         }
-
     }
 
     //region spawners TODO: create spawners
@@ -269,7 +264,6 @@ public class GameScreen extends Stage implements Screen {
         spawnEnemies(true);
         spawnCurrencies();
         spawnPowers();
-        System.out.println(data.getPlayers().get(currentPlayer).getHelper().getName());
 
         for (Player player : data.getPlayers()) {
             player.update(dt);
@@ -571,8 +565,6 @@ public class GameScreen extends Stage implements Screen {
                 renderGameOver(batch);
                 break;
         }
-
-//        batch.end();
     }
 
     @Override

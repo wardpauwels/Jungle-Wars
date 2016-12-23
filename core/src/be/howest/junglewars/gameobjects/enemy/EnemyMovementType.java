@@ -1,6 +1,5 @@
 package be.howest.junglewars.gameobjects.enemy;
 
-import be.howest.junglewars.gameobjects.enemy.chooseTarget.impl.NearestPlayer;
 import be.howest.junglewars.gameobjects.enemy.movementTypes.impl.BorderMovement;
 import be.howest.junglewars.gameobjects.enemy.movementTypes.impl.NearestPlayerMovement;
 import be.howest.junglewars.gameobjects.enemy.movementTypes.impl.RandomMovement;

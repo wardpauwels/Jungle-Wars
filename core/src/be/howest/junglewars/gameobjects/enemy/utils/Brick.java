@@ -4,9 +4,7 @@ import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-/**
- * Created by jensthiel on 20/12/16.
- */
+
 public class Brick extends GameObject {
     private static final String ATLAS_PREFIX = "wall/";
 

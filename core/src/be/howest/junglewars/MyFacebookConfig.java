@@ -2,9 +2,7 @@ package be.howest.junglewars;
 
 import de.tomgrill.gdxfacebook.core.*;
 
-/**
- * Created by Ward on 20/12/2016.
- */
+
 public class MyFacebookConfig extends GDXFacebookConfig {
 
     public MyFacebookConfig() {

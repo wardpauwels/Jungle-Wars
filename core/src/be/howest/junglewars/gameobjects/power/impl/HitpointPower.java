@@ -12,8 +12,6 @@ public class HitpointPower implements IPowerType
 
     @Override
     public void deactivatePower(Power power) {
-        //power.getOwner().setMissleSpeed(power.getOwner().getHitpoints() + power.getBonusValue());
-
     }
 
     @Override

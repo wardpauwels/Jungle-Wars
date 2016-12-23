@@ -2,7 +2,6 @@ package be.howest.junglewars.gameobjects.helper;
 
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -18,10 +17,7 @@ public class Helper extends GameObject {
     private boolean protecting = false;
     public GameScreen game;
     public boolean upgrade;
-
     private float rotationSpeed;
-
-
 
     private IHelperMovementType helperMovementType;
     private IHelperActionType helperActionType;
@@ -34,7 +30,6 @@ public class Helper extends GameObject {
         this.game = game;
         this.rotationSpeed = 25;
 
-
         this.helperMovementType = helperMovementType.getHelperMovement();
         this.helperActionType = helperActionType.getHelperAction();
         this.speed = 160;
@@ -44,17 +39,13 @@ public class Helper extends GameObject {
         helperActionType.helperAction(this);
     }
 
-
     public void hitBy(Missile missile) {
         missile.remove = protecting;
     }
 
-
     @Override
     public void update(float dt) {
-
         body.setPosition(helperMovementType.movementType(this, dt));
-
         doHelperAction(dt);
     }
 
@@ -68,8 +59,6 @@ public class Helper extends GameObject {
     public Player getOwner() {
         return owner;
     }
-
-
 
     public String getName(){
         return name;

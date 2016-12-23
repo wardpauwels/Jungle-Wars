@@ -1,18 +1,12 @@
 package be.howest.junglewars.gameobjects.enemy.utils;
 
 import be.howest.junglewars.screens.GameScreen;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Cursor;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.sun.deploy.config.VerboseDefaultConfig;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-/**
- * Created by jensthiel on 20/12/16.
- */
+
+
 public class Wall {
     private GameScreen g;
     private Vector2 start;

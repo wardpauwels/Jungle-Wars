@@ -7,9 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by jensthiel on 19/12/16.
- */
+
 public class NearestPlayer implements IChooseTargetType {
     @Override
     public List<Vector2> chooseTargets(Enemy enemy) {

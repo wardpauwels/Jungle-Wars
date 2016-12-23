@@ -5,21 +5,11 @@ import be.howest.junglewars.gameobjects.enemy.IEnemyMovementType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.ArrayMap;
-import com.badlogic.gdx.utils.BooleanArray;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.sun.deploy.config.VerboseDefaultConfig;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
-import javax.swing.border.Border;
+
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-/**
- * Created by jensthiel on 20/12/16.
- */
+
 public class BorderMovement implements IEnemyMovementType {
     private ArrayList<Rectangle> list = new ArrayList<>();
     private int currentDestination = 0;

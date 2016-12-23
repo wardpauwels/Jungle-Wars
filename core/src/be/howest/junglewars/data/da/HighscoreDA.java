@@ -7,9 +7,6 @@ import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 
-/**
- * Created by Ward on 20/12/2016.
- */
 public class HighscoreDA {
     private static final String URL = "jdbc:mysql://188.166.66.6/junglewars?useSSL=false";
     private static final String UID = "ward";

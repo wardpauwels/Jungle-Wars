@@ -2,9 +2,7 @@ package be.howest.junglewars.data.entities;
 
 import java.util.*;
 
-/**
- * Created by Ward on 20/12/2016.
- */
+
 public class HighscoreEntity {
     private int score;
     private Date date;

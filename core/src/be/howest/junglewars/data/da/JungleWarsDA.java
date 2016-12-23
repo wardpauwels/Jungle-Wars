@@ -7,9 +7,7 @@ import be.howest.junglewars.data.entities.PowerEntity;
 import java.sql.*;
 import java.util.ArrayList;
 
-/**
- * Created by jensthiel on 23/12/16.
- */
+
 public class JungleWarsDA {
     private static final String URL = "jdbc:mysql://188.166.66.6/JungleWars?useSSL=false";
     private static final String UID = "ward";
@@ -61,9 +59,7 @@ public class JungleWarsDA {
         return null;
     }
 
-    public ArrayList<PowerEntity> getPowers()
-
-    {
+    public ArrayList<PowerEntity> getPowers(){
         try {
             ArrayList<PowerEntity> powers = new ArrayList<>();
             String sql = "select * from powers";
@@ -78,18 +74,12 @@ public class JungleWarsDA {
             }
             prep.close();
             return powers;
-
         }
         catch (SQLException e) {
             e.printStackTrace();
-
         }
         return null;
-
-
-
     }
-
 
 
     public ArrayList<HelperEntity> getHelpers()
@@ -109,12 +99,10 @@ public class JungleWarsDA {
             }
             prep.close();
             return helpers;
-
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
-
     }
 }

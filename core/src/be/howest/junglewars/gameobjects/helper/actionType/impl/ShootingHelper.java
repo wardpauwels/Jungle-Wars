@@ -7,7 +7,6 @@ import be.howest.junglewars.gameobjects.helper.Helper;
 import be.howest.junglewars.gameobjects.helper.IHelperActionType;
 import com.badlogic.gdx.Gdx;
 
-import java.util.List;
 
 import static be.howest.junglewars.gameobjects.enemy.Enemy.BULLET_HEIGHT;
 import static be.howest.junglewars.gameobjects.enemy.Enemy.BULLET_WIDTH;

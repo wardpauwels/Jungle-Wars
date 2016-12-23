@@ -7,9 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
 
-/**
- * Created by jensthiel on 21/12/16.
- */
+
 public class RandomMovement implements IEnemyMovementType{
 
     Random rand = new Random();

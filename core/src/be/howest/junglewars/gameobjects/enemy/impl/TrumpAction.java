@@ -2,21 +2,11 @@ package be.howest.junglewars.gameobjects.enemy.impl;
 
 import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.gameobjects.enemy.IEnemyActionType;
-import be.howest.junglewars.gameobjects.enemy.utils.Brick;
 import be.howest.junglewars.gameobjects.enemy.utils.Wall;
-import be.howest.junglewars.screens.GameScreen;
-import com.badlogic.gdx.Audio;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
+
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.ArrayList;
-import java.util.Random;
 
-/**
- * Created by jensthiel on 20/12/16.
- */
 public class TrumpAction implements IEnemyActionType {
 
 

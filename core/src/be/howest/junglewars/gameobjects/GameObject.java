@@ -12,7 +12,7 @@ public abstract class GameObject implements Serializable {
     protected final Sprite DEFAULT_SPRITE;
     public GameScreen game;
     public boolean remove = false;
-    protected Rectangle body; // has: .width, .height, .overlaps(), .x, .y
+    protected Rectangle body;
     protected float speed = 0;
     protected Sprite activeSprite;
 

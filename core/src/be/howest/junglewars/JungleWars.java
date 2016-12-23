@@ -12,17 +12,13 @@ import com.badlogic.gdx.utils.*;
 import de.tomgrill.gdxfacebook.core.*;
 
 public class JungleWars extends Game {
-
     public SpriteBatch batch;
     public TextureAtlas atlas;
     public Skin skin;
-    GameScreen mainGameScreen;
     private FPSLogger fpsLogger;
     private Preferences savePrefs;
     private String name;
-
     private PlayerEntity player;
-
     private GDXFacebook gdxFacebook;
     private boolean facebookCancelled = false;
 
@@ -43,13 +39,9 @@ public class JungleWars extends Game {
         skin = new Skin(Gdx.files.internal(Assets.SKIN));
 
         // TODO: loading screen while assets are loading
-
         // TODO: get level and difficulty from settings/savings
-
         //setScreen(new GameScreen(this, 1, Difficulty.EASY));
         setScreen(new MainMenuScreen(this));
-
-
         MyFacebookConfig config = new MyFacebookConfig();
         gdxFacebook = GDXFacebookSystem.install( config );
     }
@@ -67,7 +59,6 @@ public class JungleWars extends Game {
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override

@@ -25,7 +25,7 @@ public class Currency extends GameObject {
     }
 
     public void collectedBy(Player player) {
-        player.addCoin(1);
+        player.addCoin();
         remove = true;
     }
 

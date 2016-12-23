@@ -102,9 +102,6 @@ public class Enemy extends GameObject {
                 timer += dt;
             }
         }
-
-
-
     }
 
     @Override
@@ -115,18 +112,15 @@ public class Enemy extends GameObject {
             changeSprite(defaultSprite);
         } else {
             changeSprite(altSprite);
-
         }
     }
 
     public void hitBy(Missile missile, Player player) {
-
         if (catchDamage(missile.getDamage()) <= 0) {
             player.addScore(scoreWhenKilled);
             player.addXp(experienceWhenKilled);
             float multiplier = player.getScoreMultiplier();
             player.setScoreMultiplier(multiplier + 0.01f);
-
         }
         missile.remove = true;
 
@@ -152,8 +146,6 @@ public class Enemy extends GameObject {
         targets = chooseTargetType.chooseTargets(this);
         if (targets == null) return;
         for (Vector2 v : targets) {
-            float destinationX = v.x;
-            float destinationY = v.y;
 
             float spawnX = body.x + (body.width / 2);
             float spawnY = body.y + (body.height / 2);

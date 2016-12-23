@@ -14,7 +14,6 @@ public class ArmorPower implements IPowerType
     @Override
     public void deactivatePower(Power power) {
         power.getOwner().setArmor(0);
-
     }
 
     @Override

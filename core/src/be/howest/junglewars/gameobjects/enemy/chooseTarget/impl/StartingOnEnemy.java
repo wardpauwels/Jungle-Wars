@@ -7,9 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by jensthiel on 20/12/16.
- */
+
 public class StartingOnEnemy implements IChooseTargetType{
     @Override
     public List<Vector2> chooseTargets(Enemy enemy) {
