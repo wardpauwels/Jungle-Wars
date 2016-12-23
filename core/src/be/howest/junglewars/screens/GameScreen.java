@@ -394,6 +394,7 @@ public class GameScreen extends Stage implements Screen {
                 getButtonTable().row();
 
                 button("upgrade","upgradeHelper");
+                button("Other player","switchPlayer");
 
                 text("HELPERS:");
                 getButtonTable().row();
@@ -426,7 +427,15 @@ public class GameScreen extends Stage implements Screen {
                        data.getPlayers().get(currentPlayer).getHelper().upgrade();
                         data.getPlayers().get(currentPlayer).collectedCoins-=upgradeCost;}
                         break;
-
+                    case "switchPlayer":
+                        if(data.getPlayers().size()>1) {
+                            if (currentPlayer == 0) {
+                                currentPlayer = 1;
+                            } else {
+                                currentPlayer = 0;
+                            }
+                        }
+                        break;
                     case "next":
                         nextLevel = true;
                         running = false;
