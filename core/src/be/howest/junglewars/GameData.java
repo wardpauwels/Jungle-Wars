@@ -78,6 +78,7 @@ public class GameData {
         }
 
         //update missiles
+        System.out.println("Size missiles: " + missiles.size());
         for (int i = 0; i < missiles.size(); i++) {
             missiles.get(i).update(dt);
 
