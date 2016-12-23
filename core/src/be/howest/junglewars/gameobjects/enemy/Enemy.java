@@ -60,16 +60,18 @@ public class Enemy extends GameObject {
         this.experienceWhenKilled = experienceWhenKilled;
         this.spawnChance = spawnChance;
 
-        // TODO: calculate stats based by game level and difficulty
-        this.damage = baseDamage;
-        this.speed = baseSpeed;
-        this.hitpoints = baseHitpoints;
-        this.actionTime = baseAttackSpeed;
+
+
+        this.damage = baseDamage + Math.round(baseDamage * calculateMultiplier());
+        this.speed = baseSpeed + (Math.round(baseSpeed * calculateMultiplier()));
+        this.hitpoints = baseHitpoints + (Math.round(baseHitpoints *calculateMultiplier()));
+        this.actionTime = baseAttackSpeed + (Math.round(baseAttackSpeed *calculateMultiplier()));
         this.actionTimer = 0;
         this.isShooting = false;
         this.time = .2f;
 
         this.timer = 0;
+
 
         this.chooseTargetType = chooseTargetType.getType();
         this.chooseMovementType = chooseMovementType.getMovementType();
@@ -79,13 +81,36 @@ public class Enemy extends GameObject {
         this.altSprite = ATLAS_PREFIX + altSpriteUrl;
     }
 
+    public float calculateMultiplier(){
+        float difficulty = 1;
+        switch (game.getData().getDifficulty()){
+            case EASY:
+                difficulty = 1f;
+                break;
+            case MEDIUM:
+                difficulty = 1.3f;
+                break;
+            case HARD:
+                difficulty = 1.5f;
+                break;
+            case EXTREME:
+                difficulty = 1.7f;
+                break;
+            case UNSURVIVABLE:
+                difficulty = 2f;
+                break;
+        }
+        float multiplier = game.getData().getWave()* difficulty;
+
+        return multiplier/300;
+    }
+
     @Override
     public void update(float dt) {
 
         if (this.hitpoints <= 0) this.remove = true;
 
         destination = chooseMovementType.returnMovement(this);
-
 
         float radians = MathUtils.atan2(destination.y - (body.y + body.getHeight()/4), destination.x - (body.x + body.getWidth()/4));
 
@@ -102,9 +127,6 @@ public class Enemy extends GameObject {
                 timer += dt;
             }
         }
-
-
-
     }
 
     @Override
@@ -129,7 +151,6 @@ public class Enemy extends GameObject {
 
         }
         missile.remove = true;
-
     }
 
     public int catchDamage(int dmg) {
@@ -152,9 +173,6 @@ public class Enemy extends GameObject {
         targets = chooseTargetType.chooseTargets(this);
         if (targets == null) return;
         for (Vector2 v : targets) {
-            float destinationX = v.x;
-            float destinationY = v.y;
-
             float spawnX = body.x + (body.width / 2);
             float spawnY = body.y + (body.height / 2);
 
@@ -176,23 +194,4 @@ public class Enemy extends GameObject {
         changeSprite(game.atlas.createSprite(sprite));
     }
 
-    public int getScoreWhenKilled() {
-        return scoreWhenKilled;
-    }
-
-    public int getExperienceWhenKilled() {
-        return experienceWhenKilled;
-    }
-
-    public int getSpawnChance() {
-        return spawnChance;
-    }
-
-    public int getDamage() {
-        return damage;
-    }
-
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
 }

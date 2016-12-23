@@ -14,7 +14,8 @@ public class Helper extends GameObject {
 
     private static final String ATLAS_PREFIX = "helper/";
     private Player owner;
-    private String name;
+    private String name; // TODO: wordt niet gebruikt ?
+    private float toReachXP;
     private boolean protecting = false;
     public GameScreen game;
     public boolean upgrade;
@@ -22,6 +23,7 @@ public class Helper extends GameObject {
     private float rotationSpeed;
 
 
+    private float speed = 1.5f;
 
     private IHelperMovementType helperMovementType;
     private IHelperActionType helperActionType;
@@ -34,6 +36,8 @@ public class Helper extends GameObject {
         this.game = game;
         this.rotationSpeed = 25;
 
+
+        this.toReachXP = owner.toReachXP;
 
         this.helperMovementType = helperMovementType.getHelperMovement();
         this.helperActionType = helperActionType.getHelperAction();
@@ -68,8 +72,6 @@ public class Helper extends GameObject {
     public Player getOwner() {
         return owner;
     }
-
-
 
     public String getName(){
         return name;

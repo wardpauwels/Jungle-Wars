@@ -15,4 +15,9 @@ public class StabbingHelper implements IHelperActionType {
             helper.checkCollision(helper.game.getData().getEnemies()).get(0).catchDamage(20);
         }
     }
+
+    @Override
+    public void helperUpgrade(Helper helper) {
+        helper.setSpeed(helper.getSpeed()* 1.05f);
+    }
 }

@@ -33,6 +33,12 @@ public class ShootingHelper implements IHelperActionType {
         }
     }
 
+    @Override
+    public void helperUpgrade(Helper helper) { // Schiet langzamerhand sneller
+        shootTime *= 0.97f;
+        System.out.println(shootTime);
+    }
+
     private void shoot(Helper helper){
         Enemy target = chooseTarget(helper);
         if (target == null) return;
