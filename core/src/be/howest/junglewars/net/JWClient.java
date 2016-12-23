@@ -108,14 +108,12 @@ public class JWClient {
     }
 
     public void sendMessageTCP(Object msg) {
-        System.out.println("SENT packet TCP");
         if (client.isConnected()) {
             client.sendTCP(msg);
         }
     }
 
     public void sendMessageUDP(Object message) {
-        System.out.println("SENT packet UPD");
         if (client.isConnected()) {
             client.sendUDP(message);
         }

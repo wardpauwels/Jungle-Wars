@@ -78,8 +78,13 @@ public class GameData {
         }
 
         //update missiles
-        for (Missile missile : missiles) {
-            missile.update(dt);
+        for (int i = 0; i < missiles.size(); i++) {
+            missiles.get(i).update(dt);
+
+            // Remove bullet if impacted
+            if (missiles.get(i).shouldRemove()) {
+                missiles.remove(i);
+            }
         }
 
         //update helper
@@ -220,7 +225,6 @@ public class GameData {
     }
 
     public void playerMoved(Network.PlayerMovementState msg) {
-        System.out.println("GameData::playerMoved");
         Player p = players.get(msg.playerId);
         if (p != null) p.setPlayerMovementState(msg);
 
