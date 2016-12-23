@@ -36,6 +36,7 @@ public class HighscoreDA {
     }
 
     public void addHighscore(Player player) {
+        if (player.getName().equals("Guest")) return;
         if (getHighscore( player.getId() ) == null) {
             Date date = new Date( Calendar.getInstance().getTime().getTime() );
             try {
