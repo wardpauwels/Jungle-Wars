@@ -104,7 +104,7 @@ public class GameData {
             }
 
             if (!isClient) {
-                server.sendMessage(new Network.EnemyMovementState(e.getId(), e.isShooting, e.getPos()));
+                serverSendMessage(new Network.EnemyMovementState(e.getId(), e.isShooting, e.getPos()));
             }
         }
 
@@ -296,7 +296,7 @@ public class GameData {
     }
 
     public synchronized void onEnemySpawn(Network.EnemySpawned msg) {
-        addEnemy(msg.id, msg.enemy);
+        enemies.add(new Enemy(msg.id, this, msg.enemy));
     }
 
     public synchronized void removePlayer(Network.PlayerJoinLeave msg) {
