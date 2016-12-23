@@ -63,7 +63,6 @@ public class Enemy extends GameObject {
         // TODO: calculate stats based by game level and difficulty
         this.damage = Math.round(baseDamage * getMultiplier());
         this.speed = Math.round(baseSpeed * getMultiplier());
-        System.out.println(getMultiplier());
         this.hitpoints = Math.round(baseHitpoints * getMultiplier());
         this.actionTime = baseAttackSpeed;
         this.actionTimer = 0;
