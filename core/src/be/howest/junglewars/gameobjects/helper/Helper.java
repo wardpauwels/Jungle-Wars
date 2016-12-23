@@ -2,6 +2,7 @@ package be.howest.junglewars.gameobjects.helper;
 
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.Player;
+import be.howest.junglewars.gameobjects.enemy.Enemy;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -48,7 +49,9 @@ public class Helper extends GameObject {
 
     @Override
     public void update(float dt) {
+
         body.setPosition(helperMovementType.movementType(this, dt));
+
         doHelperAction(dt);
     }
 
@@ -60,6 +63,10 @@ public class Helper extends GameObject {
 
     public Player getOwner() {
         return owner;
+    }
+
+    public String getName(){
+        return name;
     }
 
     public void setProtecting(boolean protecting) {

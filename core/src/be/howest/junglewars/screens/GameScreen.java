@@ -2,16 +2,25 @@ package be.howest.junglewars.screens;
 
 import be.howest.junglewars.*;
 import be.howest.junglewars.data.da.*;
+import be.howest.junglewars.data.entities.PlayerEntity;
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.enemy.*;
 import be.howest.junglewars.gameobjects.enemy.utils.*;
+import be.howest.junglewars.gameobjects.helper.Helper;
+import be.howest.junglewars.gameobjects.helper.HelperActionType;
+import be.howest.junglewars.gameobjects.helper.HelperMovementType;
 import be.howest.junglewars.gameobjects.power.*;
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.*;
+
+import java.util.ArrayList;
 
 public class GameScreen extends Stage implements Screen {
 
@@ -33,6 +42,18 @@ public class GameScreen extends Stage implements Screen {
     private boolean isGameOver;
     private String playerName;
 
+    private boolean nextLevel;
+    private boolean running;
+    private Helper[] helpers;
+
+    private int upgradeCost;
+
+    private SelectBox<Helper> helperSelectBox;
+
+
+
+
+
     //endregion
 
     public GameScreen(JungleWars game, int wave, Difficulty difficulty) {
@@ -44,6 +65,12 @@ public class GameScreen extends Stage implements Screen {
         this.skin = game.skin;
         this.isGameOver = false;
         this.playerName = game.getPlayer().getName();
+
+        this.nextLevel = true;
+
+        this.upgradeCost = 20;
+        this.running = false;
+
 
         data.setWave(wave);
         data.setDifficulty(difficulty);
@@ -69,6 +96,22 @@ public class GameScreen extends Stage implements Screen {
         startingEnemies = 1;
         multiplierEnemies = 0.5f;
         spawnEnemies(false);
+        helperSelectBox = new SelectBox<Helper>(skin);
+        fillHelperBox();
+    }
+
+    private void fillHelperBox(){
+
+        helpers = new Helper[5];
+        helpers[0]=(new Helper(this, "Power Collector", data.getPlayers().get(0), "red-wings-up", HelperMovementType.POWERCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER));
+        helpers[1]=(new Helper(this, "Coin Collector", data.getPlayers().get(0), "red-wings-up", HelperMovementType.COINCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER));
+        helpers[2]=(new Helper(this, "Shield", data.getPlayers().get(0), "red-wings-up", HelperMovementType.PROTECTING_HELPER, HelperActionType.PROTECTING_HELPER));
+        helpers[3]=(new Helper(this, "Shooter", data.getPlayers().get(0), "red-wings-up", HelperMovementType.FOLLOWING_HELPER, HelperActionType.SHOOTING_HELPER));
+        helpers[4]=(new Helper(this, "Stabber", data.getPlayers().get(0), "red-wings-up", HelperMovementType.PROTECTING_HELPER, HelperActionType.STABBING_HELPER));
+        helperSelectBox.setItems(helpers);
+        helperSelectBox.setSize(100,50);
+        helperSelectBox.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
+
     }
 
     private void checkGameOver() {
@@ -95,14 +138,14 @@ public class GameScreen extends Stage implements Screen {
             }
         }
 
-        for (Enemy enemy : data.getEnemies()) {
-            for (Player player : data.getPlayers()) {
-                for (Missile missile : enemy.checkCollision(player.getMissiles())) {
-                    enemy.hitBy(missile, player);
-                    return;
+            for (Enemy enemy : data.getEnemies()) {
+                for (Player player : data.getPlayers()) {
+                    for (Missile missile : enemy.checkCollision(player.getMissiles())) {
+                        enemy.hitBy(missile, player);
+                        return;
+                    }
                 }
             }
-        }
 
         for(Wall wall : data.getWalls()) {
             for (Player player : data.getPlayers()) {
@@ -119,16 +162,19 @@ public class GameScreen extends Stage implements Screen {
     //region spawners TODO: create spawners
 
     private void spawnEnemies(boolean nextWave) {
-        if (data.getEnemies().size() == 0) {
-            amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-            data.getEnemies().add( new Enemy( this, "Trump", 140, 160, "trump", "trumpAnimation", 5, 150, 120, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING ) );
-
-            for (int i = 0; i < amountEnemies; i++) {
-                data.getEnemies().add(new Enemy(this, "Zookeeper",50,70, "zookeeper","zookeeper", 5, 150, 10, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
-
-            }
-            if (nextWave) data.setWave(data.getWave() + 1);
+        if (data.getEnemies().size()==0 && running) {
+            data.setState(GameState.PRE_WAVE);
         }
+        if(data.getEnemies().size()==0 && !running && nextLevel){
+                data.setState(GameState.RUNNING);
+                amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
+                data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trumpAnimation", 5, 150, 1, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
+
+                for (int i = 0; i < amountEnemies; i++) {
+                    data.getEnemies().add(new Enemy(this, "Zookeeper", 70, 80, "zookeeper3", "zookeeper3Animation", 5, 150, 1, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.CRYING));
+                }
+                if (nextWave) data.setWave(data.getWave() + 1);
+            }
     }
 
     private void spawnCurrencies() {
@@ -220,6 +266,76 @@ public class GameScreen extends Stage implements Screen {
     }
 
     private void updatePreWave(float dt) {
+        spawnEnemies(true);
+
+        Dialog d = new Dialog("Upgrade your helper", skin) {
+            {
+                text("UPGRADE YOUR HELPER");
+                getButtonTable().row();
+
+                button("upgrade","upgradeHelper");
+
+                text("HELPERS:");
+                addActor(helperSelectBox);
+                getButtonTable().row();
+                button("Coin Collector","pickCoinCollector");
+                button("Power Collector","pickPowerCollector");
+
+                getButtonTable().row();
+
+                button("Shield","pickShield");
+                button("Shooter","pickShooter");
+
+                getButtonTable().row();
+                button("Stabber","pickStabber");
+
+                getButtonTable().row();
+                button("next level", "next");
+                button("Retry", "retry");
+
+
+
+            }
+
+
+
+            @Override
+            protected void result(Object object) {
+                switch (String.valueOf(object)) {
+                    case "upgradeHelper":
+                        if(data.getPlayers().get(0).getCollectedCoins()>=upgradeCost){
+                        data.getPlayers().get(0).getHelper().setSpeed(data.getPlayers().get(0).getHelper().getSpeed()*1.1f);}
+                        break;
+
+                    case "next":
+                        nextLevel = true;
+                        running = false;
+                        break;
+                    case "pickPowerCollector":
+                        data.getPlayers().get(0).setHelper(helpers[0]);
+                        break;
+                    case "pickCoinCollector":
+                        data.getPlayers().get(0).setHelper(helpers[1]);
+                        break;
+                    case "pickShield":
+                        data.getPlayers().get(0).setHelper(helpers[2]);
+                        break;
+                    case "pickShooter":
+                        data.getPlayers().get(0).setHelper(helpers[3]);
+                        break;
+                    case "pickStabber":
+                        data.getPlayers().get(0).setHelper(helpers[4]);
+                        break;
+                    case "retry":
+                        game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
+                        break;
+                }
+            }
+        };
+
+        d.show(stage).setWidth(400);
+        d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+        Gdx.input.setInputProcessor(stage);
 
     }
 
@@ -333,7 +449,8 @@ public class GameScreen extends Stage implements Screen {
     }
 
     private void renderPreWave(SpriteBatch batch) {
-
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
     }
 
     private void renderPaused(SpriteBatch batch) {
@@ -373,14 +490,15 @@ public class GameScreen extends Stage implements Screen {
                 batch.end();
                 break;
             case RUNNING:
+                running = true;
                 updateRunning(dt);
                 renderRunning(batch);
                 batch.end();
                 break;
             case PRE_WAVE:
+                batch.end();
                 updatePreWave(dt);
                 renderPreWave(batch);
-                batch.end();
                 break;
             case PAUSED:
                 updatePaused(dt);
