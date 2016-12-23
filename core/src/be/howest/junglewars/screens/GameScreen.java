@@ -1,77 +1,48 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.GameState;
-import be.howest.junglewars.JungleWars;
-import be.howest.junglewars.data.da.HighscoreDA;
-import be.howest.junglewars.data.da.JungleWarsDA;
-import be.howest.junglewars.data.entities.EnemyEntity;
-import be.howest.junglewars.data.entities.HelperEntity;
-import be.howest.junglewars.data.entities.PlayerEntity;
+import be.howest.junglewars.*;
+import be.howest.junglewars.data.da.*;
+import be.howest.junglewars.data.entities.*;
 import be.howest.junglewars.gameobjects.Currency;
-import be.howest.junglewars.gameobjects.Missile;
-import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.gameobjects.enemy.ChooseTargetType;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
-import be.howest.junglewars.gameobjects.enemy.EnemyActionType;
-import be.howest.junglewars.gameobjects.enemy.EnemyMovementType;
-import be.howest.junglewars.gameobjects.enemy.utils.Brick;
-import be.howest.junglewars.gameobjects.enemy.utils.Wall;
-import be.howest.junglewars.gameobjects.helper.Helper;
-import be.howest.junglewars.gameobjects.helper.HelperActionType;
-import be.howest.junglewars.gameobjects.helper.HelperMovementType;
-import be.howest.junglewars.gameobjects.power.Power;
-import be.howest.junglewars.gameobjects.power.PowerType;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import be.howest.junglewars.gameobjects.*;
+import be.howest.junglewars.gameobjects.enemy.*;
+import be.howest.junglewars.gameobjects.enemy.utils.*;
+import be.howest.junglewars.gameobjects.helper.*;
+import be.howest.junglewars.gameobjects.power.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.*;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.utils.viewport.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class GameScreen extends Stage implements Screen {
 
     //region fields
 
     public TextureAtlas atlas;
+    public ArrayList<Sound> sounds;
     private Skin skin;
     private Stage stage;
     private Sprite backgroundSprite;
     private BitmapFont smallFont;
     private BitmapFont bigFont;
-
     private JungleWars game;
     private GameData data;
-
     private int startingEnemies;
     private float multiplierEnemies;
     private float amountEnemies;
     private boolean isGameOver;
     private String playerName;
-
     private boolean nextLevel;
     private boolean running;
-
     private ArrayList<Helper> helpers;
     private ArrayList<Power> powers;
     private ArrayList<Enemy> enemies;
-
-    public ArrayList<Sound> sounds;
-
     private int upgradeCost;
 
     private SelectBox<Helper> helperSelectBox;
@@ -102,9 +73,6 @@ public class GameScreen extends Stage implements Screen {
         music.setLooping( true );
         music.setVolume( 0.05f );
         music.play();
-
-
-
 
         data.setWave(wave);
         data.setDifficulty(difficulty);
@@ -252,14 +220,14 @@ public class GameScreen extends Stage implements Screen {
             }
         }
 
-            for (Enemy enemy : data.getEnemies()) {
-                for (Player player : data.getPlayers()) {
-                    for (Missile missile : enemy.checkCollision(player.getMissiles())) {
-                        enemy.hitBy(missile, player);
-                        return;
-                    }
+        for (Enemy enemy : data.getEnemies()) {
+            for (Player player : data.getPlayers()) {
+                for (Missile missile : enemy.checkCollision(player.getMissiles())) {
+                    enemy.hitBy(missile, player);
+                    return;
                 }
             }
+        }
 
 
 
@@ -282,19 +250,19 @@ public class GameScreen extends Stage implements Screen {
             data.setState(GameState.PRE_WAVE);
         }
         if(data.getEnemies().size()==0 && !running && nextLevel){
-                data.setState(GameState.RUNNING);
-                amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-                data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trump-animation", 5, 150, 1, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
+            data.setState(GameState.RUNNING);
+            amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
+            data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trump-animation", 5, 150, 1, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
 
-                for (int i = 0; i < amountEnemies; i++) {
-                    data.getEnemies().add(new Enemy(this, "CryBaby", 70, 80, "zookeeper3", "zookeeper3-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.BORDER, EnemyActionType.CRYING));
-                    data.getEnemies().add(new Enemy(this, "Standard", 70, 80, "zookeeper", "zookeeper-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.ZIGZAG, EnemyActionType.SHOOTING));
-                    data.getEnemies().add(new Enemy(this, "Stabber", 70, 80, "zookeeper2", "zookeeper2-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.STABBING));
+            for (int i = 0; i < amountEnemies; i++) {
+                data.getEnemies().add(new Enemy(this, "CryBaby", 70, 80, "zookeeper3", "zookeeper3-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.BORDER, EnemyActionType.CRYING));
+                data.getEnemies().add(new Enemy(this, "Standard", 70, 80, "zookeeper", "zookeeper-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.ZIGZAG, EnemyActionType.SHOOTING));
+                data.getEnemies().add(new Enemy(this, "Stabber", 70, 80, "zookeeper2", "zookeeper2-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.STABBING));
 
 
-                }
-                if (nextWave) data.setWave(data.getWave() + 1);
             }
+            if (nextWave) data.setWave(data.getWave() + 1);
+        }
     }
 
 
@@ -381,7 +349,7 @@ public class GameScreen extends Stage implements Screen {
             }
         }
 
-       for (int i = 0; i < data.getWalls().size(); i++) {
+        for (int i = 0; i < data.getWalls().size(); i++) {
             for (int j = 0; j < data.getWalls().get(i).returnWall().size(); j++) {
                 data.getWalls().get(i).returnWall().get(j).update(dt);
                 if (data.getWalls().get(i).returnWall().get(j).shouldRemove()) {
@@ -437,8 +405,9 @@ public class GameScreen extends Stage implements Screen {
                 switch (String.valueOf(object)) {
                     case "upgradeHelper":
                         if(data.getPlayers().get(currentPlayer).getCollectedCoins()>=upgradeCost){
-                       data.getPlayers().get(currentPlayer).getHelper().upgrade();
-                        data.getPlayers().get(currentPlayer).collectedCoins-=upgradeCost;}
+                            data.getPlayers().get(currentPlayer).getHelper().upgrade();
+                            data.getPlayers().get(currentPlayer).collectedCoins -= upgradeCost;
+                        }
                         break;
                     case "switchPlayer":
                         if(data.getPlayers().size()>1) {
@@ -503,12 +472,11 @@ public class GameScreen extends Stage implements Screen {
                 protected void result(Object object) {
                     switch (String.valueOf(object)) {
                         case "leave":
-                            game.setScreen(new MainMenuScreen(game));
                             dispose();
+                            game.setScreen(new MainMenuScreen(game));
                             break;
                         case "retry":
                             game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
-                            dispose();
                             break;
                     }
                 }
@@ -680,6 +648,7 @@ public class GameScreen extends Stage implements Screen {
 
     @Override
     public void dispose() {
+        music.dispose();
     }
 
     public GameData getData(){
