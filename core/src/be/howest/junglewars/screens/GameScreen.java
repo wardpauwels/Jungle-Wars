@@ -93,7 +93,7 @@ public class GameScreen extends Stage implements Screen {
 
         this.nextLevel = true;
 
-        this.upgradeCost = 10;
+        this.upgradeCost = 5;
         this.running = false;
         this.currentPlayer = 0;
         db = JungleWarsDA.getInstance();
