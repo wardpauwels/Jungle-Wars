@@ -115,9 +115,7 @@ public class GameScreen extends Stage implements Screen {
 
         startingEnemies = 1;
         multiplierEnemies = 0.5f;
-        fillEnemiesDB();
         spawnEnemies(false);
-        helperSelectBox = new SelectBox<Helper>(skin);
         fillHelperBox();
         innitSounds();
     }
@@ -206,12 +204,10 @@ public class GameScreen extends Stage implements Screen {
         if(data.getEnemies().size()==0 && !running && nextLevel){
                 data.setState(GameState.RUNNING);
                 amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-                Enemy newEnemy =enemies.get(0);
-                data.getEnemies().add(newEnemy);
+                data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trump-animation", 5, 150, 1, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
 
                 for (int i = 0; i < amountEnemies; i++) {
-
-                    data.getEnemies().add(new Enemy(this, "Zookeeper", 70, 80, "zookeeper3", "zookeeper3-animation", 5, 150, 1, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.CRYING));
+                    data.getEnemies().add(new Enemy(this, "Zookeeper", 70, 80, "zookeeper3", "zookeeper-animation", 5, 150, 1, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.CRYING));
                 }
                 if (nextWave) data.setWave(data.getWave() + 1);
             }
@@ -330,7 +326,6 @@ public class GameScreen extends Stage implements Screen {
                 button("upgrade","upgradeHelper");
 
                 text("HELPERS:");
-                addActor(helperSelectBox);
                 getButtonTable().row();
                 button("Coin Collector","pickCoinCollector");
                 button("Power Collector","pickPowerCollector");
