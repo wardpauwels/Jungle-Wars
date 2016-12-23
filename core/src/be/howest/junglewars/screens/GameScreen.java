@@ -220,14 +220,14 @@ public class GameScreen extends Stage implements Screen {
             }
         }
 
-            for (Enemy enemy : data.getEnemies()) {
-                for (Player player : data.getPlayers()) {
-                    for (Missile missile : enemy.checkCollision(player.getMissiles())) {
-                        enemy.hitBy(missile, player);
-                        return;
-                    }
+        for (Enemy enemy : data.getEnemies()) {
+            for (Player player : data.getPlayers()) {
+                for (Missile missile : enemy.checkCollision(player.getMissiles())) {
+                    enemy.hitBy(missile, player);
+                    return;
                 }
             }
+        }
 
 
 
@@ -250,19 +250,19 @@ public class GameScreen extends Stage implements Screen {
             data.setState(GameState.PRE_WAVE);
         }
         if(data.getEnemies().size()==0 && !running && nextLevel){
-                data.setState(GameState.RUNNING);
-                amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-                data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trump-animation", 5, 150, 1, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
+            data.setState(GameState.RUNNING);
+            amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
+            data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trump-animation", 5, 150, 1, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
 
-                for (int i = 0; i < amountEnemies; i++) {
-                    data.getEnemies().add(new Enemy(this, "CryBaby", 70, 80, "zookeeper3", "zookeeper3-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.BORDER, EnemyActionType.CRYING));
-                    data.getEnemies().add(new Enemy(this, "Standard", 70, 80, "zookeeper", "zookeeper-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.ZIGZAG, EnemyActionType.SHOOTING));
-                    data.getEnemies().add(new Enemy(this, "Stabber", 70, 80, "zookeeper2", "zookeeper2-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.STABBING));
+            for (int i = 0; i < amountEnemies; i++) {
+                data.getEnemies().add(new Enemy(this, "CryBaby", 70, 80, "zookeeper3", "zookeeper3-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.BORDER, EnemyActionType.CRYING));
+                data.getEnemies().add(new Enemy(this, "Standard", 70, 80, "zookeeper", "zookeeper-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.ZIGZAG, EnemyActionType.SHOOTING));
+                data.getEnemies().add(new Enemy(this, "Stabber", 70, 80, "zookeeper2", "zookeeper2-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.STABBING));
 
 
-                }
-                if (nextWave) data.setWave(data.getWave() + 1);
             }
+            if (nextWave) data.setWave(data.getWave() + 1);
+        }
     }
 
 
@@ -349,7 +349,7 @@ public class GameScreen extends Stage implements Screen {
             }
         }
 
-       for (int i = 0; i < data.getWalls().size(); i++) {
+        for (int i = 0; i < data.getWalls().size(); i++) {
             for (int j = 0; j < data.getWalls().get(i).returnWall().size(); j++) {
                 data.getWalls().get(i).returnWall().get(j).update(dt);
                 if (data.getWalls().get(i).returnWall().get(j).shouldRemove()) {
@@ -405,8 +405,9 @@ public class GameScreen extends Stage implements Screen {
                 switch (String.valueOf(object)) {
                     case "upgradeHelper":
                         if(data.getPlayers().get(currentPlayer).getCollectedCoins()>=upgradeCost){
-                       data.getPlayers().get(currentPlayer).getHelper().upgrade();
-                        data.getPlayers().get(currentPlayer).collectedCoins-=upgradeCost;}
+                            data.getPlayers().get(currentPlayer).getHelper().upgrade();
+                            data.getPlayers().get(currentPlayer).collectedCoins -= upgradeCost;
+                        }
                         break;
                     case "switchPlayer":
                         if(data.getPlayers().size()>1) {
