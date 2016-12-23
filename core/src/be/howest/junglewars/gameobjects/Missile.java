@@ -1,11 +1,11 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
+import be.howest.junglewars.*;
+import be.howest.junglewars.gameobjects.enemy.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
 
-import java.security.InvalidParameterException;
+import java.security.*;
 
 public class Missile extends GameObject {
     private static final String ATLAS_PREFIX = "missile/";
@@ -73,5 +73,13 @@ public class Missile extends GameObject {
 
     public void doEffect(Player p) {
         effect.doEffect(p);
+    }
+
+    public Enemy getEnemyOwner() {
+        return enemyOwner;
+    }
+
+    public Player getPlayerOwner() {
+        return playerOwner;
     }
 }

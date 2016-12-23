@@ -1,25 +1,17 @@
 package be.howest.junglewars;
 
-import be.howest.junglewars.data.entities.EnemyEntity;
+import be.howest.junglewars.gameobjects.Currency;
 import be.howest.junglewars.gameobjects.*;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
-import be.howest.junglewars.gameobjects.power.Power;
-import be.howest.junglewars.net.JWClient;
-import be.howest.junglewars.net.JWServer;
-import be.howest.junglewars.net.Network;
-import be.howest.junglewars.spawners.SpawnerManager;
-import be.howest.junglewars.util.Assets;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import be.howest.junglewars.gameobjects.enemy.*;
+import be.howest.junglewars.gameobjects.power.*;
+import be.howest.junglewars.net.*;
+import be.howest.junglewars.spawners.*;
+import be.howest.junglewars.util.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GameData {
 
@@ -134,7 +126,7 @@ public class GameData {
 
         if (!isClient) {
             spawnManager.manageAllSpawners();
-            for(Enemy e : enemies){
+            for (Enemy e : enemies) {
 //                Network.EnemySpawned msg = new Network.EnemySpawned(currentId, e);
 //                manager.getData().addEnemy(msg);
 //                manager.getData().serverSendMessage(msg);
@@ -143,6 +135,7 @@ public class GameData {
                 serverSendMessage(msg);
             }
         }
+        checkCollisions();
 
     }
 
@@ -186,7 +179,10 @@ public class GameData {
 
         renderHUD();
 
+
         batch.end();
+
+
     }
 
     private synchronized void renderHUD() {
@@ -281,11 +277,21 @@ public class GameData {
     }
 
     public Player getPlayerById(long id) {
-        return players.get(id);
+        for (Player p : players.values()) {
+            if (p.getId() == id) {
+                return p;
+            }
+        }
+        return null;
     }
 
     public Enemy getEnemyById(int id) {
-        return enemies.get(id);
+        for (Enemy e : enemies) {
+            if (e.getId() == id) {
+                return e;
+            }
+        }
+        return null;
     }
 
     public synchronized void playerMoved(Network.PlayerMovementState msg) {
@@ -336,7 +342,7 @@ public class GameData {
     }
 
     public synchronized void enemyMoved(Network.EnemyMovementState msg) {
-        Enemy e = enemies.get((int) msg.id);
+        Enemy e = this.getEnemyById((int) msg.id);
         if (e != null) e.setEnemyMovenentState(msg);
     }
 
@@ -346,6 +352,50 @@ public class GameData {
     }
 
     public void dispose() {
+
+    }
+
+    private void checkCollisions() {
+
+        for (Map.Entry<Long, Player> player : players.entrySet()) {
+            for (Currency currency : player.getValue().checkCollision(this.getCurrencies())) {
+                currency.collectedBy(player.getValue());
+            }
+            for (Power power : player.getValue().checkCollision(this.getPowers())) {
+                power.collectedBy(player.getValue());
+            }
+            for (Missile missile : player.getValue().checkCollision(this.getMissiles())) {
+                if (missile.getEnemyOwner() != null) {
+                    player.getValue().hitBy(missile);
+                    missile.doEffect(player.getValue());
+                }
+            }
+
+        }
+
+        for (Enemy enemy : this.getEnemies()) {
+            for (Map.Entry<Long, Player> player : players.entrySet()) {
+                for (Missile missile : enemy.checkCollision(this.getMissiles())) {
+                    if (missile.getPlayerOwner() != null) {
+                        enemy.hitBy(missile, player.getValue());
+                        return;
+                    }
+                }
+            }
+        }
+
+//        for (Wall wall : this.getWalls()) {
+//            for (Map.Entry<Long, Player> player : players.entrySet()) {
+//                for (Brick brick : wall.returnWall()) {
+//                    for (Missile missile : brick.checkCollision(this.getMissiles())) {
+//                        if (missile.getPlayerOwner() != null) {
+//                            brick.remove = true;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
 
     }
 }

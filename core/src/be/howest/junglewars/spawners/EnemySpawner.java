@@ -1,7 +1,6 @@
 package be.howest.junglewars.spawners;
 
 import be.howest.junglewars.data.entities.*;
-import be.howest.junglewars.gameobjects.enemy.*;
 import be.howest.junglewars.net.*;
 import com.badlogic.gdx.*;
 
@@ -38,6 +37,7 @@ public class EnemySpawner implements ISpawner {
         enemies[0].setHeight(70);
         enemies[0].setName("STABBER");
         enemies[0].setTextureFileName("zookeeper");
+        enemies[0].setAltTextureFileName("zookeeper");
         enemies[0].setBaseDamage(5);
         enemies[0].setBaseSpeed(150);
         enemies[0].setBaseHitpoints(15);
@@ -54,6 +54,7 @@ public class EnemySpawner implements ISpawner {
         enemies[1].setHeight(70);
         enemies[1].setName("SHOOTER");
         enemies[1].setTextureFileName("zookeeper");
+        enemies[1].setAltTextureFileName("zookeeper");
         enemies[1].setBaseDamage(5);
         enemies[1].setBaseSpeed(150);
         enemies[1].setBaseHitpoints(15);

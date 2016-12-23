@@ -1,8 +1,5 @@
 package be.howest.junglewars.data.entities;
 
-/**
- * Created by Ward on 20/12/2016.
- */
 public class PlayerEntity {
     private String name;
     private long id;

@@ -1,28 +1,18 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.GameState;
-import be.howest.junglewars.JungleWars;
-import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.net.JWClient;
-import be.howest.junglewars.net.JWServer;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import be.howest.junglewars.*;
+import be.howest.junglewars.gameobjects.*;
+import be.howest.junglewars.net.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.*;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.viewport.*;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
+import java.io.*;
+import java.util.*;
 
 public class GameScreen extends Stage implements Screen {
     private final boolean singlePlayer;
@@ -49,9 +39,10 @@ public class GameScreen extends Stage implements Screen {
 
     //endregion
 
-    public GameScreen(JungleWars game, boolean singleplayer, Difficulty difficulty, boolean isHost, String ip) {
+    public GameScreen(JungleWars game, String name, boolean singleplayer, Difficulty difficulty, boolean isHost, String ip) {
         super(new ScreenViewport(), game.batch);
         this.singlePlayer = singleplayer;
+        this.playerName = name;
 
         this.isHost = isHost;
         if (!ip.isEmpty()) {
@@ -68,7 +59,6 @@ public class GameScreen extends Stage implements Screen {
         this.atlas = game.atlas;
         this.skin = game.skin;
         this.isGameOver = false;
-        this.playerName = "user" + ThreadLocalRandom.current().nextInt(0, 100000);
 
 //        data.setWave(1);
 //        data.setDifficulty(difficulty);
@@ -349,7 +339,7 @@ public class GameScreen extends Stage implements Screen {
             if (isHost) {
                 server.update(dt);
             }
-        } else {
+        } else if (singlePlayer) {
             data.update(dt);
             data.render();
 

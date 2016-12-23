@@ -79,11 +79,11 @@ public class LobbyScreen extends Stage implements Screen {
     }
 
     private void startHost(String host) {
-        game.setScreen(new GameScreen(game, false, Difficulty.EASY, true, host));
+        game.setScreen(new GameScreen(game, name, false, Difficulty.EASY, true, host));
     }
 
     private void joinHost(String host){
-        game.setScreen(new GameScreen(game, false, Difficulty.EASY, false, host));
+        game.setScreen(new GameScreen(game, name, false, Difficulty.EASY, false, host));
     }
 
     @Override
