@@ -269,7 +269,7 @@ public class GameScreen extends Stage implements Screen {
         if(data.getEnemies().size()==0 && !running && nextLevel){
                 data.setState(GameState.RUNNING);
                 amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-                data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trump-animation", 5, 150, 150, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
+                data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trump-animation", 5, 150, 1, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
 
                 for (int i = 0; i < amountEnemies; i++) {
                     data.getEnemies().add(new Enemy(this, "CryBaby", 70, 80, "zookeeper3", "zookeeper3-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.BORDER, EnemyActionType.CRYING));

@@ -99,7 +99,7 @@ public class Player extends GameObject {
         this.throwSound = Gdx.audio.newSound(Gdx.files.internal("sound/throw.wav"));
 
 
-        helper = new Helper(game, "Little Helper", this, "red-wings-up", HelperMovementType.POWERCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER);
+        helper = new Helper(game, "Little Helper", this, "red-wings-up", HelperMovementType.FOLLOWING_HELPER, HelperActionType.SHOOTING_HELPER);
     }
 
 

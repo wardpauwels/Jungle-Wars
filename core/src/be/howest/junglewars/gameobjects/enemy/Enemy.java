@@ -61,9 +61,10 @@ public class Enemy extends GameObject {
         this.spawnChance = spawnChance;
 
         // TODO: calculate stats based by game level and difficulty
-        this.damage = baseDamage;
-        this.speed = baseSpeed;
-        this.hitpoints = baseHitpoints;
+        this.damage = Math.round(baseDamage * getMultiplier());
+        this.speed = Math.round(baseSpeed * getMultiplier());
+        System.out.println(getMultiplier());
+        this.hitpoints = Math.round(baseHitpoints * getMultiplier());
         this.actionTime = baseAttackSpeed;
         this.actionTimer = 0;
         this.isShooting = false;
@@ -77,6 +78,29 @@ public class Enemy extends GameObject {
 
         this.defaultSprite = ATLAS_PREFIX + defaultSpriteUrl;
         this.altSprite = ATLAS_PREFIX + altSpriteUrl;
+    }
+
+    private float getMultiplier(){
+        float difficulty = 1;
+        switch (game.getData().getDifficulty()){
+            case EASY:
+                difficulty = 1;
+                break;
+            case MEDIUM:
+                difficulty = 1.2f;
+                break;
+            case HARD:
+                difficulty = 1.5f;
+                break;
+            case EXTREME:
+                difficulty = 1.7f;
+                break;
+            case UNSURVIVABLE:
+                difficulty = 2f;
+                break;
+        }
+        float wave = game.getData().getWave();
+        return (1 + (wave / 300) * difficulty);
     }
 
     @Override

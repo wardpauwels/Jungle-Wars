@@ -35,12 +35,15 @@ public class MainMenuScreen extends Stage implements Screen {
     private TextButton settingsButton;
     private TextButton creditsButton;
     private TextButton quitButton;
+    private TextButton selectDifficultyButton;
 
     private Button facebookLoginButton;
     private TextButton guestLoginButton;
 
     private float buttonWidth = 200;
     private float padBottom = 30;
+
+    private Difficulty difficulty;
 
 
     public MainMenuScreen(JungleWars game) {
@@ -77,6 +80,7 @@ public class MainMenuScreen extends Stage implements Screen {
         table.setPosition( 0, Gdx.graphics.getHeight() );
 
         playButton = new TextButton( "Play", skin );
+        selectDifficultyButton = new TextButton( "Play", skin );
         leaderBoardButton = new TextButton( "Leaderboards", skin );
         settingsButton = new TextButton( "Settings", skin );
         creditsButton = new TextButton( "Credits", skin );
@@ -118,34 +122,41 @@ public class MainMenuScreen extends Stage implements Screen {
         playButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Dialog d = new Dialog( "Gametype", skin ) {
+                Dialog d = new Dialog( "Game difficulty", skin ) {
                     {
-                        text( "Choose your gametype" );
-                        button( "Singleplayer", "single" );
-                        button( "Multiplayer", "multi" );
+                        text( "Choose your game difficulty" );
+                        button( "Easy", "easy" );
+                        button( "Medium", "medium" );
+                        button( "Hard", "hard" );
+                        button( "Extreme", "extreme" );
+                        button( "Unsurvivable", "unsurvival" );
                     }
 
                     @Override
                     protected void result(Object object) {
                         switch (String.valueOf( object )) {
-                            case "single":
-                                dispose();
-                                if (game.getPlayer() == null) {
-                                    PlayerEntity player = new PlayerEntity( "Guest", 1 );
-                                    game.setPlayer( player );
-                                    //PlayerDA.getInstance().addPlayer( player );
-                                }
-                                game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
+                            case "easy":
+                                difficulty = Difficulty.EASY;
                                 break;
-                            case "multi":
-                                game.setPlayer(new PlayerEntity("harambe",1));
-                                game.setScreen(new GameScreen(game,2,1,Difficulty.EASY));
+                            case "medium":
+                                difficulty = Difficulty.MEDIUM;
+                                break;
+                            case "hard":
+                                difficulty = Difficulty.HARD;
+                                break;
+                            case "extreme":
+                                difficulty = Difficulty.EXTREME;
+                                break;
+                            case "unsurvival":
+                                difficulty = Difficulty.UNSURVIVABLE;
                                 break;
                         }
+                        this.hide();
+                        makeSingleMultiDialog();
                     }
                 };
                 makeSmallCloseDialogButton( d );
-                d.show( stage ).setWidth( 500 );
+                d.show( stage ).setWidth( 650 );
                 d.setPosition( Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2 );
             }
         } );
@@ -265,8 +276,6 @@ public class MainMenuScreen extends Stage implements Screen {
                         button( "Yes", "leave" );
                         button( "No", "stay" );
                     }
-
-
                     @Override
                     protected void result(Object object) {
                         switch (String.valueOf( object )) {
@@ -285,6 +294,38 @@ public class MainMenuScreen extends Stage implements Screen {
             }
         } );
         Gdx.input.setInputProcessor( stage );
+    }
+
+    public void makeSingleMultiDialog(){
+        Dialog d = new Dialog( "Gametype", skin ) {
+            {
+                text( "Choose your gametype" );
+                button( "Singleplayer", "single" );
+                button( "Multiplayer", "multi" );
+            }
+
+            @Override
+            protected void result(Object object) {
+                switch (String.valueOf( object )) {
+                    case "single":
+                        dispose();
+                        if (game.getPlayer() == null) {
+                            PlayerEntity player = new PlayerEntity( "Guest", 1 );
+                            game.setPlayer( player );
+                            //PlayerDA.getInstance().addPlayer( player );
+                        }
+                        game.setScreen( new GameScreen( game, 1, difficulty) );
+                        break;
+                    case "multi":
+                        game.setPlayer(new PlayerEntity("harambe",1));
+                        game.setScreen(new GameScreen(game,2,1, difficulty));
+                        break;
+                }
+            }
+        };
+        makeSmallCloseDialogButton( d );
+        d.show( stage ).setWidth( 500 );
+        d.setPosition( Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2 );
     }
 
     @Override
