@@ -269,10 +269,14 @@ public class GameScreen extends Stage implements Screen {
         if(data.getEnemies().size()==0 && !running && nextLevel){
                 data.setState(GameState.RUNNING);
                 amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-                data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trump-animation", 5, 150, 1, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
+                data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trump-animation", 5, 150, 150, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
 
                 for (int i = 0; i < amountEnemies; i++) {
-                    data.getEnemies().add(new Enemy(this, "Zookeeper", 70, 80, "zookeeper3", "zookeeper3-animation", 5, 150, 1, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.CRYING));
+                    data.getEnemies().add(new Enemy(this, "CryBaby", 70, 80, "zookeeper3", "zookeeper3-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.BORDER, EnemyActionType.CRYING));
+                    data.getEnemies().add(new Enemy(this, "Standard", 70, 80, "zookeeper", "zookeeper-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.ZIGZAG, EnemyActionType.SHOOTING));
+                    data.getEnemies().add(new Enemy(this, "Stabber", 70, 80, "zookeeper2", "zookeeper2-animation", 5, 150, 15, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.STABBING));
+
+
                 }
                 if (nextWave) data.setWave(data.getWave() + 1);
             }
