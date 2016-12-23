@@ -157,9 +157,8 @@ public class Player extends GameObject {
         data.addMissile(missile);
         Network.PlayerShoot msgPlayershoot = new Network.PlayerShoot(id, new Vector2(spawnX, spawnY), new Vector2(destinationX, destinationY));
 
-        if (me) {
-            data.clientSendMessage(msgPlayershoot);
-        }
+        data.clientSendMessage(msgPlayershoot);
+
     }
 
     public void hitBy(Missile missile) {
@@ -212,15 +211,6 @@ public class Player extends GameObject {
             }
         }
 
-        for (int i = 0; i < missiles.size(); i++) {
-            if (missiles.get(i).shouldRemove()) {
-                missiles.remove(i);
-                i--;
-                continue;
-            }
-            missiles.get(i).update(dt);
-        }
-
         for (int i = 0; i < powers.size(); i++) {
             if (powers.get(i).isActionEnded()) {
                 powers.remove(i);
@@ -246,9 +236,6 @@ public class Player extends GameObject {
         }
 
         helper.render(batch);
-        for (Missile missile : missiles) {
-            missile.render(batch);
-        }
 
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);

@@ -226,7 +226,7 @@ public class GameData {
 
     }
 
-    public void playerHasShot(Network.PlayerShoot msg) {
+    public void onPlayerShoot(Network.PlayerShoot msg) {
         missiles.add(new Missile(getPlayerById(msg.playerId), 30, 30, msg.position.x, msg.position.y, msg.destination.x, msg.destination.y, "banana", 5, 300, -10, 3, MissileType.STANDARD, this));
     }
 

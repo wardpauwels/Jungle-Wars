@@ -74,6 +74,9 @@ public class JWClient {
         } else if (message instanceof Network.PlayerSpawned) {
             Network.PlayerSpawned msg = (Network.PlayerSpawned) message;
             data.onPlayerSpawned(msg);
+        } else if (message instanceof Network.PlayerShoot) {
+            Network.PlayerShoot msg = (Network.PlayerShoot) message;
+            data.onPlayerShoot(msg);
         }
     }
 

@@ -95,7 +95,7 @@ public class JWServer {
         } else if (message instanceof Network.PlayerShoot) {
             Network.PlayerShoot msg = (Network.PlayerShoot) message;
             msg.playerId = conn.getID();
-            data.playerHasShot(msg);
+            data.onPlayerShoot(msg);
             server.sendToAllExceptTCP(conn.getID(), msg);
         }
     }

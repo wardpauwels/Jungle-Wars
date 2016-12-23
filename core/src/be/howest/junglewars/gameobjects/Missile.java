@@ -50,6 +50,7 @@ public class Missile extends GameObject {
 
     @Override
     public void update(float dt) {
+        System.out.println("Missile::update");
         body.x += dx * dt;
         body.y += dy * dt;
 
