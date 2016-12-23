@@ -60,10 +60,7 @@ public class Enemy extends GameObject {
         this.experienceWhenKilled = experienceWhenKilled;
         this.spawnChance = spawnChance;
 
-        // TODO: calculate stats based by game level and difficulty
-        // Huidig is gebaseerd op wave
 
-//        enemyMultiplier = game.getData().getWave();
 
         this.damage = baseDamage + Math.round(baseDamage * calculateMultiplier());
         this.speed = baseSpeed + (Math.round(baseSpeed * calculateMultiplier()));
@@ -85,8 +82,27 @@ public class Enemy extends GameObject {
     }
 
     public float calculateMultiplier(){
-        float wave = game.getData().getWave();
-        return wave/300;
+        float difficulty = 1;
+        switch (game.getData().getDifficulty()){
+            case EASY:
+                difficulty = 1f;
+                break;
+            case MEDIUM:
+                difficulty = 1.3f;
+                break;
+            case HARD:
+                difficulty = 1.5f;
+                break;
+            case EXTREME:
+                difficulty = 1.7f;
+                break;
+            case UNSURVIVABLE:
+                difficulty = 2f;
+                break;
+        }
+        float multiplier = game.getData().getWave()* difficulty;
+
+        return multiplier/300;
     }
 
     @Override
@@ -95,7 +111,6 @@ public class Enemy extends GameObject {
         if (this.hitpoints <= 0) this.remove = true;
 
         destination = chooseMovementType.returnMovement(this);
-
 
         float radians = MathUtils.atan2(destination.y - (body.y + body.getHeight()/4), destination.x - (body.x + body.getWidth()/4));
 
@@ -112,9 +127,6 @@ public class Enemy extends GameObject {
                 timer += dt;
             }
         }
-
-
-
     }
 
     @Override
@@ -139,7 +151,6 @@ public class Enemy extends GameObject {
 
         }
         missile.remove = true;
-
     }
 
     public int catchDamage(int dmg) {
@@ -162,9 +173,6 @@ public class Enemy extends GameObject {
         targets = chooseTargetType.chooseTargets(this);
         if (targets == null) return;
         for (Vector2 v : targets) {
-            float destinationX = v.x;
-            float destinationY = v.y;
-
             float spawnX = body.x + (body.width / 2);
             float spawnY = body.y + (body.height / 2);
 
