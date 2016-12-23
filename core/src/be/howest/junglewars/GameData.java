@@ -178,11 +178,7 @@ public class GameData {
         }
 
         renderHUD();
-
-
         batch.end();
-
-
     }
 
     private synchronized void renderHUD() {
