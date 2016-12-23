@@ -13,7 +13,9 @@ import be.howest.junglewars.gameobjects.helper.Helper;
 import be.howest.junglewars.gameobjects.helper.HelperActionType;
 import be.howest.junglewars.gameobjects.helper.HelperMovementType;
 import be.howest.junglewars.gameobjects.power.*;
+import be.howest.junglewars.util.Assets;
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -61,6 +63,8 @@ public class GameScreen extends Stage implements Screen {
     private int currentPlayer;
     private JungleWarsDA db;
 
+    private Music music;
+
 
 
 
@@ -83,6 +87,11 @@ public class GameScreen extends Stage implements Screen {
         this.running = false;
         this.currentPlayer = 0;
         db = JungleWarsDA.getInstance();
+
+        music = Gdx.audio.newMusic( Gdx.files.internal( "music/welcome.mp3" ) );
+        music.setLooping( true );
+        music.setVolume( 0.05f );
+        music.play();
 
 
 
