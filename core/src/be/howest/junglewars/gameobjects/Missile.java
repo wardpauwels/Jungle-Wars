@@ -22,8 +22,6 @@ public class Missile extends GameObject {
     private float lifeTime;
     private float lifeTimer;
 
-    private int counter = 0;
-
     private IMissileType effect;
 
     public Missile(GameObject owner, float width, float height, float spawnX, float spawnY, float destinationX, float destinationY, String defaultSpriteUrl, int damage, int speed,
@@ -56,7 +54,6 @@ public class Missile extends GameObject {
         body.y += dy * dt;
 
         lifeTimer += dt;
-        System.out.println(counter++);
         if (lifeTimer > lifeTime) {
             remove = true;
         }

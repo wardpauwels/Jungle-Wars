@@ -9,6 +9,7 @@ import be.howest.junglewars.spawners.*;
 import be.howest.junglewars.util.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.*;
 
 import java.util.*;
 
@@ -33,6 +34,9 @@ public class GameData {
     private List<Power> powers = new ArrayList<>();
     private List<Currency> currencies = new ArrayList<>();
 
+    private BitmapFont smallFont;
+    private BitmapFont bigFont;
+
     private SpawnerManager spawnManager;
 
 
@@ -51,6 +55,15 @@ public class GameData {
 
         batch = new SpriteBatch();
         atlas = new TextureAtlas(Assets.IMAGES_ATLAS);
+
+        // Fonts
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/roboto-regular.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 20;
+        smallFont = generator.generateFont(parameter);
+        parameter.size = 24;
+        bigFont = generator.generateFont(parameter);
+        generator.dispose();
 
         // create full screen background
         backgroundSprite = atlas.createSprite("background/game");
@@ -78,11 +91,10 @@ public class GameData {
         }
 
         //update missiles
-        System.out.println("Size missiles: " + missiles.size());
         for (int i = 0; i < missiles.size(); i++) {
             missiles.get(i).update(dt);
 
-            // Remove bullet if impacted
+            // Remove bullet if needed
             if (missiles.get(i).shouldRemove()) {
                 missiles.remove(i);
             }
@@ -149,7 +161,35 @@ public class GameData {
             currency.render(batch);
         }
 
+        renderHUD();
+
         batch.end();
+    }
+
+    private void renderHUD() {
+        for (Map.Entry<Long, Player> p : players.entrySet()) {
+            Player player = p.getValue();
+            player.render(batch);
+            player.getHelper().render(batch);
+
+            // TODO: work with LibGDX Actors instead?
+            bigFont.setColor(0, 0, 0, 1);
+            bigFont.draw(batch, "Player 1", 20, Gdx.graphics.getHeight() - 20);
+            smallFont.draw(batch, "Name: " + player.getName(), 20, Gdx.graphics.getHeight() - 40);
+            smallFont.draw(batch, "Score: " + player.getScore(), 20, Gdx.graphics.getHeight() - 60);
+            smallFont.draw(batch, "Wave: " + player.getWave(), 20, Gdx.graphics.getHeight() - 80);
+            smallFont.draw(batch, "XP: " + player.getXp(), 20, Gdx.graphics.getHeight() - 100); // TODO: xp till next wave
+            smallFont.draw(batch, "Coins collected: " + player.getCollectedCoins(), 20, Gdx.graphics.getHeight() - 120);
+            smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
+            smallFont.draw(batch, "ACTIVE POWERS: ", 300, Gdx.graphics.getHeight() - 20);
+            for (int i = 0; i < player.getPowers().size(); i++) {
+                smallFont.draw(batch, player.getPowers().get(i).toString() + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
+            }
+            smallFont.draw(batch, "ATTACK SPEED: " + player.getAttackSpeed(), 20, 40);
+            smallFont.draw(batch, "DAMAGE: " + player.getDamage(), 20, 60);
+            smallFont.draw(batch, "MOVEMENT SPEED: " + player.getSpeed(), 20, 80);
+            smallFont.draw(batch, "MISSLE SPEED: " + player.getMissleSpeed(), 20, 100);
+        }
     }
 
     public GameState getState() {

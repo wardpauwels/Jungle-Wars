@@ -40,7 +40,6 @@ public class GameScreen extends Stage implements Screen {
 
     public GameScreen(JungleWars game, boolean singleplayer, Difficulty difficulty, boolean isHost, String ip) {
         super(new ScreenViewport(), game.batch);
-
         this.isHost = isHost;
         if (!ip.isEmpty()) {
             this.ip = ip;
@@ -281,29 +280,6 @@ public class GameScreen extends Stage implements Screen {
 //            return;
 //        }
 //
-//        for (Map.Entry<Long, Player> p : data.getPlayers().entrySet()) {
-//            Player player = p.getValue();
-//            player.render(batch);
-//            player.getHelper().render(batch);
-//
-//            // TODO: work with LibGDX Actors instead?
-//            bigFont.setColor(0, 0, 0, 1);
-//            bigFont.draw(batch, "Player 1", 20, Gdx.graphics.getHeight() - 20);
-//            smallFont.draw(batch, "Name: " + player.getName(), 20, Gdx.graphics.getHeight() - 40);
-//            smallFont.draw(batch, "Score: " + player.getScore(), 20, Gdx.graphics.getHeight() - 60);
-//            smallFont.draw(batch, "Wave: " + player.getWave(), 20, Gdx.graphics.getHeight() - 80);
-//            smallFont.draw(batch, "XP: " + player.getXp(), 20, Gdx.graphics.getHeight() - 100); // TODO: xp till next wave
-//            smallFont.draw(batch, "Coins collected: " + player.getCollectedCoins(), 20, Gdx.graphics.getHeight() - 120);
-//            smallFont.draw(batch, "Hitpoints: " + player.getHitpoints(), 20, Gdx.graphics.getHeight() - 140);
-//            smallFont.draw(batch, "ACTIVE POWERS: ", 300, Gdx.graphics.getHeight() - 20);
-//            for (int i = 0; i < player.getPowers().size(); i++) {
-//                smallFont.draw(batch, player.getPowers().get(i).toString() + " [" + player.getPowers().get(i).getTimeLeft() + " seconds left]", 300, Gdx.graphics.getHeight() - 20 * (i + 2));
-//            }
-//            smallFont.draw(batch, "ATTACK SPEED: " + player.getAttackSpeed(), 20, 40);
-//            smallFont.draw(batch, "DAMAGE: " + player.getDamage(), 20, 60);
-//            smallFont.draw(batch, "MOVEMENT SPEED: " + player.getSpeed(), 20, 80);
-//            smallFont.draw(batch, "MISSLE SPEED: " + player.getMissleSpeed(), 20, 100);
-//        }
 
 //        for (Enemy enemy : data.getEnemies()) {
 //            enemy.render(batch);
