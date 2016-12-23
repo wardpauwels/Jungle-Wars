@@ -1,14 +1,10 @@
 package be.howest.junglewars.spawners;
 
-import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.data.dao.EnemyDao;
-import be.howest.junglewars.data.entities.EnemyEntity;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
+import be.howest.junglewars.*;
+import be.howest.junglewars.data.entities.*;
+import be.howest.junglewars.gameobjects.enemy.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 // TODO
 public class EnemySpawner {
@@ -25,12 +21,6 @@ public class EnemySpawner {
         this.difficulty = difficulty;
 
         calcMultiplier();
-
-        availableEnemies = new HashSet<>();
-        for (EnemyEntity entity : EnemyDao.getAllEnemies()) {
-            availableEnemies.add(entity);
-        }
-
 
     }
 

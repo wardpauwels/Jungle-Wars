@@ -39,17 +39,34 @@ public class HighscoreDA {
     }
 
     public void addHighscore(Player player) {
-        Date date = new Date( Calendar.getInstance().getTime().getTime() );
-        try {
-            String sql = "insert into Highscores(fbId, score, date) values(?, ?, ?)";
-            PreparedStatement prep = this.connection.prepareStatement( sql );
-            prep.setLong( 1, player.getId() );
-            prep.setInt( 2, player.getScore() );
-            prep.setDate( 3, date );
-            prep.executeUpdate();
-            prep.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (getHighscore( player.getId() ) == null) {
+            Date date = new Date( Calendar.getInstance().getTime().getTime() );
+            try {
+                String sql = "INSERT INTO Highscores(fbId, score, date) VALUES(?, ?, ?)";
+                PreparedStatement prep = this.connection.prepareStatement( sql );
+                prep.setLong( 1, player.getId() );
+                prep.setInt( 2, player.getScore() );
+                prep.setDate( 3, date );
+                prep.executeUpdate();
+                prep.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (getHighscore( player.getId() ).getScore() < player.getScore()) {
+                Date date = new Date( Calendar.getInstance().getTime().getTime() );
+                try {
+                    String sql = "UPDATE Highscores SET score = ?, date = ? WHERE fbId = ?";
+                    PreparedStatement prep = this.connection.prepareStatement( sql );
+                    prep.setInt( 1, player.getScore() );
+                    prep.setDate( 2, date );
+                    prep.setLong( 3, player.getId() );
+                    prep.executeUpdate();
+                    prep.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -67,6 +84,26 @@ public class HighscoreDA {
             }
             prep.close();
             return highscores;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public HighscoreEntity getHighscore(long id) {
+        try {
+            HighscoreEntity highscore = null;
+
+            String sql = "select * from Highscores where fbId = ?";
+            PreparedStatement prep = this.connection.prepareStatement( sql );
+            prep.setLong( 1, id );
+
+            ResultSet rs = prep.executeQuery();
+            while (rs.next()) {
+                highscore = new HighscoreEntity( rs.getInt( "score" ), rs.getDate( "date" ), PlayerDA.getInstance().getPlayer( rs.getLong( "fbId" ) ) );
+            }
+            prep.close();
+            return highscore;
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,35 +1,10 @@
 package be.howest.junglewars.screens;
 
-import be.howest.junglewars.Difficulty;
-import be.howest.junglewars.GameData;
-import be.howest.junglewars.GameState;
-import be.howest.junglewars.JungleWars;
-import be.howest.junglewars.gameobjects.Currency;
-import be.howest.junglewars.gameobjects.Missile;
-import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.gameobjects.enemy.ChooseTargetType;
-import be.howest.junglewars.gameobjects.enemy.Enemy;
-import be.howest.junglewars.gameobjects.enemy.EnemyActionType;
-import be.howest.junglewars.gameobjects.power.Power;
-import be.howest.junglewars.gameobjects.power.PowerType;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
 import be.howest.junglewars.*;
 import be.howest.junglewars.data.da.*;
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.enemy.*;
-import be.howest.junglewars.gameobjects.enemy.utils.Brick;
-import be.howest.junglewars.gameobjects.enemy.utils.Wall;
+import be.howest.junglewars.gameobjects.enemy.utils.*;
 import be.howest.junglewars.gameobjects.power.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -134,6 +109,7 @@ public class GameScreen extends Stage implements Screen {
                 for (Brick brick : wall.returnWall()) {
                     for (Missile missile : brick.checkCollision(player.getMissiles())) {
                         brick.remove = true;
+                        missile.remove = true;
                     }
                 }
             }
@@ -145,7 +121,7 @@ public class GameScreen extends Stage implements Screen {
     private void spawnEnemies(boolean nextWave) {
         if (data.getEnemies().size() == 0) {
             amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-//            data.getEnemies().add(new Enemy(this, "Zookeeper",50,70, "zookeeper","zookeeper", 5, 150, 100, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
+            data.getEnemies().add( new Enemy( this, "Trump", 140, 160, "trump", "trumpAnimation", 5, 150, 120, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING ) );
 
             for (int i = 0; i < amountEnemies; i++) {
                 data.getEnemies().add(new Enemy(this, "Zookeeper",50,70, "zookeeper","zookeeper", 5, 150, 10, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
@@ -206,7 +182,6 @@ public class GameScreen extends Stage implements Screen {
             data.getEnemyMissiles().get(i).update(dt);
             if (data.getEnemyMissiles().get(i).shouldRemove()) {
                 data.getEnemyMissiles().remove(i);
-
                 i--;
             }
         }
@@ -308,8 +283,6 @@ public class GameScreen extends Stage implements Screen {
         for (Player player : data.getPlayers()) {
             player.draw(batch);
             player.getHelper().draw(batch);
-
-
 
             // TODO: work with LibGDX Actors instead?
             bigFont.setColor(0, 0, 0, 1);

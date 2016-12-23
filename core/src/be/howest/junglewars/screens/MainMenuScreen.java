@@ -35,9 +35,8 @@ public class MainMenuScreen extends Stage implements Screen {
     private TextButton settingsButton;
     private TextButton creditsButton;
     private TextButton quitButton;
-    private TextField nameInputfield;
 
-    private TextButton facebookLoginButton;
+    private Button facebookLoginButton;
     private TextButton guestLoginButton;
 
     private float buttonWidth = 200;
@@ -45,7 +44,7 @@ public class MainMenuScreen extends Stage implements Screen {
 
 
     public MainMenuScreen(JungleWars game) {
-        super(new ScreenViewport(), game.batch);
+        super( new ScreenViewport(), game.batch );
         this.game = game;
 
         create();
@@ -57,60 +56,86 @@ public class MainMenuScreen extends Stage implements Screen {
         this.skin = game.skin;
         this.atlas = game.atlas;
 
-        music = Gdx.audio.newMusic(Gdx.files.internal(Assets.MENU_SONG));
-        music.setLooping(true);
-        music.setVolume(0.3f);
+        music = Gdx.audio.newMusic( Gdx.files.internal( Assets.MENU_SONG ) );
+        music.setLooping( true );
+        music.setVolume( 0.3f );
         music.play();
 
         // create full screen background
-        backgroundSprite = atlas.createSprite("background/menu");
-        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        backgroundSprite = atlas.createSprite( "background/menu" );
+        backgroundSprite.setSize( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
 
         //create Harambe menu banner
-        menuBanner = atlas.createSprite("background/jw-menu-banner");
-        menuBanner.setSize(menuBanner.getWidth() * 0.7f, menuBanner.getHeight() * 0.7f);
-        menuBanner.setPosition((Gdx.graphics.getWidth() / 2) - (menuBanner.getWidth() / 2), (Gdx.graphics.getHeight() - menuBanner.getHeight() - 50));
+        menuBanner = atlas.createSprite( "background/jw-menu-banner" );
+        menuBanner.setSize( menuBanner.getWidth() * 0.7f, menuBanner.getHeight() * 0.7f );
+        menuBanner.setPosition( (Gdx.graphics.getWidth() / 2) - (menuBanner.getWidth() / 2), (Gdx.graphics.getHeight() - menuBanner.getHeight() - 50) );
 
-        table = new Table();
-        table.setWidth(stage.getWidth());
-        table.align(Align.center | Align.top);
+        table = new Table( skin );
+        table.setWidth( stage.getWidth() );
+        table.align( Align.center | Align.top );
 
-        table.setPosition(0, Gdx.graphics.getHeight());
+        table.setPosition( 0, Gdx.graphics.getHeight() );
 
-        playButton = new TextButton("Play", skin);
-        leaderBoardButton = new TextButton("Leaderboards", skin);
-        settingsButton = new TextButton("Settings", skin);
-        creditsButton = new TextButton("Credits", skin);
-        quitButton = new TextButton("Quit Game", skin);
+        playButton = new TextButton( "Play", skin );
+        leaderBoardButton = new TextButton( "Leaderboards", skin );
+        settingsButton = new TextButton( "Settings", skin );
+        creditsButton = new TextButton( "Credits", skin );
+        quitButton = new TextButton( "Quit Game", skin );
+        facebookLoginButton = new Button( new TextureRegionDrawable( new TextureRegion( new Texture( "images/button/login-button.png" ) ) ) );
+        facebookLoginButton.setSize( 250, 50 );
 
-        table.padTop(menuBanner.getHeight() + 100);
-        table.add(playButton).padBottom(padBottom).width(buttonWidth);
+        table.padTop( menuBanner.getHeight() + 100 );
+        table.add( playButton ).padBottom( padBottom ).width( buttonWidth );
         table.row();
-        table.add(leaderBoardButton).padBottom(padBottom).width(buttonWidth);
+        table.add( leaderBoardButton ).padBottom( padBottom ).width( buttonWidth );
         table.row();
-        table.add(settingsButton).padBottom(padBottom).width(buttonWidth);
+        table.add( settingsButton ).padBottom( padBottom ).width( buttonWidth );
         table.row();
-        table.add(creditsButton).padBottom(padBottom).width(buttonWidth);
+        table.add( creditsButton ).padBottom( padBottom ).width( buttonWidth );
         table.row();
-        table.add(quitButton).width(buttonWidth);
+        table.add( quitButton ).width( buttonWidth );
 
-        stage.addActor(table);
+        stage.addActor( facebookLoginButton );
+        stage.addActor( table );
 
-        playButton.addListener(new ClickListener() {
+        if (game.getPlayer() != null && !game.getPlayer().getName().equals( "Guest" )) {
+            facebookLoginButton.remove();
+            stage.addActor( new Label( "Welcome, " + game.getPlayer().getName(), skin, "title", "black" ) );
+        }
+
+        facebookLoginButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Dialog d = new Dialog("Gametype", skin) {
+                game.login();
+                while (game.getPlayer() == null && !game.isFacebookCancelled()) {
+                    //wait for facebook login data
+                }
+                facebookLoginButton.remove();
+                stage.addActor( new Label( "Welcome, " + game.getPlayer().getName(), skin, "title", "black" ) );
+            }
+        } );
+
+        playButton.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Dialog d = new Dialog( "Gametype", skin ) {
                     {
-                        text("Choose your gametype");
-                        button("Singleplayer", "single");
-                        button("Multiplayer", "multi");
+                        text( "Choose your gametype" );
+                        button( "Singleplayer", "single" );
+                        button( "Multiplayer", "multi" );
                     }
 
                     @Override
                     protected void result(Object object) {
-                        switch (String.valueOf(object)) {
+                        switch (String.valueOf( object )) {
                             case "single":
-                                makeLoginDialog();
+                                dispose();
+                                if (game.getPlayer() == null) {
+                                    PlayerEntity player = new PlayerEntity( "Guest", 1 );
+                                    game.setPlayer( player );
+                                    PlayerDA.getInstance().addPlayer( player );
+                                }
+                                game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
                                 break;
                             case "multi":
                                 this.hide();
@@ -119,12 +144,12 @@ public class MainMenuScreen extends Stage implements Screen {
                     }
                 };
                 makeSmallCloseDialogButton( d );
-                d.show(stage).setWidth(500);
-                d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+                d.show( stage ).setWidth( 500 );
+                d.setPosition( Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2 );
             }
-        });
+        } );
 
-        leaderBoardButton.addListener(new ClickListener() {
+        leaderBoardButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Table highscoresTable = new Table( skin );
@@ -158,92 +183,92 @@ public class MainMenuScreen extends Stage implements Screen {
                     }
                 } );
             }
-        });
+        } );
 
-        settingsButton.addListener(new ClickListener() {
+        settingsButton.addListener( new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Table settingsTable = new Table(skin);
-                settingsTable.align(Align.center | Align.top);
-                Slider sliderMusic = new Slider(0, 100, 1, false, skin);
-                TextButton buttonClose = new TextButton("Close", skin);
-                sliderMusic.setValue(music.getVolume() * 100);
+                Table settingsTable = new Table( skin );
+                settingsTable.align( Align.center | Align.top );
+                Slider sliderMusic = new Slider( 0, 100, 1, false, skin );
+                TextButton buttonClose = new TextButton( "Close", skin );
+                sliderMusic.setValue( music.getVolume() * 100 );
 
-                Dialog d = new Dialog("Settings", skin);
-                d.add(settingsTable);
-                settingsTable.add("Music volume: ");
-                settingsTable.add(sliderMusic);
+                Dialog d = new Dialog( "Settings", skin );
+                d.add( settingsTable );
+                settingsTable.add( "Music volume: " );
+                settingsTable.add( sliderMusic );
                 settingsTable.row();
-                settingsTable.add("Up: ");
-                settingsTable.add(new TextField("", skin));
+                settingsTable.add( "Up: " );
+                settingsTable.add( new TextField( "", skin ) );
                 settingsTable.row();
-                settingsTable.add("Down: ");
-                settingsTable.add(new TextField("", skin));
+                settingsTable.add( "Down: " );
+                settingsTable.add( new TextField( "", skin ) );
                 settingsTable.row();
-                settingsTable.add("Left: ");
-                settingsTable.add(new TextField("", skin));
+                settingsTable.add( "Left: " );
+                settingsTable.add( new TextField( "", skin ) );
                 settingsTable.row();
-                settingsTable.add("Right: ");
-                settingsTable.add(new TextField("", skin));
+                settingsTable.add( "Right: " );
+                settingsTable.add( new TextField( "", skin ) );
                 settingsTable.row();
-                settingsTable.add(buttonClose);
-                d.show(stage);
-                d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+                settingsTable.add( buttonClose );
+                d.show( stage );
+                d.setPosition( Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2 );
                 makeSmallCloseDialogButton( d );
-                d.show(stage);
+                d.show( stage );
 
-                buttonClose.addListener(new ClickListener() {
+                buttonClose.addListener( new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         d.hide();
                     }
-                });
-                sliderMusic.addListener(new ChangeListener() {
+                } );
+                sliderMusic.addListener( new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        music.setVolume(sliderMusic.getValue() / 100);
+                        music.setVolume( sliderMusic.getValue() / 100 );
                     }
-                });
+                } );
             }
-        });
+        } );
 
-        creditsButton.addListener(new ClickListener() {
+        creditsButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                TextButton closeButton = new TextButton("Close", skin);
-                Dialog d = new Dialog("Credits", skin);
+                TextButton closeButton = new TextButton( "Close", skin );
+                Dialog d = new Dialog( "Credits", skin );
 
                 d.add( "credits \n" );
-                d.add(closeButton);
+                d.add( closeButton );
 
-                d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+                d.setPosition( Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2 );
                 makeSmallCloseDialogButton( d );
-                d.show(stage);
+                d.show( stage );
 
-                closeButton.addListener(new ClickListener() {
+                closeButton.addListener( new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         d.hide();
                     }
-                });
+                } );
             }
-        });
+        } );
 
-        quitButton.addListener(new ClickListener() {
+        quitButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Dialog d = new Dialog("Confirm Exit", skin) {
+                Dialog d = new Dialog( "Confirm Exit", skin ) {
                     {
-                        text("Do you really want to leave?");
-                        button("Yes", "leave");
-                        button("No", "stay");
+                        text( "Do you really want to leave?" );
+                        button( "Yes", "leave" );
+                        button( "No", "stay" );
                     }
 
 
                     @Override
                     protected void result(Object object) {
-                        switch (String.valueOf(object)) {
+                        switch (String.valueOf( object )) {
                             case "leave":
                                 Gdx.app.exit();
                                 break;
@@ -253,12 +278,12 @@ public class MainMenuScreen extends Stage implements Screen {
                         }
                     }
                 };
-                d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
+                d.setPosition( Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2 );
                 makeSmallCloseDialogButton( d );
-                d.show(stage);
+                d.show( stage );
             }
-        });
-        Gdx.input.setInputProcessor(stage);
+        } );
+        Gdx.input.setInputProcessor( stage );
     }
 
     @Override
@@ -267,22 +292,22 @@ public class MainMenuScreen extends Stage implements Screen {
     }
 
     public void render(float dt) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 
         batch.begin();
         batch.disableBlending();
-        backgroundSprite.draw(batch);
+        backgroundSprite.draw( batch );
         batch.enableBlending();
-        menuBanner.draw(batch);
+        menuBanner.draw( batch );
         batch.end();
 
-        stage.act(Gdx.graphics.getDeltaTime());
+        stage.act( Gdx.graphics.getDeltaTime() );
         stage.draw();
     }
 
     @Override
     public void resize(int i, int i1) {
-        System.out.println("Resized");
+        System.out.println( "Resized" );
     }
 
     @Override
@@ -306,49 +331,6 @@ public class MainMenuScreen extends Stage implements Screen {
         music.dispose();
     }
 
-    public void makeLoginDialog() {
-        facebookLoginButton = new TextButton( "Facebook", skin );
-        guestLoginButton = new TextButton( "Login as Guest", skin );
-        Table nameTable = new Table(skin);
-        nameTable.align(Align.center | Align.top);
-
-        Dialog d = new Dialog( "Login", skin );
-        d.add(nameTable);
-        nameTable.add( facebookLoginButton );
-        nameTable.add( guestLoginButton );
-        nameTable.row();
-        nameTable.add( "By logging in as guest, we won't save any highscores." );
-        makeSmallCloseDialogButton( d );
-        d.show( stage );
-        d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
-
-        facebookLoginButton.addListener( new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.login();
-                facebookLoginButton.setDisabled( true );
-                guestLoginButton.setDisabled( false );
-                Timer.schedule( new Timer.Task() {
-                    @Override
-                    public void run() {
-                        dispose();
-                        game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
-                    }
-                }, 2 );
-            }
-        } );
-
-        guestLoginButton.addListener( new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setPlayer( new PlayerEntity( "Guest", 1 ) );
-                PlayerDA.getInstance().addPlayer( new PlayerEntity( "Guest", 1 ) );
-                dispose();
-                game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
-            }
-        });
-    }
-
     public void makeSmallCloseDialogButton(Dialog d) {
         Button closeButton = new Button( skin, "close" );
         closeButton.addListener( new ChangeListener() {
@@ -358,5 +340,15 @@ public class MainMenuScreen extends Stage implements Screen {
             }
         } );
         d.getTitleTable().add( closeButton );
+    }
+
+    //TODO
+    private void doJoin() {
+
+    }
+
+    //TODO
+    private void doHost() {
+
     }
 }

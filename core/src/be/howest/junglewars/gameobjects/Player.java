@@ -4,10 +4,14 @@ import be.howest.junglewars.gameobjects.helper.Helper;
 import be.howest.junglewars.gameobjects.helper.HelperActionType;
 import be.howest.junglewars.gameobjects.helper.HelperMovementType;
 import be.howest.junglewars.data.entities.*;
+import be.howest.junglewars.gameobjects.enemy.utils.Brick;
+import be.howest.junglewars.gameobjects.enemy.utils.Wall;
 import be.howest.junglewars.gameobjects.power.*;
 import be.howest.junglewars.screens.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.*;
 
@@ -78,6 +82,7 @@ public class Player extends GameObject {
     }
 
     private void handleInput(float dt) {
+
         boolean keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         boolean keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
@@ -87,6 +92,49 @@ public class Player extends GameObject {
         boolean bottomBorderTouch = body.y <= 0;
         boolean leftBorderTouch = body.x <= 0;
         boolean rightBorderTouch = body.x >= Gdx.graphics.getWidth() - body.getWidth();
+
+        boolean leftTouchWall = false;
+        boolean upTouchWall = false;
+        boolean downTouchWall = false;
+        boolean rightTouchWall = false;
+
+        for(Wall w : game.getData().getWalls()){
+            List<Brick> bricks = this.checkCollision(w.returnWall());
+            if(bricks.size() > 0) {
+                int margin = 0;
+                Rectangle rUp = new Rectangle(body.x - margin,body.y+HEIGHT  + margin,body.x+WIDTH + margin,body.y+HEIGHT + margin);
+                Rectangle rRight = new Rectangle(body.x + margin+WIDTH,body.y - margin,body.x+WIDTH + margin,body.y+HEIGHT + margin);
+                Rectangle rDown = new Rectangle(body.x - margin ,body.y + margin,body.x+WIDTH + margin,body.y + margin);
+                Rectangle rLeft = new Rectangle(body.x + margin ,body.y - margin,body.x ,body.y+HEIGHT + margin);
+                for(Brick b: bricks){
+                    if(rUp.overlaps(b.getBody())){
+                        upTouchWall = true;
+                    }
+                    else{
+                        upTouchWall = false;
+                    }
+                    if(rDown.overlaps(b.getBody())){
+                        downTouchWall = true;
+                    }
+                    else{
+                        downTouchWall = false;
+                    }
+                    if(rRight.overlaps(b.getBody())){
+                        rightTouchWall = true;
+                    }
+                    else{
+                        rightTouchWall = false;
+                    }
+                    if(rLeft.overlaps(b.getBody())){
+                        leftTouchWall = true;
+                    } else{
+                        leftTouchWall = false;
+                    }
+                }
+            }
+
+
+        }
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && canShoot) {
             shoot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
@@ -102,30 +150,37 @@ public class Player extends GameObject {
             currentSpeed = sqrtSpeed;
         }
 
-        if (keyUpPressed) {
-            if (leftBorderTouch || rightBorderTouch)
-                currentSpeed = normalizedSpeed;
-            body.y = topBorderTouch ? Gdx.graphics.getHeight() - body.getHeight() : body.y + currentSpeed;
-        }
-        if (keyDownPressed) {
-            if (leftBorderTouch || rightBorderTouch)
-                currentSpeed = normalizedSpeed;
-            body.y = bottomBorderTouch ? 0 : body.y - currentSpeed;
-        }
-        if (keyLeftPressed) {
-            isLookingLeft = true;
-            if (topBorderTouch || bottomBorderTouch)
-                currentSpeed = normalizedSpeed;
-            body.x = leftBorderTouch ? 0 : body.x - currentSpeed;
-        }
-        if (keyRightPressed) {
-            isLookingLeft = false;
-            if (topBorderTouch || bottomBorderTouch)
-                currentSpeed = normalizedSpeed;
-            body.x = rightBorderTouch ? Gdx.graphics.getWidth() - body.getWidth() : body.x + currentSpeed;
 
+
+            if (keyUpPressed) {
+                if (leftBorderTouch || rightBorderTouch)
+                    currentSpeed = normalizedSpeed;
+                if (!upTouchWall) {
+                body.y = topBorderTouch ? Gdx.graphics.getHeight() - body.getHeight() : body.y + currentSpeed;}
+            }
+            if (keyDownPressed) {
+                if (leftBorderTouch || rightBorderTouch)
+                    currentSpeed = normalizedSpeed;
+                if (!downTouchWall) {
+                body.y = bottomBorderTouch ? 0 : body.y - currentSpeed;}
+            }
+            if (keyLeftPressed) {
+                isLookingLeft = true;
+                if (topBorderTouch || bottomBorderTouch)
+                    currentSpeed = normalizedSpeed;
+                if (!leftTouchWall) {
+                body.x = leftBorderTouch ? 0 : body.x - currentSpeed;}
+            }
+            if (keyRightPressed) {
+                isLookingLeft = false;
+                if (topBorderTouch || bottomBorderTouch)
+                    currentSpeed = normalizedSpeed;
+                if (!rightTouchWall) {
+                body.x = rightBorderTouch ? Gdx.graphics.getWidth() - body.getWidth() : body.x + currentSpeed;}
+            }
         }
-    }
+
+
     public boolean isSlowed(){
         if(speed<baseSpeed){
             return true;
