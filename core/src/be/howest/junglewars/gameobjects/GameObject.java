@@ -1,11 +1,14 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.*;
+import be.howest.junglewars.GameData;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class GameObject implements Serializable {
 
@@ -21,6 +24,7 @@ public abstract class GameObject implements Serializable {
         this.data = data;
         body = initBody(width, height, x, y);
         DEFAULT_SPRITE = data.atlas.createSprite(defaultSpriteUrl);
+
         changeSprite(DEFAULT_SPRITE);
     }
 

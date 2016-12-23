@@ -7,8 +7,6 @@ import be.howest.junglewars.gameobjects.helper.Helper;
 import be.howest.junglewars.gameobjects.helper.IHelperActionType;
 import com.badlogic.gdx.Gdx;
 
-import java.util.List;
-
 import static be.howest.junglewars.gameobjects.enemy.Enemy.BULLET_HEIGHT;
 import static be.howest.junglewars.gameobjects.enemy.Enemy.BULLET_WIDTH;
 
@@ -43,7 +41,9 @@ public class ShootingHelper implements IHelperActionType {
         float spawnX = helper.getBody().x + (helper.getBody().width / 2);
         float spawnY = helper.getBody().y + (helper.getBody().height / 2);
 
-        helper.getOwner().getMissiles().add(new Missile(BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 15, 800, 30, 1.5f, MissileType.STANDARD));
+        helper.getOwner().getMissiles().add(new Missile(
+                helper.getOwner(), BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "helper-bullet", 15, 800, 30, 1.5f, MissileType.STANDARD, helper.getData())
+        );
 
     }
 

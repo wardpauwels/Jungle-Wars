@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameScreen extends Stage implements Screen {
+    private final boolean singlePlayer;
 
     //region fields
 
@@ -50,6 +51,8 @@ public class GameScreen extends Stage implements Screen {
 
     public GameScreen(JungleWars game, boolean singleplayer, Difficulty difficulty, boolean isHost, String ip) {
         super(new ScreenViewport(), game.batch);
+        this.singlePlayer = singleplayer;
+
         this.isHost = isHost;
         if (!ip.isEmpty()) {
             this.ip = ip;
@@ -339,7 +342,14 @@ public class GameScreen extends Stage implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (data.getPlayers().size() > 1) {
+        if (data.getPlayers().size() > 1 && !singlePlayer) {
+            data.update(dt);
+            data.render();
+
+            if (isHost) {
+                server.update(dt);
+            }
+        } else {
             data.update(dt);
             data.render();
 
