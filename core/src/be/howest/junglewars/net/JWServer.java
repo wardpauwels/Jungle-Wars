@@ -11,7 +11,6 @@ public class JWServer {
 
     Server server;
     GameData data;
-    private Random random = new Random();
 
     public JWServer() throws IOException {
         server = new Server() {

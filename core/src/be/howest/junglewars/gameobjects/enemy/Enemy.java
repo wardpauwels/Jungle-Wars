@@ -1,15 +1,18 @@
 package be.howest.junglewars.gameobjects.enemy;
 
-import be.howest.junglewars.*;
-import be.howest.junglewars.data.entities.*;
-import be.howest.junglewars.gameobjects.*;
-import be.howest.junglewars.net.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.*;
+import be.howest.junglewars.GameData;
+import be.howest.junglewars.data.entities.EnemyEntity;
+import be.howest.junglewars.gameobjects.GameObject;
+import be.howest.junglewars.gameobjects.Missile;
+import be.howest.junglewars.gameobjects.Player;
+import be.howest.junglewars.net.Network;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Enemy extends GameObject {
     public static final float BULLET_WIDTH = 15;
@@ -101,9 +104,9 @@ public class Enemy extends GameObject {
 
         if (this.hitpoints <= 0) this.remove = true;
 
-        // targets = chooseMovementType.chooseTargets(this);
-        //for (Vector2 v : targets) {
-        Vector2 v = new Vector2(data.getPlayerById(1).getPos().x, data.getPlayerById(1).getPos().y);
+        targets = chooseMovementType.chooseTargets(this);
+        for (Vector2 v : targets) {
+            v = new Vector2(data.getPlayerById(1).getPos().x, data.getPlayerById(1).getPos().y);
 
             float radians = MathUtils.atan2(v.y - body.y, v.x - body.x);
 
@@ -111,7 +114,8 @@ public class Enemy extends GameObject {
             body.y += MathUtils.sin(radians) * speed * dt;
 
             doEnemyAction(dt);
-        //}
+
+        }
 
         if (timer < time && !spriteChanged) {
             timer += dt;
@@ -216,7 +220,7 @@ public class Enemy extends GameObject {
         this.id = msg.id;
     }
 
-    public GameData getData(){
+    public GameData getData() {
         return data;
     }
 }
