@@ -72,6 +72,7 @@ public class GameData {
     }
 
     public synchronized void update(float dt) {
+        System.out.println(server == null);
         //client ready and enemy spawned
         if (client != null && me != null) {
             if (me.handleInput(dt)) {
@@ -88,9 +89,6 @@ public class GameData {
         //update enemies
         for (Enemy enemy : enemies) {
             enemy.update(dt);
-//            if (!isClient){
-//                server.sendMessage(enemy.getEnemyMovementState());
-//            }
         }
 
         //update missiles
@@ -124,6 +122,9 @@ public class GameData {
 
         if (!isClient) {
             spawnManager.manageAllSpawners();
+            for (Enemy enemy : enemies) {
+                server.sendMessage(enemy.getEnemyMovementState());
+            }
         }
     }
 

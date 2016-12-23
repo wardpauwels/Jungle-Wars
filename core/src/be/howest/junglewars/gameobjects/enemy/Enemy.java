@@ -96,8 +96,6 @@ public class Enemy extends GameObject {
     @Override
     public void update(float dt) {
 
-        System.out.println("I'm an enemy -> I'm updating");
-
         if (this.hitpoints <= 0) this.remove = true;
 
         targets = chooseMovementType.chooseTargets(this);
@@ -123,12 +121,10 @@ public class Enemy extends GameObject {
             spriteChanged = false;
             dabTimer = 2.5f;
         }
-
     }
 
     @Override
     public void render(SpriteBatch batch) {
-        System.out.println("I'm an enemy -> I'm rendering");
 
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
