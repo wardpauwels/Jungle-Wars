@@ -216,9 +216,7 @@ public class Player extends GameObject {
             }
             powers.get(i).update(dt);
         }
-
         helper.update(dt);
-
     }
 
     @Override

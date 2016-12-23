@@ -276,6 +276,11 @@ public class GameData {
         getPlayerById(msg.playerId).setPlayerShoot(msg);
     }
 
+    public void onEnemySpawn(Network.EnemySpawned msg) {
+        enemies.add(new Enemy(this, msg.enemy));
+        System.out.println(enemies.size());
+    }
+
     public void removePlayer(Network.PlayerJoinLeave msg) {
         players.remove(msg.playerId);
     }

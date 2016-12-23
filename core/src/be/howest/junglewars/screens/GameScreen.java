@@ -85,7 +85,6 @@ public class GameScreen extends Stage implements Screen {
 
     @Override
     public void show() {
-        Gdx.input.setCatchBackKey(true);
 
         client = new JWClient(playerName);
         data = client.getData();

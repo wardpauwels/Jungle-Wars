@@ -1,6 +1,7 @@
 package be.howest.junglewars.net;
 
 import be.howest.junglewars.*;
+import be.howest.junglewars.data.entities.*;
 import com.badlogic.gdx.math.*;
 import com.esotericsoftware.kryo.*;
 import com.esotericsoftware.kryonet.*;
@@ -23,6 +24,9 @@ public class Network {
         kryo.register(Vector2.class);
         kryo.register(StartNewGame.class);
         kryo.register(Difficulty.class);
+        kryo.register(EnemySpawned.class);
+        kryo.register(EnemyMovementState.class);
+        kryo.register(EnemyEntity.class);
     }
 
     static public class Login {
@@ -30,6 +34,7 @@ public class Network {
 
         public Login() {
         }
+
         public Login(String name) {
             this.name = name;
         }
@@ -136,14 +141,27 @@ public class Network {
 
     }
 
+    static public class EnemySpawned {
+        public EnemyEntity enemy;
+
+        public EnemySpawned() {
+        }
+
+        public EnemySpawned(EnemyEntity enemy) {
+            this.enemy = enemy;
+        }
+    }
+
     static public class EnemyMovementState {
         public Vector2 position;
+        public boolean isShooting;
 
         public EnemyMovementState() {
         }
 
-        public EnemyMovementState(boolean isLookingLeft, boolean isShooting, Vector2 position) {
+        public EnemyMovementState(boolean isShooting, Vector2 position) {
             this.position = position;
+            this.isShooting = isShooting;
         }
     }
 

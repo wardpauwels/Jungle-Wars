@@ -1,7 +1,7 @@
 package be.howest.junglewars.spawners;
 
 import be.howest.junglewars.data.entities.*;
-import be.howest.junglewars.gameobjects.enemy.*;
+import be.howest.junglewars.net.*;
 import com.badlogic.gdx.*;
 
 import java.util.concurrent.*;
@@ -91,7 +91,7 @@ public class EnemySpawner implements ISpawner {
         }
     }
 
-    public void updateStats(Enemy enemy) {
+    public void updateStats(EnemyEntity enemy) {
         // TODO: update stats with game difficulty and game level
     }
 
@@ -100,7 +100,9 @@ public class EnemySpawner implements ISpawner {
         for (EnemyEntity e : enemies) {
             random -= e.getSpawnProbability();
             if (random <= 0) {
-                manager.getData().getEnemies().add(new Enemy(manager.getData(), e));
+                updateStats(e);
+                //manager.getData().getEnemies().add(new Enemy(manager.getData(), e));
+                manager.getData().serverSendMessage(new Network.EnemySpawned(e));
                 System.out.println(e.getName());
                 break;
             }
