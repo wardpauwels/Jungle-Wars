@@ -133,7 +133,7 @@ public class MainMenuScreen extends Stage implements Screen {
                                 if (game.getPlayer() == null) {
                                     PlayerEntity player = new PlayerEntity( "Guest", 1 );
                                     game.setPlayer( player );
-                                    PlayerDA.getInstance().addPlayer( player );
+                                    //PlayerDA.getInstance().addPlayer( player );
                                 }
                                 game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );
                                 break;

@@ -289,23 +289,25 @@ public class GameScreen extends Stage implements Screen {
         Dialog d = new Dialog("Upgrade your helper", skin) {
             {
                 text("UPGRADE YOUR HELPER");
-                row();
+                getButtonTable().row();
+
                 button("upgrade","upgradeHelper");
 
                 text("HELPERS:");
                 addActor(helperSelectBox);
-                row();
+                getButtonTable().row();
                 button("Coin Collector","pickCoinCollector");
                 button("Power Collector","pickPowerCollector");
 
-                row();
+                getButtonTable().row();
+
                 button("Shield","pickShield");
                 button("Shooter","pickShooter");
 
-                row();
+                getButtonTable().row();
                 button("Stabber","pickStabber");
 
-
+                getButtonTable().row();
                 button("next level", "next");
                 button("Retry", "retry");
 
@@ -349,7 +351,7 @@ public class GameScreen extends Stage implements Screen {
             }
         };
 
-        d.show(stage).setWidth(1000);
+        d.show(stage).setWidth(400);
         d.setPosition(Gdx.graphics.getWidth() / 2 - d.getWidth() / 2, Gdx.graphics.getHeight() / 2 - d.getHeight() / 2);
         Gdx.input.setInputProcessor(stage);
 
