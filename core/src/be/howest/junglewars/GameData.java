@@ -1,18 +1,25 @@
 package be.howest.junglewars;
 
 import be.howest.junglewars.data.entities.EnemyEntity;
-import be.howest.junglewars.gameobjects.Currency;
 import be.howest.junglewars.gameobjects.*;
-import be.howest.junglewars.gameobjects.enemy.*;
-import be.howest.junglewars.gameobjects.power.*;
-import be.howest.junglewars.net.*;
-import be.howest.junglewars.spawners.*;
-import be.howest.junglewars.util.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.*;
+import be.howest.junglewars.gameobjects.enemy.Enemy;
+import be.howest.junglewars.gameobjects.power.Power;
+import be.howest.junglewars.net.JWClient;
+import be.howest.junglewars.net.JWServer;
+import be.howest.junglewars.net.Network;
+import be.howest.junglewars.spawners.SpawnerManager;
+import be.howest.junglewars.util.Assets;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GameData {
 
@@ -88,11 +95,16 @@ public class GameData {
         }
 
         //update enemies
-        for(int i = 0; i < enemies.size(); i++) {
-            enemies.get(i).update(dt);
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy e = enemies.get(i);
+            e.update(dt);
 
-            if(enemies.get(i).shouldRemove()){
+            if (e.shouldRemove()) {
                 enemies.remove(i);
+            }
+
+            if (!isClient) {
+                server.sendMessage(new Network.EnemyMovementState(e.getId(), e.isShooting, e.getPos()));
             }
         }
 
@@ -126,7 +138,6 @@ public class GameData {
 
         if (!isClient) {
             spawnManager.manageAllSpawners();
-            System.out.println(enemies.size());
         }
 
     }
@@ -285,7 +296,6 @@ public class GameData {
     }
 
     public synchronized void onEnemySpawn(Network.EnemySpawned msg) {
-//        enemies.add(new Enemy(msg.id, this, msg.enemy));
         addEnemy(msg.id, msg.enemy);
     }
 
@@ -298,10 +308,10 @@ public class GameData {
 
     }
 
-    public synchronized void addEnemy(long id, EnemyEntity entity){
+    public synchronized void addEnemy(long id, EnemyEntity entity) {
         Enemy e = new Enemy(id, this, entity);
         enemies.add(e);
-        if(!isClient) {
+        if (!isClient) {
             server.sendMessage(new Network.EnemySpawned(id, entity));
         }
     }

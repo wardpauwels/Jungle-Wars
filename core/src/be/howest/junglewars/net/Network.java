@@ -154,7 +154,7 @@ public class Network {
         }
     }
 
-    public class EnemyMovementState {
+    public static class EnemyMovementState {
         public Vector2 position;
         public long id;
         public boolean isShooting;
