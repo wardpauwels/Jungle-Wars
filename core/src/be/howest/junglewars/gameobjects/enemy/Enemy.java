@@ -215,4 +215,8 @@ public class Enemy extends GameObject {
         this.isShooting = msg.isShooting;
         this.id = msg.id;
     }
+
+    public GameData getData(){
+        return data;
+    }
 }
