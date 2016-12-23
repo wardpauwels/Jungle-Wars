@@ -79,7 +79,7 @@ public class JWClient {
             data.onPlayerShoot(msg);
         } else if (message instanceof Network.EnemySpawned) {
             Network.EnemySpawned msg = (Network.EnemySpawned) message;
-            data.onEnemySpawn(msg);
+            data.addEnemy(msg);
         } else if (message instanceof Network.EnemyMovementState) {
             Network.EnemyMovementState msg = (Network.EnemyMovementState) message;
             data.enemyMoved(msg);

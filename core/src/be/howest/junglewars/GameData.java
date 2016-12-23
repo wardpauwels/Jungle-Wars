@@ -295,9 +295,9 @@ public class GameData {
         getPlayerById(msg.playerId).setPlayerShoot(msg);
     }
 
-    public synchronized void onEnemySpawn(Network.EnemySpawned msg) {
-        enemies.add(new Enemy(msg.id, this, msg.enemy));
-    }
+//    public synchronized void onEnemySpawn(Network.EnemySpawned msg) {
+//        enemies.add(new Enemy(msg.id, this, msg.enemy));
+//    }
 
     public synchronized void removePlayer(Network.PlayerJoinLeave msg) {
         players.remove(msg.playerId);
@@ -308,12 +308,8 @@ public class GameData {
 
     }
 
-    public synchronized void addEnemy(long id, EnemyEntity entity) {
-        Enemy e = new Enemy(id, this, entity);
-        enemies.add(e);
-        if (!isClient) {
-            server.sendMessage(new Network.EnemySpawned(id, entity));
-        }
+    public synchronized void addEnemy(Network.EnemySpawned msg) {
+        enemies.add(new Enemy(msg.id, this, msg.enemy));
     }
 
     public void clientSendMessage(Object msg) {

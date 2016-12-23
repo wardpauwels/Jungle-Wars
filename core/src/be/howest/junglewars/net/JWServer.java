@@ -96,10 +96,10 @@ public class JWServer {
             msg.playerId = conn.getID();
             data.onPlayerShoot(msg);
             server.sendToAllTCP(msg);
-        } else if (message instanceof Network.EnemySpawned) {
-            Network.EnemySpawned msg = (Network.EnemySpawned) message;
-            data.onEnemySpawn(msg);
-            server.sendToAllTCP(msg);
+//        } else if (message instanceof Network.EnemySpawned) {
+//            Network.EnemySpawned msg = (Network.EnemySpawned) message;
+//            data.onEnemySpawn(msg);
+//            server.sendToAllTCP(msg);
         } else if (message instanceof Network.EnemyMovementState) {
             Network.EnemyMovementState msg = (Network.EnemyMovementState) message;
             server.sendToAllTCP(msg);

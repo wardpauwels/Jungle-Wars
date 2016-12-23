@@ -112,6 +112,7 @@ public class EnemySpawner implements ISpawner {
 //                manager.getData().addEnemy(currentId, e);
 //                manager.getData().serverSendMessage(new Network.EnemySpawned(currentId, e));
                 Network.EnemySpawned msg = new Network.EnemySpawned(currentId, e);
+                manager.getData().addEnemy(msg);
                 manager.getData().serverSendMessage(msg);
                 currentId++;
                 System.out.println(e.getName());
