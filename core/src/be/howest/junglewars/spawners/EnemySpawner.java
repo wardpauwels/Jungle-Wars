@@ -1,6 +1,7 @@
 package be.howest.junglewars.spawners;
 
 import be.howest.junglewars.data.entities.*;
+import be.howest.junglewars.gameobjects.enemy.*;
 import be.howest.junglewars.net.*;
 import com.badlogic.gdx.*;
 
@@ -9,7 +10,7 @@ import java.util.stream.*;
 
 public class EnemySpawner implements ISpawner {
 
-    private long currentId = 0;
+    private int currentId = 0;
 
     private SpawnerManager manager;
 
@@ -103,7 +104,7 @@ public class EnemySpawner implements ISpawner {
             random -= e.getSpawnProbability();
             if (random <= 0) {
                 updateStats(e);
-                //manager.getData().getEnemies().add(new Enemy(manager.getData(), e));
+                manager.getData().getEnemies().add(new Enemy(currentId, manager.getData(), e));
                 manager.getData().serverSendMessage(new Network.EnemySpawned(currentId, e));
                 currentId++;
                 System.out.println(e.getName());

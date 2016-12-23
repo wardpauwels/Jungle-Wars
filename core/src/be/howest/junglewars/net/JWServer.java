@@ -85,7 +85,6 @@ public class JWServer {
                     conn.sendTCP(connectedPlayer.getPlayerMovementState());
                 }
             }
-            return;
 
         } else if (message instanceof Network.PlayerMovementState) {
             Network.PlayerMovementState msg = (Network.PlayerMovementState) message;
@@ -96,6 +95,13 @@ public class JWServer {
             Network.PlayerShoot msg = (Network.PlayerShoot) message;
             msg.playerId = conn.getID();
             data.onPlayerShoot(msg);
+            server.sendToAllTCP(msg);
+        } else if (message instanceof Network.EnemySpawned) {
+            Network.EnemySpawned msg = (Network.EnemySpawned) message;
+            data.onEnemySpawn(msg);
+            server.sendToAllTCP(msg);
+        } else if (message instanceof Network.EnemyMovementState) {
+            Network.EnemyMovementState msg = (Network.EnemyMovementState) message;
             server.sendToAllTCP(msg);
         }
     }

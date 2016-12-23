@@ -25,8 +25,8 @@ public class Network {
         kryo.register(StartNewGame.class);
         kryo.register(Difficulty.class);
         kryo.register(EnemySpawned.class);
-        kryo.register(EnemyMovementState.class);
         kryo.register(EnemyEntity.class);
+        kryo.register(EnemyMovementState.class);
     }
 
     static public class Login {
@@ -154,9 +154,9 @@ public class Network {
         }
     }
 
-    static public class EnemyMovementState {
-        public long id;
+    public class EnemyMovementState {
         public Vector2 position;
+        public long id;
         public boolean isShooting;
 
         public EnemyMovementState() {
@@ -164,9 +164,9 @@ public class Network {
 
         public EnemyMovementState(long id, boolean isShooting, Vector2 position) {
             this.id = id;
-            this.position = position;
             this.isShooting = isShooting;
+            this.position = position;
         }
-    }
 
+    }
 }

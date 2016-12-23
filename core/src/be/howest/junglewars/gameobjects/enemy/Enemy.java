@@ -16,6 +16,7 @@ public class Enemy extends GameObject {
     public static final float BULLET_HEIGHT = 15;
     private static final String ATLAS_PREFIX = "enemy/";
     public String altSprite;
+    public boolean isShooting;
     private float WIDTH;
     private float HEIGHT;
     private String name;
@@ -36,14 +37,16 @@ public class Enemy extends GameObject {
     private float timer;
     private float time;
     private float dabTimer;
-    private boolean isShooting;
     private long id;
+    private GameData data;
+    private Network.EnemyMovementState enemyMovenentState;
 
     public Enemy(long id, String name, float width, float height, String defaultSpriteUrl, String altSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
                  float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType, GameData data) {
         super(ATLAS_PREFIX + defaultSpriteUrl, width, height,
                 ThreadLocalRandom.current().nextInt(0 - Math.round(width), Gdx.graphics.getWidth() + Math.round(width)),
                 ThreadLocalRandom.current().nextBoolean() ? 0 - height : Gdx.graphics.getHeight() + height, data); // TODO: spawns only top or bottom now
+        this.data = data;
         this.WIDTH = width;
         this.HEIGHT = height;
         this.name = name;
@@ -98,8 +101,9 @@ public class Enemy extends GameObject {
 
         if (this.hitpoints <= 0) this.remove = true;
 
-        targets = chooseMovementType.chooseTargets(this);
-        for (Vector2 v : targets) {
+        // targets = chooseMovementType.chooseTargets(this);
+        //for (Vector2 v : targets) {
+        Vector2 v = new Vector2(data.getPlayerById(1).getPos().x, data.getPlayerById(1).getPos().y);
 
             float radians = MathUtils.atan2(v.y - body.y, v.x - body.x);
 
@@ -107,7 +111,7 @@ public class Enemy extends GameObject {
             body.y += MathUtils.sin(radians) * speed * dt;
 
             doEnemyAction(dt);
-        }
+        //}
 
         if (timer < time && !spriteChanged) {
             timer += dt;
@@ -198,13 +202,17 @@ public class Enemy extends GameObject {
         this.damage = damage;
     }
 
-    public Network.EnemyMovementState getEnemyMovementState() {
-        return new Network.EnemyMovementState(id, isShooting, getPos());
+    public long getId() {
+        return id;
     }
 
-    public void setEnemyMovementState(Network.EnemyMovementState msg) {
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setEnemyMovenentState(Network.EnemyMovementState msg) {
         this.setPos(msg.position);
-        this.id = msg.id;
         this.isShooting = msg.isShooting;
+        this.id = msg.id;
     }
 }

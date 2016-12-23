@@ -72,7 +72,7 @@ public class GameData {
     }
 
     public synchronized void update(float dt) {
-        System.out.println(server == null);
+
         //client ready and enemy spawned
         if (client != null && me != null) {
             if (me.handleInput(dt)) {
@@ -89,6 +89,8 @@ public class GameData {
         //update enemies
         for (Enemy enemy : enemies) {
             enemy.update(dt);
+            client.sendMessageUDP(enemy.getEnemyMovementState);
+            enemy.setEnemyMovenentState(new Network.EnemyMovementState(enemy.getId(), enemy.isShooting, enemy.getPos()));
         }
 
         //update missiles
@@ -119,16 +121,14 @@ public class GameData {
 
         //TODO collisions
 
-
         if (!isClient) {
             spawnManager.manageAllSpawners();
-            for (Enemy enemy : enemies) {
-                server.sendMessage(enemy.getEnemyMovementState());
-            }
+            System.out.println(enemies.size());
         }
+
     }
 
-    public void render() {
+    public synchronized void render() {
         if (!isClient) return;
         batch.begin();
         batch.disableBlending();
@@ -142,6 +142,7 @@ public class GameData {
 
         //render enemies
         for (Enemy enemy : enemies) {
+            System.out.println(enemy);
             enemy.render(batch);
         }
 
@@ -170,7 +171,7 @@ public class GameData {
         batch.end();
     }
 
-    private void renderHUD() {
+    private synchronized void renderHUD() {
         for (Map.Entry<Long, Player> p : players.entrySet()) {
             Player player = p.getValue();
             player.render(batch);
@@ -200,7 +201,7 @@ public class GameData {
         return state;
     }
 
-    public void setState(GameState state) {
+    public synchronized void setState(GameState state) {
         this.state = state;
     }
 
@@ -208,7 +209,7 @@ public class GameData {
         return wave;
     }
 
-    public void setWave(int wave) {
+    public synchronized void setWave(int wave) {
         this.wave = wave;
     }
 
@@ -228,18 +229,18 @@ public class GameData {
         return currencies;
     }
 
-    public void setDifficulty(Difficulty difficulty) {
+    public synchronized void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
     }
 
-    public void onDisconnect() {
+    public synchronized void onDisconnect() {
         this.client = null;
         this.players.clear();
 
         System.out.println("GameData::onDisconnect");
     }
 
-    public void onConnect(String name) {
+    public synchronized void onConnect(String name) {
         if (this.me == null) {
             me = new Player("harambe", true, this);
             this.me.setId(client.id);
@@ -250,7 +251,7 @@ public class GameData {
         }
     }
 
-    public void addPlayer(Network.PlayerJoinLeave msg) {
+    public synchronized void addPlayer(Network.PlayerJoinLeave msg) {
         Player p = new Player("harambe", false, this);
         p.setId(msg.playerId);
         p.setName(msg.name);
@@ -261,35 +262,35 @@ public class GameData {
         return missiles;
     }
 
-    public void addMissile(Missile missile) {
-        missiles.add(missile);
-    }
-
     public Player getPlayerById(long id) {
         return players.get(id);
     }
 
-    public void playerMoved(Network.PlayerMovementState msg) {
+    public Enemy getEnemyById(int id) {
+        return enemies.get(id);
+    }
+
+    public synchronized void playerMoved(Network.PlayerMovementState msg) {
         Player p = players.get(msg.playerId);
         if (p != null) p.setPlayerMovementState(msg);
 
     }
 
-    public void onPlayerShoot(Network.PlayerShoot msg) {
+    public synchronized void onPlayerShoot(Network.PlayerShoot msg) {
         missiles.add(new Missile(getPlayerById(msg.playerId), 30, 30, msg.position.x, msg.position.y, msg.destination.x, msg.destination.y, "banana", 5, 300, -10, 3, MissileType.STANDARD, this));
         getPlayerById(msg.playerId).setPlayerShoot(msg);
     }
 
-    public void onEnemySpawn(Network.EnemySpawned msg) {
-        enemies.add(new Enemy(msg.id, this, msg.enemy));
-        System.out.println(enemies.size());
+    public synchronized void onEnemySpawn(Network.EnemySpawned msg) {
+//        enemies.add(new Enemy(msg.id, this, msg.enemy));
+
     }
 
-    public void removePlayer(Network.PlayerJoinLeave msg) {
+    public synchronized void removePlayer(Network.PlayerJoinLeave msg) {
         players.remove(msg.playerId);
     }
 
-    public void onPlayerWasHit(Network.PlayerWasHit msg) {
+    public synchronized void onPlayerWasHit(Network.PlayerWasHit msg) {
         Player player = players.get(msg.playerId);
 
     }
@@ -302,15 +303,20 @@ public class GameData {
         server.sendMessage(msg);
     }
 
-    public void onWaveEnd(Network.WaveEnd msg) {
+    public synchronized void onWaveEnd(Network.WaveEnd msg) {
 
     }
 
-    public void onPlayerSpawned(Network.PlayerSpawned msg) {
+    public synchronized void onPlayerSpawned(Network.PlayerSpawned msg) {
         Player spawner = players.get(msg.playerId);
         if (spawner != null) {
             spawner.spawn(msg);
         }
+    }
+
+    public synchronized void enemyMoved(Network.EnemyMovementState msg) {
+        Enemy e = enemies.get((int) msg.id);
+        if (e != null) e.setEnemyMovenentState(msg);
     }
 
     public void onWaveStart(Network.WaveStart msg) {
@@ -320,9 +326,5 @@ public class GameData {
 
     public void dispose() {
 
-    }
-
-    public void enemyMoved(Network.EnemyMovementState msg) {
-        server.sendMessage(msg);
     }
 }

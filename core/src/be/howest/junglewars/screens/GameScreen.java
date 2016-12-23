@@ -56,7 +56,7 @@ public class GameScreen extends Stage implements Screen {
         this.atlas = game.atlas;
         this.skin = game.skin;
         this.isGameOver = false;
-        this.playerName = "john" + ThreadLocalRandom.current().nextInt(0, 100000);
+        this.playerName = "user" + ThreadLocalRandom.current().nextInt(0, 100000);
 
 //        data.setWave(1);
 //        data.setDifficulty(difficulty);
