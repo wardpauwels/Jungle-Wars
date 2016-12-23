@@ -2,7 +2,10 @@ package be.howest.junglewars.screens;
 
 import be.howest.junglewars.*;
 import be.howest.junglewars.data.da.*;
+import be.howest.junglewars.data.entities.EnemyEntity;
+import be.howest.junglewars.data.entities.HelperEntity;
 import be.howest.junglewars.data.entities.PlayerEntity;
+import be.howest.junglewars.data.entities.PowerEntity;
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.enemy.*;
 import be.howest.junglewars.gameobjects.enemy.utils.*;
@@ -45,7 +48,10 @@ public class GameScreen extends Stage implements Screen {
 
     private boolean nextLevel;
     private boolean running;
-    private Helper[] helpers;
+
+    private ArrayList<Helper> helpers;
+    private ArrayList<Power> powers;
+    private ArrayList<Enemy> enemies;
 
     public ArrayList<Sound> sounds;
 
@@ -53,6 +59,7 @@ public class GameScreen extends Stage implements Screen {
 
     private SelectBox<Helper> helperSelectBox;
     private int currentPlayer;
+    private JungleWarsDA db;
 
 
 
@@ -75,12 +82,18 @@ public class GameScreen extends Stage implements Screen {
         this.upgradeCost = 1;
         this.running = false;
         this.currentPlayer = 0;
+        db = JungleWarsDA.getInstance();
+
 
 
 
         data.setWave(wave);
         data.setDifficulty(difficulty);
         data.setState(GameState.READY);
+
+        helpers = new ArrayList<>();
+        powers = new ArrayList<>();
+        enemies = new ArrayList<>();
 
         // create full screen background
         backgroundSprite = atlas.createSprite("background/game");
@@ -102,6 +115,7 @@ public class GameScreen extends Stage implements Screen {
 
         startingEnemies = 1;
         multiplierEnemies = 0.5f;
+        fillEnemiesDB();
         spawnEnemies(false);
         helperSelectBox = new SelectBox<Helper>(skin);
         fillHelperBox();
@@ -119,16 +133,20 @@ public class GameScreen extends Stage implements Screen {
     }
     private void fillHelperBox(){
 
-        helpers = new Helper[5];
-        helpers[0]=(new Helper(this, "Power Collector", data.getPlayers().get(currentPlayer), "red-wings-up", HelperMovementType.POWERCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER));
-        helpers[1]=(new Helper(this, "Coin Collector", data.getPlayers().get(currentPlayer), "red-wings-up", HelperMovementType.COINCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER));
-        helpers[2]=(new Helper(this, "Shield", data.getPlayers().get(currentPlayer), "red-wings-up", HelperMovementType.PROTECTING_HELPER, HelperActionType.PROTECTING_HELPER));
-        helpers[3]=(new Helper(this, "Shooter", data.getPlayers().get(currentPlayer), "red-wings-up", HelperMovementType.FOLLOWING_HELPER, HelperActionType.SHOOTING_HELPER));
-        helpers[4]=(new Helper(this, "Stabber", data.getPlayers().get(currentPlayer), "red-wings-up", HelperMovementType.PROTECTING_HELPER, HelperActionType.STABBING_HELPER));
-        helperSelectBox.setItems(helpers);
-        helperSelectBox.setSize(100,50);
-        helperSelectBox.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
+        ArrayList<HelperEntity> helperDB = new ArrayList<>();
+        helperDB = db.getHelpers();
+        for(HelperEntity h : helperDB){
 
+            helpers.add(new Helper(this,h.getName(),data.getPlayers().get(currentPlayer),h.getTextureFileName(),HelperMovementType.valueOf(h.getMovementType()),HelperActionType.valueOf(h.getActionType())));
+        }
+
+    }
+
+    private void fillEnemiesDB(){
+        ArrayList<EnemyEntity> enemiesDB = db.getEnemies();
+        for(EnemyEntity e : enemiesDB){
+            enemies.add(new Enemy(this,e.getName(),e.getWidth(),e.getHeight(),e.getTextureFileName(),e.getAltTextureFileName(),e.getBaseDamage(),e.getBaseSpeed(),e.getBaseHitpoints(),e.getBaseAttackSpeed(),e.getExperienceWhenKilled(),e.getScoreWhenKilled(),e.getRarity(),ChooseTargetType.valueOf(e.getTargetSelectionType()),EnemyMovementType.valueOf(e.getMovementType()),EnemyActionType.valueOf(e.getAttackType())));
+        }
     }
 
     private void checkGameOver() {
@@ -188,10 +206,12 @@ public class GameScreen extends Stage implements Screen {
         if(data.getEnemies().size()==0 && !running && nextLevel){
                 data.setState(GameState.RUNNING);
                 amountEnemies = startingEnemies + (startingEnemies * (multiplierEnemies * data.getWave()));
-                data.getEnemies().add(new Enemy(this, "Trump", 140, 160, "trump", "trumpAnimation", 5, 150, 1, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING));
+                Enemy newEnemy =enemies.get(0);
+                data.getEnemies().add(newEnemy);
 
                 for (int i = 0; i < amountEnemies; i++) {
-                    data.getEnemies().add(new Enemy(this, "Zookeeper", 70, 80, "zookeeper3", "zookeeper3Animation", 5, 150, 1, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.CRYING));
+
+                    data.getEnemies().add(new Enemy(this, "Zookeeper", 70, 80, "zookeeper3", "zookeeper3-animation", 5, 150, 1, 1.5f, 10, 15, 5, ChooseTargetType.NEAREST_PLAYER, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.CRYING));
                 }
                 if (nextWave) data.setWave(data.getWave() + 1);
             }
@@ -223,7 +243,7 @@ public class GameScreen extends Stage implements Screen {
             data.getPowers().add(new Power(this, "Damage", "damage", 5, 10, PowerType.DAMAGE_POWER, 40));
             data.getPowers().add(new Power(this, "Movement Speed", "movement-speed", 5, 10, PowerType.MOVEMENT_SPEED_POWER, 50));
             data.getPowers().add(new Power(this, "Attack Speed", "power-up", 5, 10, PowerType.ATTACK_SPEED_POWER, 40));
-            data.getPowers().add(new Power(this, "Missle Speed", "misslespeed", 5, 10, PowerType.MISSILE_SPEED_POWER, 40));
+            data.getPowers().add(new Power(this, "Missle Speed", "missilespeed", 5, 10, PowerType.MISSILE_SPEED_POWER, 40));
             data.getPowers().add(new Power(this, "HP bonus", "HP", 5, 1, PowerType.HITPOINTS_POWER, 100));
             data.getPowers().add(new Power(this, "Armor Bonus", "armor", 5, 10, PowerType.ARMOR_POWER, 20));
         }
@@ -347,19 +367,19 @@ public class GameScreen extends Stage implements Screen {
                         running = false;
                         break;
                     case "pickPowerCollector":
-                        data.getPlayers().get(currentPlayer).setHelper(helpers[0]);
+                        data.getPlayers().get(currentPlayer).setHelper(helpers.get(0));
                         break;
                     case "pickCoinCollector":
-                        data.getPlayers().get(currentPlayer).setHelper(helpers[1]);
+                        data.getPlayers().get(currentPlayer).setHelper(helpers.get(1));
                         break;
                     case "pickShield":
-                        data.getPlayers().get(currentPlayer).setHelper(helpers[2]);
+                        data.getPlayers().get(currentPlayer).setHelper(helpers.get(2));
                         break;
                     case "pickShooter":
-                        data.getPlayers().get(currentPlayer).setHelper(helpers[3]);
+                        data.getPlayers().get(currentPlayer).setHelper(helpers.get(3));
                         break;
                     case "pickStabber":
-                        data.getPlayers().get(currentPlayer).setHelper(helpers[4]);
+                        data.getPlayers().get(currentPlayer).setHelper(helpers.get(4));
                         break;
                     case "retry":
                         game.setScreen( new GameScreen( game, 1, Difficulty.EASY ) );

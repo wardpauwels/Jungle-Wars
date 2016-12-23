@@ -1,5 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.data.da.JungleWarsDA;
 import be.howest.junglewars.gameobjects.helper.Helper;
 import be.howest.junglewars.gameobjects.helper.HelperActionType;
 import be.howest.junglewars.gameobjects.helper.HelperMovementType;
@@ -12,7 +13,6 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 
 import java.util.*;
 
@@ -208,6 +208,10 @@ public class Player extends GameObject {
                 new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3,MissileType.STANDARD)
         );
         throwSound.play(.1f);
+
+        //TODO
+
+
     }
 
     public void hitBy(Missile missile) {
