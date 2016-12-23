@@ -153,8 +153,8 @@ public class Player extends GameObject {
         if (!isLookingLeft) spawnX += body.getWidth() / 2;
         float spawnY = body.y + body.getHeight() - 10;
 
-        Missile missile = new Missile(this, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3, MissileType.STANDARD, getData());
-        data.addMissile(missile);
+//        Missile missile = new Missile(this, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3, MissileType.STANDARD, getData());
+//        data.addMissile(missile);
         Network.PlayerShoot msgPlayershoot = new Network.PlayerShoot(id, new Vector2(spawnX, spawnY), new Vector2(destinationX, destinationY));
 
         data.clientSendMessage(msgPlayershoot);
