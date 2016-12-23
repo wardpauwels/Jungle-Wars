@@ -182,6 +182,14 @@ public class Enemy extends GameObject {
         }
     }
 
+    public String getAltSprite() {
+        return altSprite;
+    }
+
+    public void setAltSprite(String altSprite) {
+        this.altSprite = altSprite;
+    }
+
     public void changeSprite(String sprite){
         changeSprite(game.atlas.createSprite(sprite));
     }
