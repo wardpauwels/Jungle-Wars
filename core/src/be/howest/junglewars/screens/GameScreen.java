@@ -124,7 +124,7 @@ public class GameScreen extends Stage implements Screen {
             data.getEnemies().add( new Enemy( this, "Trump", 140, 160, "trump", "trumpAnimation", 5, 150, 120, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.ZIGZAG, EnemyActionType.TRUMPING ) );
 
             for (int i = 0; i < amountEnemies; i++) {
-                data.getEnemies().add(new Enemy(this, "Zookeeper",50,70, "zookeeper","zookeeper", 5, 150, 10, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, ChooseTargetType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
+                data.getEnemies().add(new Enemy(this, "Zookeeper",50,70, "zookeeper","zookeeper", 5, 150, 10, 5f, 10, 15, 5, ChooseTargetType.STARTING_ON_ENEMY, EnemyMovementType.NEAREST_PLAYER, EnemyActionType.SHOOTING));
 
             }
             if (nextWave) data.setWave(data.getWave() + 1);
