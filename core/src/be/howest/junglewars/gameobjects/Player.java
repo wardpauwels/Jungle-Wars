@@ -187,7 +187,6 @@ public class Player extends GameObject {
                 body.x = rightBorderTouch ? Gdx.graphics.getWidth() - body.getWidth() : body.x + currentSpeed;}
             }
         }
-    }
 
 
     public boolean isSlowed(){
