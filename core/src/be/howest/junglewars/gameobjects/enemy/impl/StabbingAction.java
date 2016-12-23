@@ -14,8 +14,8 @@ public class StabbingAction implements IEnemyActionType {
     @Override
     public void attack(Enemy enemy, Vector2 v, float spawnX, float spawnY) {
 
-        if(enemy.checkCollision(enemy.game.getData().getPlayers()).size()!=0){
-            for(Player p: enemy.game.getData().getPlayers()){
+        if(enemy.checkCollision(enemy.data.getPlayers()).size()!=0){
+            for(Player p: enemy.data.getPlayers()){
                 p.catchDamage(20);
             }
         }

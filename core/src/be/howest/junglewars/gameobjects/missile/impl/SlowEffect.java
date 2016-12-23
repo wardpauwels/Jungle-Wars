@@ -9,14 +9,11 @@ import be.howest.junglewars.gameobjects.power.Power;
 import be.howest.junglewars.gameobjects.power.PowerType;
 import be.howest.junglewars.screens.GameScreen;
 
-/**
- * Created by jensthiel on 19/12/16.
- */
 public class SlowEffect implements IMissileType {
 
 
     @Override
-    public void doEffect(GameScreen g,Player player) {
+    public void doEffect(GameData g,Player player) {
         if (!player.isSlowed()) {
             player.setSpeed(player.getSpeed() - 200);
         }

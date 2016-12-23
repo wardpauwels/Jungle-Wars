@@ -1,5 +1,6 @@
 package be.howest.junglewars.gameobjects;
 
+import be.howest.junglewars.GameData;
 import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,7 +19,7 @@ public class Currency extends GameObject {
     private float lifeTime;
     private float lifeTimer;
 
-    public Currency(GameScreen game, float lifeTime, String defaultSpriteUrl) {
+    public Currency(GameData game, float lifeTime, String defaultSpriteUrl) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getWidth()), ThreadLocalRandom.current().nextInt(0, Gdx.graphics.getHeight()));
 
         this.lifeTime = lifeTime;

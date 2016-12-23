@@ -1,9 +1,10 @@
 package be.howest.junglewars.gameobjects.enemy;
 
+import be.howest.junglewars.GameData;
+import be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.gameobjects.GameObject;
 import be.howest.junglewars.gameobjects.Missile;
 import be.howest.junglewars.gameobjects.Player;
-import be.howest.junglewars.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -13,110 +14,102 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Enemy extends GameObject {
-    private float WIDTH;
-    private float HEIGHT;
+    private static final float WIDTH = 70;
+    private static final float HEIGHT = 80;
     public static final float BULLET_WIDTH = 15;
     public static final float BULLET_HEIGHT = 15;
 
     private static final String ATLAS_PREFIX = "enemy/";
 
+    private EnemyActionType enemyAction;
+    private ChooseTargetType chooseMovement;
+    private ChooseTargetType chooseTarget;
+
     private String name;
 
-    private int damage;
-    private int hitpoints;
-    private int speed;
+    private int baseDamage;
+    private int baseHitpoints;
+    private int baseSpeed;
 
     private float actionTime;
     private float actionTimer;
 
-    private int spawnChance;
+    private int spawnProbability;
 
     private int scoreWhenKilled;
     private int experienceWhenKilled;
 
     private List<Vector2> targets;
-    private Vector2 destination;
 
     private IChooseTargetType chooseTargetType;
-    private IEnemyMovementType chooseMovementType;
+    private IChooseTargetType chooseMovementType;
     private IEnemyActionType enemyActionType;
 
-    private String defaultSprite;
-    public String altSprite;
+    public Enemy(GameData data, EnemyEntity e) {
+        this(
+                data,
+                e.getName(),
+                e.getDefaultSpriteUrl(),
+                e.getBaseDamage(),
+                e.getBaseSpeed(),
+                e.getBaseHitpoints(),
+                e.getBaseAttackSpeed(),
+                e.getExperienceWhenKilled(),
+                e.getScoreWhenKilled(),
+                e.getSpawnProbability(),
+                ChooseTargetType.valueOf(e.getTargetSelectionType()),
+                ChooseTargetType.valueOf(e.getMovementType()),
+                EnemyActionType.valueOf(e.getAttackType())
+        );
+    }
 
-    private boolean isShooting;
-    private float timer;
-    private float time;
+    public Enemy(GameData data, String name, String defaultSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
+                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnProbability, ChooseTargetType chooseTargetType, ChooseTargetType chooseMovementType, EnemyActionType actionType) {
+        super(data, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT,
+                ThreadLocalRandom.current().nextInt(0 - Math.round(WIDTH), Gdx.graphics.getWidth() + Math.round(WIDTH)),
+                ThreadLocalRandom.current().nextBoolean() ? 0 - HEIGHT : Gdx.graphics.getHeight() + HEIGHT); // TODO: spawns only top or bottom now
 
-    public Enemy(GameScreen game, String name, float width, float height, String defaultSpriteUrl, String altSpriteUrl, int baseDamage, int baseSpeed, int baseHitpoints,
-                 float baseAttackSpeed, int experienceWhenKilled, int scoreWhenKilled, int spawnChance, ChooseTargetType chooseTargetType, EnemyMovementType chooseMovementType, EnemyActionType actionType) {
-        super(game, ATLAS_PREFIX + defaultSpriteUrl, width, height,
-                ThreadLocalRandom.current().nextInt(0 - Math.round(width), Gdx.graphics.getWidth() + Math.round(width)),
-                ThreadLocalRandom.current().nextBoolean() ? 0 - height : Gdx.graphics.getHeight() + height); // TODO: spawns only top or bottom now
-        this.WIDTH = width;
-        this.HEIGHT = height;
         this.name = name;
         this.scoreWhenKilled = scoreWhenKilled;
         this.experienceWhenKilled = experienceWhenKilled;
-        this.spawnChance = spawnChance;
+        this.spawnProbability = spawnProbability;
 
         // TODO: calculate stats based by game level and difficulty
-        this.damage = baseDamage;
-        this.speed = baseSpeed;
-        this.hitpoints = baseHitpoints;
+        this.baseDamage = baseDamage;
+        this.baseSpeed = baseSpeed;
+        this.baseHitpoints = baseHitpoints;
         this.actionTime = baseAttackSpeed;
         this.actionTimer = 0;
-        this.isShooting = false;
-        this.time = .2f;
 
-        this.timer = 0;
-
+        this.chooseTarget = chooseTargetType;
         this.chooseTargetType = chooseTargetType.getType();
-        this.chooseMovementType = chooseMovementType.getMovementType();
+        this.chooseMovement = chooseMovementType;
+        this.chooseMovementType = chooseMovementType.getType();
+        this.enemyAction = actionType;
         this.enemyActionType = actionType.getAction();
-
-        this.defaultSprite = ATLAS_PREFIX + defaultSpriteUrl;
-        this.altSprite = ATLAS_PREFIX + altSpriteUrl;
     }
 
     @Override
     public void update(float dt) {
 
-        if (this.hitpoints <= 0) this.remove = true;
+        if (this.baseHitpoints <= 0) this.remove = true;
 
-        destination = chooseMovementType.returnMovement(this);
+        targets = chooseMovementType.chooseTargets(this);
+        for (Vector2 v : targets) {
 
+            float radians = MathUtils.atan2(v.y - body.y, v.x - body.x);
 
-        float radians = MathUtils.atan2(destination.y - (body.y + body.getHeight()/4), destination.x - (body.x + body.getWidth()/4));
+            body.x += MathUtils.cos(radians) * baseSpeed * dt;
+            body.y += MathUtils.sin(radians) * baseSpeed * dt;
 
-        body.x += MathUtils.cos(radians) * speed * dt;
-        body.y += MathUtils.sin(radians) * speed * dt;
-
-        doEnemyAction(dt);
-
-        if (isShooting) {
-            if (timer > time) {
-                timer = 0;
-                isShooting = false;
-            } else {
-                timer += dt;
-            }
+            doEnemyAction(dt);
         }
-
-
-
     }
 
     @Override
     public void draw(SpriteBatch batch) {
         activeSprite.setPosition(body.x, body.y);
         activeSprite.draw(batch);
-        if (!isShooting) {
-            changeSprite(defaultSprite);
-        } else {
-            changeSprite(altSprite);
-
-        }
     }
 
     public void hitBy(Missile missile, Player player) {
@@ -124,17 +117,14 @@ public class Enemy extends GameObject {
         if (catchDamage(missile.getDamage()) <= 0) {
             player.addScore(scoreWhenKilled);
             player.addXp(experienceWhenKilled);
-            float multiplier = player.getScoreMultiplier();
-            player.setScoreMultiplier(multiplier + 0.01f);
-
         }
         missile.remove = true;
 
     }
 
     public int catchDamage(int dmg) {
-        this.hitpoints -= dmg;
-        return hitpoints;
+        this.baseHitpoints -= dmg;
+        return baseHitpoints;
     }
 
 
@@ -147,8 +137,6 @@ public class Enemy extends GameObject {
     }
 
     private void attack() {
-        isShooting = true;
-        timer = 0;
         targets = chooseTargetType.chooseTargets(this);
         if (targets == null) return;
         for (Vector2 v : targets) {
@@ -160,20 +148,7 @@ public class Enemy extends GameObject {
 
             enemyActionType.attack(this, v, spawnX, spawnY);
 
-
         }
-    }
-
-    public String getAltSprite() {
-        return altSprite;
-    }
-
-    public void setAltSprite(String altSprite) {
-        this.altSprite = altSprite;
-    }
-
-    public void changeSprite(String sprite){
-        changeSprite(game.atlas.createSprite(sprite));
     }
 
     public int getScoreWhenKilled() {
@@ -184,15 +159,15 @@ public class Enemy extends GameObject {
         return experienceWhenKilled;
     }
 
-    public int getSpawnChance() {
-        return spawnChance;
+    public int getSpawnProbability() {
+        return spawnProbability;
     }
 
-    public int getDamage() {
-        return damage;
+    public int getBaseDamage() {
+        return baseDamage;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
+    public void setBaseDamage(int baseDamage) {
+        this.baseDamage = baseDamage;
     }
 }

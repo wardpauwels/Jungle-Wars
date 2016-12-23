@@ -1,18 +1,10 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.data.da.JungleWarsDA;
-import be.howest.junglewars.gameobjects.helper.Helper;
-import be.howest.junglewars.gameobjects.helper.HelperActionType;
-import be.howest.junglewars.gameobjects.helper.HelperMovementType;
-import be.howest.junglewars.data.entities.*;
-import be.howest.junglewars.gameobjects.enemy.utils.Brick;
-import be.howest.junglewars.gameobjects.enemy.utils.Wall;
+import be.howest.junglewars.GameData;
 import be.howest.junglewars.gameobjects.power.*;
 import be.howest.junglewars.screens.*;
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.Rectangle;
 
 import java.util.*;
 
@@ -23,44 +15,44 @@ public class Player extends GameObject {
     private static final float BULLET_HEIGHT = 25;
 
     private static final String ATLAS_PREFIX = "player/";
-    private final Sprite SHOOTING_SPRITE = game.atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
-    public float timer;
+    private final Sprite SHOOTING_SPRITE = data.getGame().atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
+
     private boolean isLookingLeft;
+
     private boolean isShooting;
     private float shootingAnimationTime;
     private float shootingAnimationTimer;
+
     private float shootTime;
     private float shootTimer;
     private boolean canShoot;
+
     private Helper helper;
     private ArrayList<Missile> missiles;
     private ArrayList<Power> powers;
+
     private String name;
-    private long id;
     private int hitpoints;
     private float speed;
     private float attackSpeed;
-    private float scoreMultiplier = 1;
-    public int toReachXP = 100; // Setter/getter voor maken
+    private float scoreMultiplier = 1; // TODO: when multiplier? over time? when x score is reached, ...?
     private int xp = 0;
     private int level = 1;
     private int score = 0;
-    public int collectedCoins = 0;
+    private int collectedCoins = 0;
     private int damage;
-    private int missileSpeed = 500;
+
+    private int missleSpeed = 500;
     private float armor = 0f;
+
     private float baseSpeed;
-    private Sound throwSound;
+    public float timer;
 
-    public Player(GameScreen game, String defaultSpriteUrl, PlayerEntity entity) {
-        this( game, entity.getName(), entity.getId(), defaultSpriteUrl );
-    }
 
-    public Player(GameScreen game, String name, long id, String defaultSpriteUrl) {
+    public Player(GameData game, String name, String defaultSpriteUrl) {
         super(game, ATLAS_PREFIX + defaultSpriteUrl, WIDTH, HEIGHT, Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2);
 
         this.name = name;
-        this.id = id;
 
         missiles = new ArrayList<>();
         powers = new ArrayList<>();
@@ -80,14 +72,10 @@ public class Player extends GameObject {
         this.hitpoints = 100;
         this.damage = 10;
 
-        this.throwSound = Gdx.audio.newSound(Gdx.files.internal("sound/throw.wav"));
-
-
-        helper = new Helper(game, "Little Helper", this, "red-wings-up", HelperMovementType.POWERCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER);
+        helper = new Helper(game, "Little Helper", this, "red-wings-up");
     }
 
     private void handleInput(float dt) {
-
         boolean keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         boolean keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
@@ -97,49 +85,6 @@ public class Player extends GameObject {
         boolean bottomBorderTouch = body.y <= 0;
         boolean leftBorderTouch = body.x <= 0;
         boolean rightBorderTouch = body.x >= Gdx.graphics.getWidth() - body.getWidth();
-
-        boolean leftTouchWall = false;
-        boolean upTouchWall = false;
-        boolean downTouchWall = false;
-        boolean rightTouchWall = false;
-
-        for(Wall w : game.getData().getWalls()){
-            List<Brick> bricks = this.checkCollision(w.returnWall());
-            if(bricks.size() > 0) {
-                int margin = 0;
-                Rectangle rUp = new Rectangle(body.x - margin,body.y+HEIGHT  + margin,body.x+WIDTH + margin,body.y+HEIGHT + margin);
-                Rectangle rRight = new Rectangle(body.x + margin+WIDTH,body.y - margin,body.x+WIDTH + margin,body.y+HEIGHT + margin);
-                Rectangle rDown = new Rectangle(body.x - margin ,body.y + margin,body.x+WIDTH + margin,body.y + margin);
-                Rectangle rLeft = new Rectangle(body.x + margin ,body.y - margin,body.x ,body.y+HEIGHT + margin);
-                for(Brick b: bricks){
-                    if(rUp.overlaps(b.getBody())){
-                        upTouchWall = true;
-                    }
-                    else{
-                        upTouchWall = false;
-                    }
-                    if(rDown.overlaps(b.getBody())){
-                        downTouchWall = true;
-                    }
-                    else{
-                        downTouchWall = false;
-                    }
-                    if(rRight.overlaps(b.getBody())){
-                        rightTouchWall = true;
-                    }
-                    else{
-                        rightTouchWall = false;
-                    }
-                    if(rLeft.overlaps(b.getBody())){
-                        leftTouchWall = true;
-                    } else{
-                        leftTouchWall = false;
-                    }
-                }
-            }
-
-
-        }
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && canShoot) {
             shoot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
@@ -155,37 +100,29 @@ public class Player extends GameObject {
             currentSpeed = sqrtSpeed;
         }
 
-
-
-            if (keyUpPressed) {
-                if (leftBorderTouch || rightBorderTouch)
-                    currentSpeed = normalizedSpeed;
-                if (!upTouchWall) {
-                body.y = topBorderTouch ? Gdx.graphics.getHeight() - body.getHeight() : body.y + currentSpeed;}
-            }
-            if (keyDownPressed) {
-                if (leftBorderTouch || rightBorderTouch)
-                    currentSpeed = normalizedSpeed;
-                if (!downTouchWall) {
-                body.y = bottomBorderTouch ? 0 : body.y - currentSpeed;}
-            }
-            if (keyLeftPressed) {
-                isLookingLeft = true;
-                if (topBorderTouch || bottomBorderTouch)
-                    currentSpeed = normalizedSpeed;
-                if (!leftTouchWall) {
-                body.x = leftBorderTouch ? 0 : body.x - currentSpeed;}
-            }
-            if (keyRightPressed) {
-                isLookingLeft = false;
-                if (topBorderTouch || bottomBorderTouch)
-                    currentSpeed = normalizedSpeed;
-                if (!rightTouchWall) {
-                body.x = rightBorderTouch ? Gdx.graphics.getWidth() - body.getWidth() : body.x + currentSpeed;}
-            }
+        if (keyUpPressed) {
+            if (leftBorderTouch || rightBorderTouch)
+                currentSpeed = normalizedSpeed;
+            body.y = topBorderTouch ? Gdx.graphics.getHeight() - body.getHeight() : body.y + currentSpeed;
         }
-
-
+        if (keyDownPressed) {
+            if (leftBorderTouch || rightBorderTouch)
+                currentSpeed = normalizedSpeed;
+            body.y = bottomBorderTouch ? 0 : body.y - currentSpeed;
+        }
+        if (keyLeftPressed) {
+            isLookingLeft = true;
+            if (topBorderTouch || bottomBorderTouch)
+                currentSpeed = normalizedSpeed;
+            body.x = leftBorderTouch ? 0 : body.x - currentSpeed;
+        }
+        if (keyRightPressed) {
+            isLookingLeft = false;
+            if (topBorderTouch || bottomBorderTouch)
+                currentSpeed = normalizedSpeed;
+            body.x = rightBorderTouch ? Gdx.graphics.getWidth() - body.getWidth() : body.x + currentSpeed;
+        }
+    }
     public boolean isSlowed(){
         if(speed<baseSpeed){
             return true;
@@ -205,13 +142,8 @@ public class Player extends GameObject {
         float spawnY = body.y + body.getHeight() - 10;
 
         missiles.add(
-                new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3,MissileType.STANDARD)
+                new Missile(data, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3,MissileType.STANDARD)
         );
-        throwSound.play(.1f);
-
-        //TODO
-
-
     }
 
     public void hitBy(Missile missile) {
@@ -308,10 +240,6 @@ public class Player extends GameObject {
         checkLevelUp();
     }
 
-    public void setHelper(Helper helper){
-        this.helper = helper;
-    }
-
     public void addCoin(int coin) {
         this.collectedCoins += coin;
     }
@@ -326,18 +254,7 @@ public class Player extends GameObject {
     }
 
     private void checkLevelUp() {
-        if(xp >= toReachXP){
-            this.level += 1;
-            toReachXP = Math.round(toReachXP * 2.6f);
-            levelUp();
-        }
-    }
-
-    public void levelUp(){
-        this.attackSpeed *= 1.03f;
-        this.damage *= 1.03f;
-        this.speed *= 1.03f;
-        this.missileSpeed *= 1.03f;
+        // TODO: if level up condition true => level++
     }
 
     public Helper getHelper() {
@@ -354,10 +271,6 @@ public class Player extends GameObject {
 
     public int getHitpoints() {
         return hitpoints;
-    }
-
-    public void setHitpoints(int hitpoints) {
-        this.hitpoints = hitpoints;
     }
 
     public ArrayList<Power> getPowers() {
@@ -404,9 +317,13 @@ public class Player extends GameObject {
         this.attackSpeed = attackSpeed;
     }
 
-    public int getMissileSpeed(){return missileSpeed;}
+    public int getMissleSpeed(){return missleSpeed;}
 
-    public void setMissileSpeed(int missileSpeed){ this.missileSpeed = missileSpeed;}
+    public void setMissleSpeed(int missleSpeed){ this.missleSpeed = missleSpeed;}
+
+    public void setHitpoints(int hitpoints) {
+        this.hitpoints = hitpoints;
+    }
 
     public float getArmor() {
         return armor;
@@ -414,25 +331,5 @@ public class Player extends GameObject {
 
     public void setArmor(float armor) {
         this.armor = armor;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public float getScoreMultiplier() {
-        return scoreMultiplier;
-    }
-
-    public void setScoreMultiplier(float scoreMultiplier) {
-        this.scoreMultiplier = scoreMultiplier;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 }

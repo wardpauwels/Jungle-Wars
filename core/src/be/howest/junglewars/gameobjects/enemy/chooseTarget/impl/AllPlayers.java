@@ -15,7 +15,7 @@ public class AllPlayers implements IChooseTargetType {
     @Override
     public List<Vector2> chooseTargets(Enemy enemy) {
         List<Vector2> list = new ArrayList<>();
-        for(Player p : enemy.game.getData().getPlayers()){
+        for(Player p : enemy.data.getPlayers()){
             list.add(new Vector2(p.getBody().getX(), p.getBody().getY()));
         }
         return list;
