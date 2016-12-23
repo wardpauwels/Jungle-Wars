@@ -2,61 +2,47 @@ package be.howest.junglewars.screens;
 
 import be.howest.junglewars.*;
 import be.howest.junglewars.data.da.*;
-import be.howest.junglewars.data.entities.EnemyEntity;
-import be.howest.junglewars.data.entities.HelperEntity;
-import be.howest.junglewars.data.entities.PlayerEntity;
-import be.howest.junglewars.data.entities.PowerEntity;
+import be.howest.junglewars.data.entities.*;
+import be.howest.junglewars.gameobjects.Currency;
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.enemy.*;
 import be.howest.junglewars.gameobjects.enemy.utils.*;
-import be.howest.junglewars.gameobjects.helper.Helper;
-import be.howest.junglewars.gameobjects.helper.HelperActionType;
-import be.howest.junglewars.gameobjects.helper.HelperMovementType;
+import be.howest.junglewars.gameobjects.helper.*;
 import be.howest.junglewars.gameobjects.power.*;
-import be.howest.junglewars.util.Assets;
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.viewport.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class GameScreen extends Stage implements Screen {
 
     //region fields
 
     public TextureAtlas atlas;
+    public ArrayList<Sound> sounds;
     private Skin skin;
     private Stage stage;
     private Sprite backgroundSprite;
     private BitmapFont smallFont;
     private BitmapFont bigFont;
-
     private JungleWars game;
     private GameData data;
-
     private int startingEnemies;
     private float multiplierEnemies;
     private float amountEnemies;
     private boolean isGameOver;
     private String playerName;
-
     private boolean nextLevel;
     private boolean running;
-
     private ArrayList<Helper> helpers;
     private ArrayList<Power> powers;
     private ArrayList<Enemy> enemies;
-
-    public ArrayList<Sound> sounds;
-
     private int upgradeCost;
 
     private SelectBox<Helper> helperSelectBox;
@@ -87,9 +73,6 @@ public class GameScreen extends Stage implements Screen {
         music.setLooping( true );
         music.setVolume( 0.05f );
         music.play();
-
-
-
 
         data.setWave(wave);
         data.setDifficulty(difficulty);
@@ -488,6 +471,7 @@ public class GameScreen extends Stage implements Screen {
                 protected void result(Object object) {
                     switch (String.valueOf(object)) {
                         case "leave":
+                            dispose();
                             game.setScreen(new MainMenuScreen(game));
                             break;
                         case "retry":
@@ -663,6 +647,7 @@ public class GameScreen extends Stage implements Screen {
 
     @Override
     public void dispose() {
+        music.dispose();
     }
 
     public GameData getData(){

@@ -1,15 +1,13 @@
 package be.howest.junglewars.data.da;
 
-import be.howest.junglewars.data.entities.EnemyEntity;
-import be.howest.junglewars.data.entities.HelperEntity;
-import be.howest.junglewars.data.entities.PowerEntity;
+import be.howest.junglewars.data.entities.*;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 
 
 public class JungleWarsDA {
-    private static final String URL = "jdbc:mysql://188.166.66.6/JungleWars?useSSL=false";
+    private static final String URL = "jdbc:mysql://188.166.66.6/junglewars?useSSL=false";
     //private static final String URL = "jdbc:mysql://localhost:3306/JungleWars";
 
     private static final String UID = "ward";

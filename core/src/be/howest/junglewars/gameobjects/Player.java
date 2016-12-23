@@ -1,23 +1,14 @@
 package be.howest.junglewars.gameobjects;
 
-import be.howest.junglewars.gameobjects.helper.Helper;
-import be.howest.junglewars.gameobjects.helper.HelperActionType;
-import be.howest.junglewars.gameobjects.helper.HelperMovementType;
 import be.howest.junglewars.data.entities.*;
-import be.howest.junglewars.gameobjects.enemy.utils.Brick;
-import be.howest.junglewars.gameobjects.enemy.utils.Wall;
+import be.howest.junglewars.gameobjects.enemy.utils.*;
+import be.howest.junglewars.gameobjects.helper.*;
 import be.howest.junglewars.gameobjects.power.*;
 import be.howest.junglewars.screens.*;
-import be.howest.junglewars.util.XBox360Pad;
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.ControllerListener;
-import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.*;
 
 import java.util.*;
 
@@ -30,6 +21,10 @@ public class Player extends GameObject {
     private static final String ATLAS_PREFIX = "player/";
     private final Sprite SHOOTING_SPRITE = game.atlas.createSprite(ATLAS_PREFIX + "harambe-shoot");
     public float timer;
+    public int toReachXP = 100; // Setter/getter voor maken
+    public int collectedCoins = 0;
+    public boolean controller;
+    public boolean autoAim;
     private boolean isLookingLeft;
     private boolean isShooting;
     private float shootingAnimationTime;
@@ -46,22 +41,18 @@ public class Player extends GameObject {
     private float speed;
     private float attackSpeed;
     private float scoreMultiplier = 1;
-    public int toReachXP = 100; // Setter/getter voor maken
     private int xp = 0;
     private int level = 1;
     private int score = 0;
-    public int collectedCoins = 0;
     private int damage;
     private int missileSpeed = 500;
     private float armor = 0f;
     private float baseSpeed;
     private Sound throwSound;
-    public boolean controller;
     private boolean keyUpPressed;
     private boolean keyDownPressed;
     private boolean keyLeftPressed;
     private boolean keyRightPressed;
-    public boolean autoAim;
 
 
     public Player(GameScreen game, String defaultSpriteUrl, PlayerEntity entity) {
@@ -296,10 +287,6 @@ public class Player extends GameObject {
         checkLevelUp();
     }
 
-    public void setHelper(Helper helper) {
-        this.helper = helper;
-    }
-
     public void addCoin() {
         this.collectedCoins += 1;
     }
@@ -320,6 +307,7 @@ public class Player extends GameObject {
             levelUp();
         }
     }
+
     public void levelUp(){
         this.attackSpeed *= 1.03f;
         this.damage *= 1.03f;
@@ -329,6 +317,10 @@ public class Player extends GameObject {
 
     public Helper getHelper() {
         return helper;
+    }
+
+    public void setHelper(Helper helper) {
+        this.helper = helper;
     }
 
     public String getName() {
