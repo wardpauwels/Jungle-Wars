@@ -8,10 +8,16 @@ import be.howest.junglewars.gameobjects.enemy.utils.Brick;
 import be.howest.junglewars.gameobjects.enemy.utils.Wall;
 import be.howest.junglewars.gameobjects.power.*;
 import be.howest.junglewars.screens.*;
+import be.howest.junglewars.util.XBox360Pad;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerListener;
+import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.*;
 
@@ -50,9 +56,16 @@ public class Player extends GameObject {
     private float armor = 0f;
     private float baseSpeed;
     private Sound throwSound;
+    public boolean controller;
+    private boolean keyUpPressed;
+    private boolean keyDownPressed;
+    private boolean keyLeftPressed;
+    private boolean keyRightPressed;
+    public boolean autoAim;
+
 
     public Player(GameScreen game, String defaultSpriteUrl, PlayerEntity entity) {
-        this( game, entity.getName(), entity.getId(), defaultSpriteUrl );
+        this(game, entity.getName(), entity.getId(), defaultSpriteUrl);
     }
 
     public Player(GameScreen game, String name, long id, String defaultSpriteUrl) {
@@ -79,18 +92,31 @@ public class Player extends GameObject {
         this.hitpoints = 100;
         this.damage = 10;
 
+
+        this.controller = false;
+        this.autoAim = false;
+
         this.throwSound = Gdx.audio.newSound(Gdx.files.internal("sound/throw.wav"));
 
 
         helper = new Helper(game, "Little Helper", this, "red-wings-up", HelperMovementType.POWERCOLLECTING_HELPER, HelperActionType.COLLECTING_HELPER);
     }
 
-    private void handleInput(float dt) {
 
-        boolean keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
-        boolean keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
-        boolean keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
-        boolean keyRightPressed = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+    private void handleInput(float dt) {
+        //sorry meneer van dycke
+        if (!controller) {
+            keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
+            keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
+            keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
+            keyRightPressed = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+        } else {
+            keyUpPressed = Gdx.input.isKeyPressed(Input.Keys.W);
+            keyDownPressed = Gdx.input.isKeyPressed(Input.Keys.S);
+            keyLeftPressed = Gdx.input.isKeyPressed(Input.Keys.A);
+            keyRightPressed = Gdx.input.isKeyPressed(Input.Keys.D);
+        }
+
 
         boolean topBorderTouch = body.y >= Gdx.graphics.getHeight() - body.getHeight();
         boolean bottomBorderTouch = body.y <= 0;
@@ -102,14 +128,14 @@ public class Player extends GameObject {
         boolean downTouchWall = false;
         boolean rightTouchWall = false;
 
-        for(Wall w : game.getData().getWalls()){
+        for (Wall w : game.getData().getWalls()) {
             List<Brick> bricks = this.checkCollision(w.returnWall());
-            if(bricks.size() > 0) {
+            if (bricks.size() > 0) {
                 int margin = 0;
-                Rectangle rUp = new Rectangle(body.x - margin,body.y+HEIGHT  + margin,body.x+WIDTH + margin,body.y+HEIGHT + margin);
-                Rectangle rRight = new Rectangle(body.x + margin+WIDTH,body.y - margin,body.x+WIDTH + margin,body.y+HEIGHT + margin);
-                Rectangle rDown = new Rectangle(body.x - margin ,body.y + margin,body.x+WIDTH + margin,body.y + margin);
-                Rectangle rLeft = new Rectangle(body.x + margin ,body.y - margin,body.x ,body.y+HEIGHT + margin);
+                Rectangle rUp = new Rectangle(body.x - margin, body.y + HEIGHT + margin, body.x + WIDTH + margin, body.y + HEIGHT + margin);
+                Rectangle rRight = new Rectangle(body.x + margin + WIDTH, body.y - margin, body.x + WIDTH + margin, body.y + HEIGHT + margin);
+                Rectangle rDown = new Rectangle(body.x - margin, body.y + margin, body.x + WIDTH + margin, body.y + margin);
+                Rectangle rLeft = new Rectangle(body.x + margin, body.y - margin, body.x, body.y + HEIGHT + margin);
                 for(Brick b: bricks){
                     upTouchWall = rUp.overlaps(b.getBody());
                     downTouchWall = rDown.overlaps(b.getBody());
@@ -119,8 +145,11 @@ public class Player extends GameObject {
             }
         }
 
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && canShoot) {
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && canShoot && !autoAim) {
             shoot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && canShoot && autoAim){
+            shoot(this.getNearest(this.game.getData().getEnemies()).getBody().x,this.getNearest(this.game.getData().getEnemies()).getBody().y);
         }
 
         float normalizedSpeed = speed * dt;
@@ -158,6 +187,7 @@ public class Player extends GameObject {
                 body.x = rightBorderTouch ? Gdx.graphics.getWidth() - body.getWidth() : body.x + currentSpeed;}
             }
         }
+    }
 
 
     public boolean isSlowed(){
@@ -174,7 +204,7 @@ public class Player extends GameObject {
         float spawnY = body.y + body.getHeight() - 10;
 
         missiles.add(
-                new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3,MissileType.STANDARD)
+                new Missile(game, BULLET_WIDTH, BULLET_HEIGHT, spawnX, spawnY, destinationX, destinationY, "banana", damage, 500, -10, 3, MissileType.STANDARD)
         );
         throwSound.play(.1f);
 
@@ -188,7 +218,7 @@ public class Player extends GameObject {
 
     public int catchDamage(int dmg) {
         armor /= 10;
-        dmg -= (dmg*armor);
+        dmg -= (dmg * armor);
         this.hitpoints -= dmg;
         return hitpoints;
     }
@@ -267,7 +297,7 @@ public class Player extends GameObject {
         checkLevelUp();
     }
 
-    public void setHelper(Helper helper){
+    public void setHelper(Helper helper) {
         this.helper = helper;
     }
 
@@ -285,7 +315,7 @@ public class Player extends GameObject {
     }
 
     private void checkLevelUp() {
-        if(xp >= toReachXP){
+        if (xp >= toReachXP) {
             this.level += 1;
             toReachXP = Math.round(toReachXP * 2.6f);
             levelUp();

@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 public class JungleWarsDA {
     private static final String URL = "jdbc:mysql://188.166.66.6/JungleWars?useSSL=false";
+    //private static final String URL = "jdbc:mysql://localhost:3306/JungleWars";
+
     private static final String UID = "ward";
     private static final String PWD = "pauwels";
     private static JungleWarsDA instance;
