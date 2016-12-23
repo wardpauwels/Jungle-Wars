@@ -1,5 +1,6 @@
 package be.howest.junglewars;
 
+import be.howest.junglewars.data.entities.EnemyEntity;
 import be.howest.junglewars.gameobjects.Currency;
 import be.howest.junglewars.gameobjects.*;
 import be.howest.junglewars.gameobjects.enemy.*;
@@ -87,10 +88,12 @@ public class GameData {
         }
 
         //update enemies
-        for (Enemy enemy : enemies) {
-            enemy.update(dt);
-            client.sendMessageUDP(enemy.getEnemyMovementState);
-            enemy.setEnemyMovenentState(new Network.EnemyMovementState(enemy.getId(), enemy.isShooting, enemy.getPos()));
+        for(int i = 0; i < enemies.size(); i++) {
+            enemies.get(i).update(dt);
+
+            if(enemies.get(i).shouldRemove()){
+                enemies.remove(i);
+            }
         }
 
         //update missiles
@@ -283,7 +286,7 @@ public class GameData {
 
     public synchronized void onEnemySpawn(Network.EnemySpawned msg) {
 //        enemies.add(new Enemy(msg.id, this, msg.enemy));
-
+        addEnemy(msg.id, msg.enemy);
     }
 
     public synchronized void removePlayer(Network.PlayerJoinLeave msg) {
@@ -293,6 +296,14 @@ public class GameData {
     public synchronized void onPlayerWasHit(Network.PlayerWasHit msg) {
         Player player = players.get(msg.playerId);
 
+    }
+
+    public synchronized void addEnemy(long id, EnemyEntity entity){
+        Enemy e = new Enemy(id, this, entity);
+        enemies.add(e);
+        if(!isClient) {
+            server.sendMessage(new Network.EnemySpawned(id, entity));
+        }
     }
 
     public void clientSendMessage(Object msg) {

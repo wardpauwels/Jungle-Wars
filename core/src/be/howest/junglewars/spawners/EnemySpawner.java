@@ -22,7 +22,7 @@ public class EnemySpawner implements ISpawner {
     private int totalEnemiesSpawned;
     private int totalEnemiesToSpawn;
 
-    // TODO should be database enemies or enemies should be clonable
+    // TODO: should be database enemies
     private EnemyEntity[] enemies;
     private int[] probabilities;
     private int totalProbability;
@@ -104,8 +104,9 @@ public class EnemySpawner implements ISpawner {
             random -= e.getSpawnProbability();
             if (random <= 0) {
                 updateStats(e);
-                manager.getData().getEnemies().add(new Enemy(currentId, manager.getData(), e));
-                manager.getData().serverSendMessage(new Network.EnemySpawned(currentId, e));
+//                manager.getData().getEnemies().add(new Enemy(currentId, manager.getData(), e));
+                manager.getData().addEnemy(currentId, e);
+//                manager.getData().serverSendMessage(new Network.EnemySpawned(currentId, e));
                 currentId++;
                 System.out.println(e.getName());
                 break;

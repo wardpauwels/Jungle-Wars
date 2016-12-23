@@ -23,9 +23,9 @@ public class SpawnerManager {
         enemySpawner = new EnemySpawner(this);
         spawners.add(enemySpawner);
         powerSpawner = new PowerSpawner(this);
-//        spawners.add(powerSpawner);
+        spawners.add(powerSpawner);
         currencySpawner = new CurrencySpawner(this);
-//        spawners.add(currencySpawner);
+        spawners.add(currencySpawner);
     }
 
     public void manageAllSpawners() {
