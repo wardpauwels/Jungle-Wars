@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Presentatie Jungle Wars</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="assets/vendor/jquery.fullpage.min.css" rel="stylesheet">
+        <link href="assets/css/style.css" rel="stylesheet">
+    </head>
+
+    <body onresize="setOverview();">
+
+        <div id="fullpage">
+            <div id="menu"></div>
+
+            <!--First page black-->
+            <div class="section" data-anchor="start-page"></div>
+
+            <!--Jungle Wars - Harambe-->
+            <div class="section" data-anchor="first-page">
+                <div class="slide">
+                    <h1 class="topTitle">Jungle Wars
+                        <small>The Revenge of Harambe</small>
+                    </h1>
+                    <div class="image-bottom-wrapper">
+                        <img class="image-bottom" src="assets/images/harambe/harambe-icon.png">
+                    </div>
+                </div>
+                <div class="slide">
+                    <h1 class="topTitle">Harambe?</h1>
+                    <div class="image-bottom-wrapper">
+                        <img class="image-bottom" src="assets/images/harambe/harambe-img.png">
+                    </div>
+                </div>
+            </div>
+
+            <!--Overzicht-->
+            <div class="section" data-anchor="second-page">
+                <h1 class="topTitle">Overzicht</h1>
+                <div class="overview">
+                    <div style="position:absolute;width:100%;top:50%;transform:translateY(-50%);">
+                        <h2>Het team</h2>
+                        <h2>Demo</h2>
+                        <h2>Uitbreidingen</h2>
+                        <h2>Financieel</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!--Team-->
+            <div class="section" data-anchor="third-page">
+                <h1>Het team</h1>
+            </div>
+
+            <!--Demo-->
+            <div class="section" data-anchor="fourth-page">
+                <div class="slide">
+                    <h1>Demo</h1>
+                </div>
+                <div class="slide">
+                    <video id="demo-vid" data-autoplay width="100%">
+                        <source src="assets/video/sample-vid.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <!--Uitbreidingen-->
+            <div class="section" data-anchor="fifth-page">
+                <h1>Uitbreiding</h1>
+            </div>
+
+            <!--Financieel-->
+            <div class="section" data-anchor="sixth-page">
+                <h1>Financieel</h1>
+            </div>
+
+            <!--Harambe end-->
+            <div class="section" data-anchor="end-page">
+                <h3 class="full-width-text">benjavr.github.io/Jungle-Wars</h3>
+            </div>
+        </div>
+
+        <script src="assets/vendor/jquery.min.js"></script>
+        <script src="assets/vendor/jquery.fullpage.min.js"></script>
+        <script src="assets/js/script.js"></script>
+    </body>
+
+</html>

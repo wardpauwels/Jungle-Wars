@@ -1,0 +1,64 @@
+@font-face {
+    font-family: 'Lato';
+    src: url('../font/lato/Lato-Regular.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Lato';
+    src: url('../font/lato/Lato-Bold.ttf');
+    font-weight: bold;
+}
+
+body {
+    color: #FFF;
+    font-family: 'Lato', sans-serif;
+    text-transform: uppercase;
+}
+
+.section {
+    text-align: center;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 7rem;
+}
+
+h2 {
+    font-size: 3rem;
+}
+
+.topTitle {
+    margin-top: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.topTitle small {
+    font-size: 3rem;
+    display: block;
+}
+
+.image-bottom {
+    position: absolute;
+    bottom: 0;
+}
+
+.image-bottom-wrapper {
+    height: 60%;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+}
+
+.overview {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
+.overview h2 {
+    margin-bottom: 0;
+}
