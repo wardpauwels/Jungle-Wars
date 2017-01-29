@@ -53,14 +53,23 @@ $(function() {
         });
     });
 
-    setOverview();
+    window.setTimeout(function() {
+        setOverviewAndImage();
+    }, 1000);
 });
 
 // Overview
-function setOverview() {
+function setOverviewAndImage() {
+    var windowHeight = window.innerHeight;
     $('.overview').each(function(i, overview) {
-        var windowHeight = window.innerHeight;
         var height = $(overview).closest('.section').find('h1').first().height();
         $(overview).css('height', windowHeight - height);
+    });
+    $('.image-bottom').each(function(i, image) {
+        var height = $(image).closest('.section').find('h1').first().height();
+        console.log(windowHeight);
+        console.log(height);
+        console.log(windowHeight - height);
+        $(image).css('height', (windowHeight - height));
     });
 }
