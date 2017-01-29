@@ -22,7 +22,8 @@ $(function() {
             'sixth-page',
             'end-page'
         ],
-        loopHorizontal: false
+        loopHorizontal: false,
+        animateAnchor: false
     });
 
     // Video
