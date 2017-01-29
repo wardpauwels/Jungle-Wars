@@ -53,9 +53,6 @@ $(function() {
         });
     });
 
-    // Full width ending
-    $('.full-width-text').fitText();
-
     setOverview();
 });
 
