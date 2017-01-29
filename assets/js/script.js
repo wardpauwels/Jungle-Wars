@@ -27,8 +27,11 @@ $(function() {
 
     // Video
     var $vid = $('#demo-vid');
-    var $arrow = $('.fp-controlArrow');
+    var $arrow;
     $vid.on('playing', function() {
+        $arrow = $($vid.closest('.section').find('.fp-controlArrow')).filter(function() {
+            return $(this).css('display') == 'block';
+        });
         $arrow.css('display', 'none');
     });
     $vid.on('ended pause', function() {
@@ -67,9 +70,6 @@ function setOverviewAndImage() {
     });
     $('.image-bottom').each(function(i, image) {
         var height = $(image).closest('.section').find('h1').first().height();
-        console.log(windowHeight);
-        console.log(height);
-        console.log(windowHeight - height);
         $(image).css('height', (windowHeight - height));
     });
 }

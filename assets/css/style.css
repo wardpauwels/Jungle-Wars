@@ -62,4 +62,23 @@ h2 {
 
 .overview h2 {
     margin-bottom: 0;
+    margin-top: 20px;
+}
+
+.person {
+    width: 25%;
+    float: left;
+    height: 100%;
+}
+
+.person img {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.person p {
+    position: absolute;
+    bottom: 18%;
+    width: 12%;
 }
