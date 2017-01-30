@@ -23,8 +23,7 @@ $(function() {
             'end-page'
         ],
         loopHorizontal: false,
-        animateAnchor: false,
-        menu: '#menu'
+        animateAnchor: false
     });
 
     // Video
